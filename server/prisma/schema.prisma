@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique 
+  password String
+  is_blocked Boolean @default(false)
+  role_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile Profile?
+  role Role @relation(fields: [role_id], references: [id])
+  stories Story[] // 1 user have many stories
+  bookmarks Bookmark[] // 1 user have many bookmarks
+  upvotes Upvote[] // 1 user can many upvotes
+
+  @@map("users")
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+  user_id Int @unique
+  profile_img String? @db.Text
+  gender String?
+  age Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("profiles")
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  name String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users User[] // 1 role is in many users
+
+  @@map("roles")
+}
+
+model Genre {
+  id Int @id @default(autoincrement())
+  name String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  stories Story[] // 1 genre have many stories
+
+  @@map("genres")
+}
+
+model Story {
+  id Int @id @default(autoincrement())
+  title String
+  author_id Int 
+  genre_id Int
+  upvote Int @default(0)
+  cover_img String? @db.Text
+  synopsis String? @db.Text
+  status String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  genre Genre @relation(fields: [genre_id], references: [id])
+  author User @relation(fields: [author_id], references: [id])
+  chapters Chapter[] // 1 story have many chapters
+  bookmarks Bookmark[] // 1 story is in many bookmarks
+  upvotes Upvote[] // 1 story have many upvotes
+
+  @@map("stories")
+}
+
+model Chapter {
+  id Int @id @default(autoincrement())
+  title String
+  content String @db.Text
+  story_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  story Story @relation(fields: [story_id], references: [id])
+
+  @@map("chapters")
+}
+
+model Bookmark {
+  id Int @id @default(autoincrement())
+  story_id Int
+  user_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  stories Story @relation(fields: [story_id], references: [id])
+  users User @relation(fields: [user_id], references: [id])
+
+  @@map("bookmarks")
+}
+
+model Upvote {
+  id Int @id @default(autoincrement())
+  story_id Int
+  user_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  stories Story @relation(fields: [story_id], references: [id])
+  users User @relation(fields: [user_id], references: [id])
+
+  @@map("upvotes")
+}
