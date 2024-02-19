@@ -1,98 +1,104 @@
 import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
+
+const navLinks = [
+  {
+    id: 1,
+    name: "Popular",
+    link: "/popular",
+  },
+  {
+    id: 2,
+    name: "Latest",
+    link: "/latest",
+  },
+  {
+    id: 3,
+    name: "Random",
+    link: "/random",
+  },
+];
 
 function Navbar() {
+  const location = useLocation();
+  const { pathname } = location;
   const [nav, setNav] = useState(false);
   const [isAuth, setAuth] = useState(false);
 
-  const navLinks = [
-    {
-      id: 1,
-      name: "Popular",
-      link: "/popular",
-    },
-    {
-      id: 2,
-      name: "Latest Added",
-      link: "/latest",
-    },
-    {
-      id: 3,
-      name: "Random",
-      link: "/random",
-    },
-  ];
-
   return (
     <>
-      <div
-        id="navbar"
-        className=" flex flex-col md:flex-row  gap-y-3 md:gap-y-0 py-5 md:py-0 items-center w-full md:h-[111px]  border border-black border-b-1 "
-      >
-        <div id="navigation" className="w-3/5 h-full hidden md:flex">
-          <ul className="flex   items-center w-full h-full  text-[1.5rem] font-semibold md:pl-10">
-            {navLinks.map(({ id, name, link }) => (
-              <li
-                key={id}
-                className="hover:translate-y-[-3px] transition duration-100 cursor-pointer w-auto md:pr-10 text-center"
-              >
-                <Link to={link}> {name} </Link>
-              </li>
-            ))}
-          </ul>
+      <div className="flex flex-row justify-between md:px-12">
+        <div
+          id="navbar"
+          className="flex w-full flex-col items-center gap-y-3 py-5 font-dm-display text-primary md:h-[111px] md:flex-row md:gap-y-0 md:py-0"
+        >
+          <div id="navigation" className="hidden h-full w-full md:flex">
+            <ul className="flex h-full w-full items-center space-x-8  text-[1.5rem] font-semibold ">
+              {navLinks.map(({ id, name, link }) => (
+                <li
+                  key={id}
+                  className={`border-b-2  ${pathname === link ? "border-b-black" : "border-b-transparent hover:border-b-black"}`}
+                >
+                  <Link to={link} className="text-md tracking-wide">
+                    {name.toUpperCase()}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {isAuth ? (
+            <div
+              id="logged"
+              className="hidden h-full  w-full items-center justify-end md:flex md:flex-row md:gap-y-0 md:space-x-4"
+            >
+              <div className="font-dm-sans font-bold">lalallal ada</div>
+              <Dropdown placement="bottom-end">
+                <MenuHandler>
+                  <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
+                </MenuHandler>
+                <MenuList className="flex flex-col space-y-2 rounded-none font-dm-sans lg:w-[240px]">
+                  <a>Account</a>
+                  <a>Account</a>
+                  <a>Account</a>
+                </MenuList>
+              </Dropdown>
+            </div>
+          ) : (
+            <div id="not-logged" className="hidden w-2/5 md:flex ">
+              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0 md:pr-10">
+                <div
+                  onClick={() => setAuth(true)}
+                  className="cursor-pointer border-b-2 border-transparent transition duration-100 hover:border-b-2 hover:border-b-black"
+                >
+                  <Link to="/login">LOGIN</Link>
+                </div>
+                <div className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80">
+                  <Link to="/register">REGISTER</Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        {isAuth ? (
-          <div
-            id="logged"
-            className="w-2/5 hidden md:flex md:flex-row md:gap-10 items-center h-full md:gap-y-0 justify-end md:pr-10"
-          >
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
-              <IoMdNotificationsOutline size={40} />
-            </div>
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer text-[1.5rem]">
-              User Name
-            </div>
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
-              <RiArrowDropDownLine size={40} />
-            </div>
-          </div>
-        ) : (
-          <div id="not-logged" className="w-2/5 hidden md:flex ">
-            <div className="flex md:flex-row md:gap-10 items-center w-full h-full md:gap-y-0 text-[1.5rem] font-semibold justify-end md:pr-10">
-              <div
-                onClick={() => setAuth(true)}
-                className="hover:translate-y-[-3px] transition duration-100 cursor-pointer"
-              >
-                <Link to="/login">Login</Link>
-              </div>
-              <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer border border-[#472316] bg-black text-white px-[56px] py-[9px]">
-                <Link to="/register">Register</Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div onClick={() => setNav(!nav)} id="hamburger-button" className=" self-end mr-10 md:hidden">
-          {nav ? <FaTimes size={30} /> : <FaBars size={30} />}
+        <div onClick={() => setNav(!nav)} id="hamburger-button" className="mr-10 inline-flex items-center md:hidden">
+          {nav ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </div>
       </div>
       {nav && (
-        <div className="md:hidden w-full absolute bg-white border-black border-b-2">
-          <ul className="flex flex-col items-center w-full h-full gap-y-1 text-[1.5rem] font-semibold  border-black border-b-2 py-5">
+        <div className="absolute w-full border-b-2 border-black bg-white md:hidden">
+          <ul className="flex h-full w-full flex-col items-center gap-y-1 border-b-2 border-black  py-5 text-[1.5rem] font-semibold">
             {navLinks.map(({ id, name, link }) => (
-              <li key={id} className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
+              <li key={id} className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">
                 <Link to={link}> {name} </Link>
               </li>
             ))}
           </ul>
           {isAuth ? (
-            <div className="flex flex-col items-center gap-y-1 text-[1.5rem] font-semibold py-5">
-              <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">User Name</div>
+            <div className="flex flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold">
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">User Name</div>
               <div
-                className="hover:translate-y-[-3px] transition duration-100 cursor-pointer"
+                className="cursor-pointer transition duration-100 hover:translate-y-[-3px]"
                 onClick={() => setAuth(false)}
               >
                 Log Out
@@ -101,12 +107,12 @@ function Navbar() {
           ) : (
             <div
               id="not-logged"
-              className="flex flex-col items-center w-full h-full gap-y-1 text-[1.5rem] font-semibold py-5"
+              className="flex h-full w-full flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold"
             >
-              <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">
                 <Link to="/login">Login</Link>
               </div>
-              <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer border border-[#472316] bg-black text-white px-[56px] py-[9px]">
+              <div className="cursor-pointer border border-[#472316] bg-black px-[56px] py-[9px] text-white transition duration-100 hover:translate-y-[-3px]">
                 <Link to="/register">Register</Link>
               </div>
             </div>
