@@ -1,8 +1,14 @@
+import Search from "../components/Search.jsx";
+import Category from "../components/Category.jsx";
+
 const HomePage = () => {
   return (
-    <>
-      <h1 className="w-full h-full m-auto text-center">HomePage</h1>
-    </>
+    <div className="px-12">
+      <section className="flex flex-col space-y-3">
+        <Search />
+        <Category />
+      </section>
+    </div>
   );
 };
 
