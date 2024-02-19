@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { IoMdNotificationsOutline } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 
 const navLinks = [
   {
@@ -12,7 +11,7 @@ const navLinks = [
   },
   {
     id: 2,
-    name: "Latest Added",
+    name: "Latest",
     link: "/latest",
   },
   {
@@ -26,61 +25,64 @@ function Navbar() {
   const location = useLocation();
   const { pathname } = location;
   const [nav, setNav] = useState(false);
-  const [isAuth, setAuth] = useState(false);
+  const [isAuth, setAuth] = useState(true);
 
   return (
     <>
-      <div
-        id="navbar"
-        className="font-dm-display text-primary flex flex-col md:flex-row gap-y-3 md:gap-y-0 py-5 md:py-0 items-center w-full md:h-[111px] border border-black border-b-1"
-      >
-        <div id="navigation" className="w-3/5 h-full hidden md:flex">
-          <ul className="flex space-x-4 items-center w-full h-full  text-[1.5rem] font-semibold md:pl-10">
-            {navLinks.map(({ id, name, link }) => (
-              <li
-                key={id}
-                className={`border-b-2  ${pathname === link ? "border-b-black" : "border-b-transparent hover:border-b-black"}`}
-              >
-                <Link to={link} className="text-md">
-                  {name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div className="flex flex-row justify-between md:px-12">
+        <div
+          id="navbar"
+          className="font-dm-display text-primary flex flex-col md:flex-row gap-y-3 md:gap-y-0 py-5 md:py-0 items-center w-full md:h-[111px]"
+        >
+          <div id="navigation" className="w-full h-full hidden md:flex">
+            <ul className="flex space-x-4 items-center w-full h-full  text-[1.5rem] font-semibold md:pl-10">
+              {navLinks.map(({ id, name, link }) => (
+                <li
+                  key={id}
+                  className={`border-b-2  ${pathname === link ? "border-b-black" : "border-b-transparent hover:border-b-black"}`}
+                >
+                  <Link to={link} className="text-md tracking-wide">
+                    {name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {isAuth ? (
+            <div
+              id="logged"
+              className="hidden w-full  md:flex md:flex-row md:space-x-4 items-center h-full md:gap-y-0 justify-end"
+            >
+              <div className="font-dm-sans font-bold">lalallal ada</div>
+              <Dropdown placement="bottom-end">
+                <MenuHandler>
+                  <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
+                </MenuHandler>
+                <MenuList className="flex flex-col space-y-2 rounded-none lg:w-[240px] font-dm-sans">
+                  <a>Account</a>
+                  <a>Account</a>
+                  <a>Account</a>
+                </MenuList>
+              </Dropdown>
+            </div>
+          ) : (
+            <div id="not-logged" className="w-2/5 hidden md:flex ">
+              <div className="flex md:flex-row md:gap-10 items-center w-full h-full md:gap-y-0 text-[1.5rem] font-semibold justify-end md:pr-10">
+                <div
+                  onClick={() => setAuth(true)}
+                  className="border-b-2 border-transparent hover:border-b-black hover:border-b-2 transition duration-100 cursor-pointer"
+                >
+                  <Link to="/login">Login</Link>
+                </div>
+                <div className="hover:bg-black/80 transition duration-100 cursor-pointer border  bg-black text-white px-[56px] py-[9px]">
+                  <Link to="/register">Register</Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        {isAuth ? (
-          <div
-            id="logged"
-            className="w-2/5 hidden md:flex md:flex-row md:gap-10 items-center h-full md:gap-y-0 justify-end md:pr-10"
-          >
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
-              <IoMdNotificationsOutline size={40} />
-            </div>
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer text-[1.5rem]">
-              User Name
-            </div>
-            <div className="hover:translate-y-[-3px] transition duration-100 cursor-pointer">
-              <RiArrowDropDownLine size={40} />
-            </div>
-          </div>
-        ) : (
-          <div id="not-logged" className="w-2/5 hidden md:flex ">
-            <div className="flex md:flex-row md:gap-10 items-center w-full h-full md:gap-y-0 text-[1.5rem] font-semibold justify-end md:pr-10">
-              <div
-                onClick={() => setAuth(true)}
-                className="border-b-2 border-transparent hover:border-b-black hover:border-b-2 transition duration-100 cursor-pointer"
-              >
-                <Link to="/login">Login</Link>
-              </div>
-              <div className="hover:bg-black/80 transition duration-100 cursor-pointer border  bg-black text-white px-[56px] py-[9px]">
-                <Link to="/register">Register</Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div onClick={() => setNav(!nav)} id="hamburger-button" className=" self-end mr-10 md:hidden">
-          {nav ? <FaTimes size={30} /> : <FaBars size={30} />}
+        <div onClick={() => setNav(!nav)} id="hamburger-button" className="inline-flex items-center mr-10 md:hidden">
+          {nav ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </div>
       </div>
       {nav && (
