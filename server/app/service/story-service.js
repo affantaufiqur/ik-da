@@ -69,6 +69,32 @@
             }
             return listStories;
         }
+        async getStoryById(storyId) {
+            const story = await prisma.story.findUnique({
+            where: {
+                id: storyId,
+            },
+            include: {
+                author: {
+                select: {
+                    name: true,
+                }
+                },
+                genre: {
+                select: {
+                    name: true,
+                }
+                },
+                chapters: {
+                    select: {
+                        id: true,
+                        title: true
+                    }
+                }
+            },
+            });
+            return story;
+        }
     }
 
     export default new Story();

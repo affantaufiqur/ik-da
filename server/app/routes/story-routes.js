@@ -2,7 +2,6 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware/auth-middleware.js";
 import { authorOnChangeMiddleware } from "../middleware/story-middleware.js";
 import storyService from "../service/story-service.js";
-import prisma from "../prisma.js";
 
 const routes = Router();
 
@@ -18,7 +17,14 @@ routes.get("/stories", async (req, res) => {
 });
 
 routes.get("/stories/:storyId", async (req, res) => {
-  res.json({ message: "Route get detail stories" });
+  try {
+    const { storyId } = req.params;
+    const story = await storyService.getStoryById(storyId);
+    res.json(story);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 routes.post("/stories", authMiddleware, async (req, res) => {
