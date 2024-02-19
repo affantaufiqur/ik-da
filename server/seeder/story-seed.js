@@ -14,16 +14,16 @@ async function main() {
                 title: faker.lorem.sentence(),
                 synopsis: faker.lorem.paragraph(),
                 author_id: user[Math.floor(Math.random() * user.length)].id,
-                genre_id: genre[Math.floor(Math.random() * genre.length)].id
-            }
+                genre_id: genre[Math.floor(Math.random() * genre.length)].id,
+            },
         });
     }
 }
 
 main()
-  .catch((e) => {
-    throw e;
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+    .catch((e) => {
+        throw e;
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
