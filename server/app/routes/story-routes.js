@@ -10,6 +10,9 @@ routes.get("/stories", async (req, res) => {
   try {
     const { page, search, popular, direction } = req.query;
     const stories = await storyService.getListStory(Number(page), search, popular === 'true', direction);
+    if (stories.data.length < 1) {
+      return res.status(404).json({ message: "Stories not found" });
+    }
     res.json(stories);
   } catch(err) {
     console.log(err)
@@ -21,6 +24,9 @@ routes.get("/stories/:storyId", async (req, res) => {
   try {
     const { storyId } = req.params;
     const story = await storyService.getStoryById(storyId);
+    if (!story) {
+      return res.status(404).json({ message: "Story not found" });
+    }
     res.json(story);
   } catch (err) {
     console.log(err);
@@ -47,6 +53,14 @@ routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async 
 });
 
 routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async (req, res) => {
+  try {
+    const { storyId } = req.params;
+    const story = await storyService.deleteStory(storyId);
+    res.json({ message: "Delete story successfully", story});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
   res.json({ message: "Route delete stories" });
 });
 

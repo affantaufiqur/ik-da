@@ -112,6 +112,13 @@
             });
             return story;
         }
+        async deleteStory(storyId) {
+            await prisma.upvote.deleteMany({where: {story_id: storyId}});
+            await prisma.bookmark.deleteMany({where: {story_id: storyId}});
+            await prisma.chapter.deleteMany({where: {story_id: storyId}});
+            const story = await prisma.story.delete({where: {id: storyId}});
+            return story;
+        }
     }
 
     export default new Story();
