@@ -112,6 +112,15 @@
             });
             return story;
         }
+        async updateStory(storyId, data) {
+            const story = await prisma.story.update({
+                where: {
+                    id: storyId,
+                },
+                data: { ...data },
+            });
+            return story;
+        }
         async deleteStory(storyId) {
             await prisma.upvote.deleteMany({where: {story_id: storyId}});
             await prisma.bookmark.deleteMany({where: {story_id: storyId}});

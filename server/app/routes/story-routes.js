@@ -49,7 +49,18 @@ routes.post("/stories", authMiddleware, async (req, res) => {
 });
 
 routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async (req, res) => {
-  res.json({ message: "Route update stories" });
+  try {
+    const { storyId } = req.params;
+    const updateData = req.body;
+    const story = await storyService.updateStory(storyId, updateData);
+    if (!story) {
+      return res.status(400).json({ message: "Story not found" });
+    }
+    res.json({ message: "Update story successfully", story });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async (req, res) => {
