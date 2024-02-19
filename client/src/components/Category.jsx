@@ -1,7 +1,7 @@
 const dummy = ["Action", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
 export default function Category() {
   return (
-    <div className="flex space-x-4 overflow-x-hidden font-dm-sans text-primary md:overflow-hidden">
+    <div className="no-scrollbar flex space-x-4 overflow-x-scroll font-dm-sans text-primary md:overflow-hidden">
       {dummy.map((item) => (
         <button
           type="button"

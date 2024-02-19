@@ -25,7 +25,7 @@ function Navbar() {
   const location = useLocation();
   const { pathname } = location;
   const [nav, setNav] = useState(false);
-  const [isAuth, setAuth] = useState(true);
+  const [isAuth, setAuth] = useState(false);
 
   return (
     <>
@@ -35,14 +35,14 @@ function Navbar() {
           className="flex w-full flex-col items-center gap-y-3 py-5 font-dm-display text-primary md:h-[111px] md:flex-row md:gap-y-0 md:py-0"
         >
           <div id="navigation" className="hidden h-full w-full md:flex">
-            <ul className="flex h-full w-full items-center space-x-4  text-[1.5rem] font-semibold ">
+            <ul className="flex h-full w-full items-center space-x-8  text-[1.5rem] font-semibold ">
               {navLinks.map(({ id, name, link }) => (
                 <li
                   key={id}
                   className={`border-b-2  ${pathname === link ? "border-b-black" : "border-b-transparent hover:border-b-black"}`}
                 >
                   <Link to={link} className="text-md tracking-wide">
-                    {name}
+                    {name.toUpperCase()}
                   </Link>
                 </li>
               ))}
@@ -72,10 +72,10 @@ function Navbar() {
                   onClick={() => setAuth(true)}
                   className="cursor-pointer border-b-2 border-transparent transition duration-100 hover:border-b-2 hover:border-b-black"
                 >
-                  <Link to="/login">Login</Link>
+                  <Link to="/login">LOGIN</Link>
                 </div>
                 <div className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80">
-                  <Link to="/register">Register</Link>
+                  <Link to="/register">REGISTER</Link>
                 </div>
               </div>
             </div>
