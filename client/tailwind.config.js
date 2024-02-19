@@ -11,6 +11,7 @@ const config = {
       },
       colors: {
         primary: "#222222",
+        line: "#5E5E5E",
       },
     },
   },

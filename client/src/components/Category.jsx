@@ -1,11 +1,11 @@
-const dummy = ["Action", "Fantasy", "Horror", "Sci-Fi"];
+const dummy = ["Action", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
 export default function Category() {
   return (
-    <div className="flex space-x-4 font-dm-sans text-primary">
+    <div className="flex space-x-4 overflow-x-hidden font-dm-sans text-primary md:overflow-hidden">
       {dummy.map((item) => (
         <button
           type="button"
-          className="border-[#EAEAEA] font-medium hover:bg-black hover:text-white py-2 transition-all duration-100 px-6 inline-flex items-center gap-x-2 text-sm border-2"
+          className="inline-flex items-center gap-x-2 text-nowrap border-2 border-line px-6 py-2 text-sm font-medium transition-all duration-100 hover:bg-black hover:text-white md:text-base"
           key={item}
         >
           {item}
