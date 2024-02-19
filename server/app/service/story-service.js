@@ -12,12 +12,8 @@
             }
             if (popular === true) {
                 orderBy = {
-                    upvote: direction === 'desc' ? 'desc' : 'asc',
-                };
-                } else {
-                orderBy = {
-                    created_at: direction === 'desc' ? 'desc' : 'asc',
-                };
+                    upvote: direction === 'asc' ? 'asc' : 'desc',
+                }; 
             }
             const whereCondition = search ? {
             OR: [
@@ -53,7 +49,9 @@
             },
 
             });
-            const totalCount = await prisma.story.count();
+            const totalCount = await prisma.story.count({
+                where: whereCondition,
+            });
             const totalPage = Math.ceil(totalCount / limit);
             const nextPage = page < totalPage ? page + 1 : null;
             const prevPage = page > 1 ? page - 1 : null;
@@ -92,6 +90,18 @@
                     }
                 }
             },
+            });
+            return story;
+        }
+        async createStory(data) {
+            const story = await prisma.story.create({
+                data: {
+                    title: data.title,
+                    synopsis: data.synopsis,
+                    genre_id: data.genreId,
+                    author_id: data.authorId,
+                    status: data.status,
+                },
             });
             return story;
         }
