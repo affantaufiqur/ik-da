@@ -27,6 +27,13 @@
                     contains: search,
                     }
                 }
+                },
+                {
+                author: {
+                    name: {
+                        contains: search,
+                    }
+                }
                 }
             ]
             } : {};
