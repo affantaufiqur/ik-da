@@ -4,10 +4,11 @@ import genreService from "../service/genre-service.js";
 
 const routes = Router();
 
-routes.get("/genres", authMiddleware, async (req, res) => {
+routes.get("/genres", async (req, res) => {
     try {
-        const genres = await genreService.getAllGenre();
-        if (genres.length < 1) {
+        const { page } = req.query;
+        const genres = await genreService.getAllGenre(Number(page));
+        if (genres.data.length < 1) {
             return res.status(404).json({ message: "Genres not found" });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -21,9 +22,13 @@ routes.get("/genres", authMiddleware, async (req, res) => {
 routes.get("/genres/:genreId", async (req, res) => {
     try {
         const { genreId } = req.params;
-        const genre = await genreService.getGenreById(genreId);
+        const { page } = req.query;
+        const genre = await genreService.getGenreById(genreId, Number(page));
         if (!genre) {
             return res.status(404).json({ message: "Genre not found" });
+        }
+        if (genre.genre.stories.length < 1) {
+            return res.status(404).json({ message: "Stories not found" });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(genre);
