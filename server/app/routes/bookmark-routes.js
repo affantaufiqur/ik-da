@@ -13,6 +13,7 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
         if (bookmarks.length < 1) {
             return res.status(404).json({ message: "Bookmarks is empty" });
         }
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ bookmarks });
     } catch (err) {
         console.log(err);
@@ -24,6 +25,7 @@ routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
     try {        
         // @ts-ignore
         const message = req.isMark ? "Add to Bookmark successfully" : "Remove from Bookmark successfully";
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message });
     } catch (err) {
         console.log(err);

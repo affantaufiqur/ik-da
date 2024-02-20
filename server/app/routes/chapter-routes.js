@@ -11,14 +11,17 @@ routes.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
 });
 
 routes.post("/stories/:storyId/chapters", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ message: "Route create stories chapters" });
 });
 
 routes.put("/stories/:storyId/chapters/:chapterId", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ message: "Route update stories chapters" });
 });
 
 routes.delete("/stories/:storyId/chapters/:chapterId", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ message: "Route delete stories chapters" });
 });
 

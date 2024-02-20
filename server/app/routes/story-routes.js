@@ -28,6 +28,7 @@ routes.get("/stories/:storyId", async (req, res) => {
         if (!story) {
             return res.status(404).json({ message: "Story not found" });
         }
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(story);
     } catch (err) {
         console.log(err);
@@ -42,6 +43,7 @@ routes.get("/stories/author/:authorId", async (req, res) => {
     if (stories.length < 1) {
       return res.status(404).json({ message: "Stories not found" });
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json(stories);
   } catch (err) {
     console.log(err);
@@ -56,6 +58,7 @@ routes.post("/stories", authMiddleware, async (req, res) => {
             return res.status(400).json({ message: "Error", reason: error });
         }
         const story = await storyService.createStory(value);
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message: "Create story successfully", story });
     } catch (err) {
         console.log(err);
@@ -75,6 +78,7 @@ routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async 
     if (!story) {
       return res.status(400).json({ message: "Story not found" });
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ message: "Update story successfully", story });
   } catch (err) {
     console.log(err);
@@ -86,6 +90,7 @@ routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, asy
     try {
         const { storyId } = req.params;
         const story = await storyService.deleteStory(storyId);
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message: "Delete story successfully", story });
     } catch (err) {
         console.log(err);
