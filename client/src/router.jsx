@@ -39,6 +39,7 @@ export const router = createBrowserRouter([
       if (token) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
