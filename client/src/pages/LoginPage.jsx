@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import FormWrapper from "../components/ui/FormWrapper";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { useForm } from "@mantine/form";
 import * as yup from "yup";
@@ -66,7 +66,7 @@ const LoginPage = () => {
             </label>
             <input
               name={field}
-              className={`w-full border-2 border-line/80 px-4 py-2 focus:border-primary focus:outline-none ${form.errors[field] ? "border-red-800" : ""}`}
+              className={`form-input-normal ${form.errors[field] ? "border-red-800" : ""}`}
               type={`${field === "password" ? "password" : "text"}`}
               placeholder={field}
               {...form.getInputProps(field)}
@@ -74,11 +74,7 @@ const LoginPage = () => {
             <p className="text-sm text-red-800">{form.errors[field]}</p>
           </FormWrapper>
         ))}
-        <button
-          type="submit"
-          className="border-2 border-transparent bg-black p-3 font-dm-display text-xl text-white  hover:border-black hover:bg-white hover:text-black"
-          disabled={submit}
-        >
+        <button type="submit" className="btn-primary" disabled={submit}>
           {submit ? <Loader className="inline-flex h-5 w-5 animate-spin justify-center" /> : "Login"}
         </button>
         {status ? <p className="text-red-800">{status}</p> : ""}
@@ -88,11 +84,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-function FormWrapper({ children }) {
-  return <div className="flex flex-col space-y-3">{children}</div>;
-}
-
-FormWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
-};
