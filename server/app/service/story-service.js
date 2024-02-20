@@ -3,7 +3,7 @@
     class Story {
         async getListStory(pageNumber, search, popular, direction) {
             const page = pageNumber || 1;
-            const limit = 10;
+            const limit = 100;
             const offset = (page - 1) * limit;
             let orderBy = {};
 
@@ -14,6 +14,10 @@
                 orderBy = {
                     upvote: direction === 'asc' ? 'asc' : 'desc',
                 }; 
+            } else {
+                orderBy = {
+                    created_at: direction === 'asc' ? 'asc' : 'desc',
+                }
             }
             const whereCondition = search ? {
             OR: [
