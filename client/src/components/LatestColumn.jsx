@@ -6,7 +6,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 
 const LatestColumn = () => {
   const selectedGenre= useSelector((state) => state.genre.selectedGenre)
-const [isLoading,data, error] = useFetch("fetchLatest", `stories?direction=asc${selectedGenre ? `&search=${selectedGenre}` : ""}`);
+const [isLoading,data, error] = useFetch("fetchLatest", `stories?direction=desc${selectedGenre ? `&search=${selectedGenre}` : ""}`);
 
 if (isLoading) return <p>Loading...</p>;
 if (error) return <p>Error</p>;
