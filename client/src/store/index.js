@@ -15,18 +15,15 @@ const hamburgerSlice = createSlice({
 })
 
 const initialGenreState = {
-    selectedGenres: []
+    selectedGenre: ""
 }
 
 const genreSlice = createSlice({
     name: "genre",
     initialState: initialGenreState,
     reducers: {
-        addGenre: (state, action) => {
-            state.selectedGenres.push(action.payload)
-        },
-        removeGenre: (state, action) => {
-            state.selectedGenres = state.selectedGenres.filter(genre => genre !== action.payload)
+        setGenre: (state,action) => {
+            state.selectedGenre = action.payload
         }
     }
 
