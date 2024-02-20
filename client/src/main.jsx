@@ -5,6 +5,9 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import * as Sentry from "@sentry/react";
 
+import { Provider } from "react-redux";
+import  store  from "./store/index.js";
+
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
@@ -22,6 +25,8 @@ Sentry.init({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <Provider store={store}>
     <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 );
