@@ -41,6 +41,7 @@ routes.post("/register", async (req, res) => {
             secure: process.env.NODE_ENV === "development",
             sameSite: "none",
         });
+        res.setHeader("Access-Control-Allow-Origin", "*");
         return res.status(200).json({ message: "success", token: signedUser });
     } catch (err) {
         console.log(err);
@@ -57,6 +58,7 @@ routes.get("/current-user", (req, res) => {
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
     return jwt.verify(token, "secret", (err, data) => {
         if (err) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -96,6 +98,7 @@ routes.post("/login", async (req, res) => {
             secure: process.env.NODE_ENV === "development",
             sameSite: "strict",
         });
+        res.setHeader("Access-Control-Allow-Origin", "*");
         return res.status(200).json({ message: "login success", token: signedUser });
     } catch (err) {
         return res.status(500).json({ message: "Error", reason: err });

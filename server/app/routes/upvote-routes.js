@@ -8,6 +8,7 @@ routes.post("/likes-story", authMiddleware, checkBookLike, async (req, res) => {
     try {
         // @ts-ignore
         const message = req.isLiked ? "Book liked" : "Book unliked";
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message });
     } catch (err) {
         console.log(err)
@@ -16,6 +17,7 @@ routes.post("/likes-story", authMiddleware, checkBookLike, async (req, res) => {
 });
 
 routes.delete("/likes-story/:likeId", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ message: "Route remove like book" });
 });
 
