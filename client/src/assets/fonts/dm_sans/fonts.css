@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "DM Sans";
+  src: url("./DM_Sans.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "DM Serif Display";
+  src: url("./DMSerifDisplay.ttf") format("ttf");
+}
