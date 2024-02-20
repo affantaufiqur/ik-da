@@ -14,6 +14,10 @@
                 orderBy = {
                     upvote: direction === 'asc' ? 'asc' : 'desc',
                 }; 
+            } else {
+                orderBy = {
+                    created_at: direction === 'asc' ? 'asc' : 'desc',
+                }
             }
             const whereCondition = search ? {
             OR: [
