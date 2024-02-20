@@ -28,6 +28,11 @@ routes.post("/register", async (req, res) => {
                 role_id: roleId.id,
             },
         });
+        await prisma.profile.create({
+            data: {
+                user_id: insertUser.id,
+            }
+        });
         const userData = {
             id: insertUser.id,
             email: insertUser.email,
