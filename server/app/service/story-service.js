@@ -108,6 +108,7 @@
                     genre_id: data.genreId,
                     author_id: data.authorId,
                     status: data.status,
+                    cover_img: data.image
                 },
             });
             return story;
