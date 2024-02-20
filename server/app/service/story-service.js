@@ -3,7 +3,7 @@
     class Story {
         async getListStory(pageNumber, search, popular, direction) {
             const page = pageNumber || 1;
-            const limit = 10;
+            const limit = 100;
             const offset = (page - 1) * limit;
             let orderBy = {};
 
@@ -14,6 +14,10 @@
                 orderBy = {
                     upvote: direction === 'asc' ? 'asc' : 'desc',
                 }; 
+            } else {
+                orderBy = {
+                    created_at: direction === 'asc' ? 'asc' : 'desc',
+                }
             }
             const whereCondition = search ? {
             OR: [
@@ -100,6 +104,26 @@
             });
             return story;
         }
+        async getStoryByAuthor(authorId) {
+            const stories = await prisma.story.findMany({
+            where: {
+                author_id: authorId,
+            },
+            include: {
+                author: {
+                select: {
+                    name: true,
+                }
+                },
+                genre: {
+                select: {
+                    name: true,
+                }
+                },
+            },
+            });
+            return stories;
+        }
         async createStory(data) {
             const story = await prisma.story.create({
                 data: {
@@ -108,6 +132,7 @@
                     genre_id: data.genreId,
                     author_id: data.authorId,
                     status: data.status,
+                    cover_img: data.image
                 },
             });
             return story;

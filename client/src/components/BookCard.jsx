@@ -1,12 +1,18 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-export default function BookCard({ renderFn }) {
+export default function BookCard({ id, title, chapter, imgUrl, renderFn }) {
   return (
     <div className="col-span-3 flex h-[700px] flex-col space-y-2">
-      <div className="h-full w-full bg-line" />
+      <img src={imgUrl} alt={title} className="h-full w-full object-cover" />
       <div className="flex flex-col space-y-1">
-        <h3 className="font-dm-display text-lg font-medium tracking-wide md:text-2xl">Alone</h3>
-        <h6 className="font-dm-sans text-sm tracking-wide text-[#5E5E5E] md:text-base">Chapter 21</h6>
+        <Link
+          to={`/story/${id}`}
+          className="truncate font-dm-display text-lg font-medium tracking-wide hover:underline md:text-2xl"
+        >
+          {title}
+        </Link>
+        <h6 className="font-dm-sans text-sm tracking-wide text-[#5E5E5E] md:text-base">{chapter}</h6>
         {renderFn()}
       </div>
     </div>
@@ -14,5 +20,9 @@ export default function BookCard({ renderFn }) {
 }
 
 BookCard.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  chapter: PropTypes.string.isRequired,
+  imgUrl: PropTypes.string.isRequired,
   renderFn: PropTypes.func.isRequired,
 };

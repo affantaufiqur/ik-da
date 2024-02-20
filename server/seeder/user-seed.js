@@ -8,6 +8,9 @@ export const Role = {
 };
 
 async function main() {
+    await prisma.bookmark.deleteMany();
+    await prisma.upvote.deleteMany();
+    await prisma.chapter.deleteMany();
     await prisma.story.deleteMany();
     await prisma.user.deleteMany();
     await prisma.role.deleteMany();

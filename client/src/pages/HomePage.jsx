@@ -2,8 +2,13 @@ import Banner from "../components/Banner.jsx";
 import BookCard from "../components/BookCard.jsx";
 import Search from "../components/Search.jsx";
 import Category from "../components/Category.jsx";
+import { useFetch } from "../hooks/fetch-hooks.js";
 
 const HomePage = () => {
+  const [isLoading, data, error] = useFetch("fetchStories", "stories");
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error</p>;
+  const getFourData = data.data.slice(0, 4);
   const progress = 35;
   return (
     <div className="pb-12">
@@ -19,21 +24,21 @@ const HomePage = () => {
           </div>
           <section className="mt-4">
             <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
-              <BookCard
-                renderFn={() => (
-                  <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                    <p>{progress}%</p>
-                  </div>
-                )}
-              />
-              <BookCard
-                renderFn={() => (
-                  <div className="w-1/3 bg-[#E2EFDE] p-2">
-                    <p className="text-sm font-bold text-primary md:text-base">23,593 Upvote</p>
-                  </div>
-                )}
-              />
+              {getFourData.map((item) => (
+                <BookCard
+                  key={item.id}
+                  id={item.id}
+                  title={item.title}
+                  imgUrl={item.cover_img}
+                  chapter={"chapter 21"}
+                  renderFn={() => (
+                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
+                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
+                      <p>{progress}%</p>
+                    </div>
+                  )}
+                />
+              ))}
             </div>
           </section>
         </section>
