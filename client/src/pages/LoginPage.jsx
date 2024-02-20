@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const schemaPage = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -14,6 +15,8 @@ const schemaPage = yup.object().shape({
 const LoginPage = () => {
   const [status, setStatus] = useState(null);
   const [submit, isSubmit] = useState(false);
+  const navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -41,7 +44,7 @@ const LoginPage = () => {
       }
       document.cookie = `token=${data.token}`;
       isSubmit(false);
-      return data;
+      return navigate("/");
     },
   });
   const fields = Object.keys(schemaPage.fields);
