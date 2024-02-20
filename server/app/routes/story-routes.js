@@ -34,6 +34,20 @@ routes.get("/stories/:storyId", async (req, res) => {
   }
 });
 
+routes.get("/stories/author/:authorId", async (req, res) => {
+  try {
+    const { authorId } = req.params;
+    const stories = await storyService.getStoryByAuthor(authorId);
+    if (stories.length < 1) {
+      return res.status(404).json({ message: "Stories not found" });
+    }
+    res.json(stories);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 routes.post("/stories", authMiddleware, async (req, res) => {
   try {
     const { error, value } = createStorySchema.validate(req.body);

@@ -100,6 +100,26 @@
             });
             return story;
         }
+        async getStoryByAuthor(authorId) {
+            const stories = await prisma.story.findMany({
+            where: {
+                author_id: authorId,
+            },
+            include: {
+                author: {
+                select: {
+                    name: true,
+                }
+                },
+                genre: {
+                select: {
+                    name: true,
+                }
+                },
+            },
+            });
+            return stories;
+        }
         async createStory(data) {
             const story = await prisma.story.create({
                 data: {
