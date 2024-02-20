@@ -5,7 +5,7 @@ import storyRoutes from "./app/routes/story-routes.js";
 import chapterRoutes from "./app/routes/chapter-routes.js";
 import genreRoutes from "./app/routes/genre-routes.js";
 import bookmarkRoutes from "./app/routes/bookmark-routes.js";
-import booklikeRoutes from "./app/routes/booklike-routes.js";
+import upvoteRoutes from "./app/routes/upvote-routes.js";
 
 const app = express();
 const port = 3000;
@@ -22,6 +22,6 @@ app.use(storyRoutes);
 app.use(chapterRoutes);
 app.use(genreRoutes);
 app.use(bookmarkRoutes);
-app.use(booklikeRoutes);
+app.use(upvoteRoutes);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

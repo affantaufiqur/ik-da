@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware/auth-middleware.js";
 import { authorOnChangeMiddleware } from "../middleware/story-middleware.js";
 import storyService from "../service/story-service.js";
-import { createStorySchema } from "../validation/story-validataion.js";
+import { createStorySchema, updateStorySchema } from "../validation/story-validataion.js";
 
 const routes = Router();
 
@@ -35,6 +35,20 @@ routes.get("/stories/:storyId", async (req, res) => {
     }
 });
 
+routes.get("/stories/author/:authorId", async (req, res) => {
+  try {
+    const { authorId } = req.params;
+    const stories = await storyService.getStoryByAuthor(authorId);
+    if (stories.length < 1) {
+      return res.status(404).json({ message: "Stories not found" });
+    }
+    res.json(stories);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+})
+
 routes.post("/stories", authMiddleware, async (req, res) => {
     try {
         const { error, value } = createStorySchema.validate(req.body);
@@ -50,18 +64,22 @@ routes.post("/stories", authMiddleware, async (req, res) => {
 });
 
 routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async (req, res) => {
-    try {
-        const { storyId } = req.params;
-        const updateData = req.body;
-        const story = await storyService.updateStory(storyId, updateData);
-        if (!story) {
-            return res.status(400).json({ message: "Story not found" });
-        }
-        res.json({ message: "Update story successfully", story });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+  try {
+    const { storyId } = req.params;
+    const updateData = req.body;
+    const { error, value } = updateStorySchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: "Error", reason: error });
     }
+    const story = await storyService.updateStory(storyId, value);
+    if (!story) {
+      return res.status(400).json({ message: "Story not found" });
+    }
+    res.json({ message: "Update story successfully", story });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async (req, res) => {

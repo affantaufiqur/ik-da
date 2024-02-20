@@ -14,12 +14,4 @@ routes.get("/user/:userId/stories", async (req, res) => {
     res.json({ message: "Route get user stories" });
 });
 
-routes.get("/user/:userId/bookmarks", async (req, res) => {
-    res.json({ message: "Route get user bookmarks" });
-});
-
-routes.get("/user/:userId/book-likes", async (req, res) => {
-    res.json({ message: "Route get user book likes" });
-});
-
 export default routes;
