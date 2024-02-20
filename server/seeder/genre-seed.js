@@ -5,19 +5,28 @@ async function main() {
     await prisma.story.deleteMany();
     await prisma.genre.deleteMany();
 
-    for (let i = 0; i <= 5; i++) {    
+    for (let i = 0; i <= 5; i++) {
+        let genreName;
+        do {
+            genreName = faker.music.genre();
+        } while (await prisma.genre.findUnique({
+            where: {
+                name: genreName,
+            },
+        }));
+    
         await prisma.genre.create({
             data: {
-                name: faker.music.genre(),
-            }
+                name: genreName,
+            },
         });
     }
 }
 
 main()
-  .catch((e) => {
-    throw e;
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+    .catch((e) => {
+        throw e;
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
