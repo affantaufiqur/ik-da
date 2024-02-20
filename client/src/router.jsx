@@ -1,5 +1,6 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import App from "./App";
+import { getTokenFromCookies } from "./shared/token.js";
 import HomePage from "./pages/HomePage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
 import LatestPage from "./pages/LatestPage.jsx";
@@ -33,9 +34,21 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    loader: () => {
+      const token = getTokenFromCookies();
+      if (token) {
+        return redirect("/");
+      }
+    },
   },
   {
     path: "/register",
     element: <RegisterPage />,
+    loader: () => {
+      const token = getTokenFromCookies();
+      if (token) {
+        return redirect("/");
+      }
+    },
   },
 ]);
