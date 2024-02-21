@@ -19,6 +19,14 @@ routes.post("/register", async (req, res) => {
                 name: "user",
             },
         });
+        const checkIfUserExist = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (checkIfUserExist) {
+            return res.status(400).json({ message: "User already exist" });
+        }
         const hashPassword = bcrypt.hashSync(password, Number(process.env.BCRYPT_ROUND));
         const insertUser = await prisma.user.create({
             data: {
@@ -27,6 +35,11 @@ routes.post("/register", async (req, res) => {
                 name,
                 role_id: roleId.id,
             },
+        });
+        await prisma.profile.create({
+            data: {
+                user_id: insertUser.id,
+            }
         });
         const userData = {
             id: insertUser.id,

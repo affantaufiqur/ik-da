@@ -1,16 +1,24 @@
-import { useFetch } from "../hooks/fetch-hooks"
-import BookCard from "../components/BookCard";
-const PopularPage = () => {
-  const [isLoading, data, error] = useFetch("fetchPopular", "stories?popular=true")
-  if(isLoading) return <p>Loading...</p>
-  if (error) return <p>Error</p>
-  const getFourData = data.data.slice(0, 4)
-    
-  return(
-    <section className="mt-12">
+import BookCard from "./BookCard";
+
+import { useSelector } from "react-redux";
+import { useFetch } from "../hooks/fetch-hooks";
+
+
+const PopularColumn = () => {
+  const selectedGenre= useSelector((state) => state.genre.selectedGenre)
+const [isLoading,data, error] = useFetch("fetchPopular", `stories?popular=true${selectedGenre ? `&search=${selectedGenre}` : ""}`);
+
+if (isLoading) return <p>Loading...</p>;
+if (error) return <p>Error</p>;
+const getFourData = data.data.slice(0, 4);
+const progress = 35;
+
+  return (
+    <div className="px-4 md:px-12">
+        <section className="mt-12">
           <div className="flex flex-col space-y-1 text-primary">
             <h1 className="font-dm-display text-2xl font-medium tracking-wide">Popular</h1>
-            <p className="font-dm-sans text-base tracking-wide">Books that are populer right now</p>
+            <p className="font-dm-sans text-base tracking-wide">This is what popular right now ;)</p>
           </div>
           <section className="mt-4">
             <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
@@ -31,8 +39,9 @@ const PopularPage = () => {
               ))}
             </div>
           </section>
-          </section>
+        </section>
+      </div>
   )
-};
+}
 
-export default PopularPage;
+export default PopularColumn

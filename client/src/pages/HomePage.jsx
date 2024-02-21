@@ -3,13 +3,18 @@ import BookCard from "../components/BookCard.jsx";
 import Search from "../components/Search.jsx";
 import Category from "../components/Category.jsx";
 import { useFetch } from "../hooks/fetch-hooks.js";
+import PopularColumn from "../components/PopularColumn.jsx";
+import LatestColumn from "../components/LatestColumn.jsx";
 
 const HomePage = () => {
   const [isLoading, data, error] = useFetch("fetchStories", "stories");
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
   const progress = 35;
+
+
   return (
     <div className="pb-12">
       <div className="px-4 md:px-12">
@@ -46,6 +51,8 @@ const HomePage = () => {
       <div className="mt-24">
         <Banner />
       </div>
+      <PopularColumn/>
+      <LatestColumn/>
     </div>
   );
 };
