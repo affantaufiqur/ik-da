@@ -10,7 +10,7 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
         // @ts-ignore
         const user = req.user;
         const bookmarks = await bookmarkService.getBookmarks(user.id);
-        if (bookmarks.length < 1) {
+        if (bookmarks.data.length < 1) {
             return res.status(404).json({ message: "Bookmarks is empty" });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
