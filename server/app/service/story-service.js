@@ -139,7 +139,11 @@
                 chapters: {
                     select: {
                         id: true,
-                        title: true
+                        title: true,
+                        created_at: true
+                    },
+                    orderBy: {
+                        created_at: 'desc'
                     }
                 }
             },
