@@ -1,10 +1,14 @@
-import PropTypes from "prop-types";
+import { authAction } from "../store/index";
+import FormWrapper from "../components/ui/FormWrapper";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { useForm } from "@mantine/form";
 import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "../shared/fetch";
 
 const schemaPage = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -14,6 +18,10 @@ const schemaPage = yup.object().shape({
 const LoginPage = () => {
   const [status, setStatus] = useState(null);
   const [submit, isSubmit] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth.currentUser);
+
   const form = useForm({
     initialValues: {
       email: "",
@@ -33,7 +41,6 @@ const LoginPage = () => {
         },
       });
       const data = await res.json();
-      console.log(res);
       if (res.status !== 200) {
         setStatus(data.message);
         isSubmit(false);
@@ -41,7 +48,21 @@ const LoginPage = () => {
       }
       document.cookie = `token=${data.token}`;
       isSubmit(false);
-      return data;
+      const getCurrentUser = await fetchData("current-user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      if (getCurrentUser.message) {
+        setStatus("Something went wrong, please try again");
+        return;
+      }
+      console.log(getCurrentUser);
+      dispatch(authAction.currentUser(getCurrentUser));
+      console.log("current user: ", auth);
+      return;
+      // return navigate("/");
     },
   });
   const fields = Object.keys(schemaPage.fields);
@@ -66,7 +87,7 @@ const LoginPage = () => {
             </label>
             <input
               name={field}
-              className={`w-full border-2 border-line/80 px-4 py-2 focus:border-primary focus:outline-none ${form.errors[field] ? "border-red-800" : ""}`}
+              className={`form-input-normal ${form.errors[field] ? "border-red-800" : ""}`}
               type={`${field === "password" ? "password" : "text"}`}
               placeholder={field}
               {...form.getInputProps(field)}
@@ -74,11 +95,7 @@ const LoginPage = () => {
             <p className="text-sm text-red-800">{form.errors[field]}</p>
           </FormWrapper>
         ))}
-        <button
-          type="submit"
-          className="border-2 border-transparent bg-black p-3 font-dm-display text-xl text-white  hover:border-black hover:bg-white hover:text-black"
-          disabled={submit}
-        >
+        <button type="submit" className="btn-primary" disabled={submit}>
           {submit ? <Loader className="inline-flex h-5 w-5 animate-spin justify-center" /> : "Login"}
         </button>
         {status ? <p className="text-red-800">{status}</p> : ""}
@@ -88,11 +105,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-function FormWrapper({ children }) {
-  return <div className="flex flex-col space-y-3">{children}</div>;
-}
-
-FormWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
-};
