@@ -80,11 +80,11 @@ function Navbar() {
                 <MenuHandler>
                   <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
                 </MenuHandler>
-                <MenuList className="flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
-                  <Link to="/profile" className="hover:underline">
+                <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                  <Link to="/profile" className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
                     Profile
                   </Link>
-                  <button onClick={logout} className="hover:underline">
+                  <button onClick={logout} className="inline-flex justify-start p-1.5 hover:bg-gray-100">
                     Logout
                   </button>
                 </MenuList>
