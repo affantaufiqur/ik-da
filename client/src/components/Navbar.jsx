@@ -1,11 +1,11 @@
-
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { authAction, hamburgerAction } from "../store/index.js";
+import { getTokenFromCookies } from "../shared/token.js";
+import { useFetch } from "../hooks/fetch-hooks.js";
 
 const navLinks = [
   {
@@ -29,21 +29,29 @@ function Navbar() {
   const location = useLocation();
   const { pathname } = location;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
 
-const menuHandler = () =>{
-  dispatch(hamburgerAction.click())
-}
+  //TODO: Use redux instead of this?
+  // const token = getTokenFromCookies();
+  // const [isLoading, data, error] = useFetch("fetchUser", `current-user`, {
+  //   method: "GET",
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+  const menuHandler = () => {
+    dispatch(hamburgerAction.click());
+  };
 
-const loginHandler = () =>{
-  dispatch(authAction.login())
-}
+  const loginHandler = () => {
+    dispatch(authAction.login());
+  };
 
-const logoutHandler = () =>{
-  dispatch(authAction.logout())
-}
+  const logoutHandler = () => {
+    dispatch(authAction.logout());
+  };
 
   return (
     <>
@@ -89,7 +97,7 @@ const logoutHandler = () =>{
                 <div
                   onClick={loginHandler}
                   className="cursor-pointer border-b-2 border-transparent transition duration-100 hover:border-b-2 hover:border-b-black"
-                > 
+                >
                   <Link to="/login">LOGIN</Link>
                 </div>
                 <div className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80">
@@ -115,10 +123,7 @@ const logoutHandler = () =>{
           {isAuth ? (
             <div className="flex flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold">
               <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">User Name</div>
-              <div
-                className="cursor-pointer transition duration-100 hover:translate-y-[-3px]"
-                onClick={logoutHandler}
-              >
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={logoutHandler}>
                 Log Out
               </div>
             </div>
@@ -127,8 +132,7 @@ const logoutHandler = () =>{
               id="not-logged"
               className="flex h-full w-full flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold"
             >
-              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]"
-              onClick={loginHandler}>
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={loginHandler}>
                 <Link to="/login">Login</Link>
               </div>
               <div className="cursor-pointer border border-[#472316] bg-black px-[56px] py-[9px] text-white transition duration-100 hover:translate-y-[-3px]">
