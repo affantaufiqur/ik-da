@@ -78,10 +78,10 @@ function Navbar() {
                 <MenuHandler>
                   <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
                 </MenuHandler>
-                <MenuList className="flex flex-col space-y-2 rounded-none font-dm-sans lg:w-[240px]">
-                  <a>Account</a>
-                  <a>Account</a>
-                  <a>Account</a>
+                <MenuList className="flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                  <Link to="/profile" className="hover:underline">
+                    Profile
+                  </Link>
                 </MenuList>
               </Dropdown>
             </div>
