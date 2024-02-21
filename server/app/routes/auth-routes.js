@@ -40,7 +40,7 @@ routes.post("/register", async (req, res) => {
         await prisma.profile.create({
             data: {
                 user_id: insertUser.id,
-            }
+            },
         });
         const userData = {
             id: insertUser.id,
@@ -106,7 +106,7 @@ routes.post("/login", async (req, res) => {
             is_blocked: user.is_blocked,
             role_id: user.role_id,
         };
-        const signedUser = jwt.sign({ user: userData }, "secret");
+        const signedUser = jwt.sign({ user: userData }, "secret", { expiresIn: "30d" });
         res.cookie("token", signedUser, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "development",

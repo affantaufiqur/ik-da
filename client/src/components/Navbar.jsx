@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { Link, useLocation } from "react-router-dom";
+import { useRevalidator, Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { authAction, hamburgerAction } from "../store/index.js";
+import { hamburgerAction } from "../store/index.js";
 import { useFetchUser } from "../hooks/user-hooks.js";
 import { Loader } from "lucide-react";
+import { useCookies } from "react-cookie";
 
 const navLinks = [
   {
@@ -29,23 +30,24 @@ function Navbar() {
   const location = useLocation();
   const { pathname } = location;
   const [isLoading, data, error] = useFetchUser();
+  // eslint-disable-next-line no-unused-vars
+  const [_cookies, _setCookie, removeCookie] = useCookies(["token"]);
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  if (isLoading) return <Loader className="h-5 w-5" />;
-  if (error) return <p>error</p>;
+  // const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const validator = useRevalidator();
 
   const menuHandler = () => {
     dispatch(hamburgerAction.click());
   };
 
-  const loginHandler = () => {
-    dispatch(authAction.login());
-  };
+  async function logout() {
+    removeCookie("token");
+    return validator.revalidate();
+  }
 
-  const logoutHandler = () => {
-    dispatch(authAction.logout());
-  };
+  if (isLoading) return <Loader className="h-5 w-5" />;
+  if (error) return <p>error</p>;
 
   return (
     <>
@@ -78,25 +80,26 @@ function Navbar() {
                 <MenuHandler>
                   <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
                 </MenuHandler>
-                <MenuList className="flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
-                  <Link to="/profile" className="hover:underline">
+                <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                  <Link to="/profile" className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
                     Profile
                   </Link>
+                  <button onClick={logout} className="inline-flex justify-start p-1.5 hover:bg-gray-100">
+                    Logout
+                  </button>
                 </MenuList>
               </Dropdown>
             </div>
           ) : (
             <div id="not-logged" className="hidden w-2/5 md:flex ">
               <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0 md:pr-10">
-                <div
-                  onClick={loginHandler}
-                  className="cursor-pointer border-b-2 border-transparent transition duration-100 hover:border-b-2 hover:border-b-black"
+                <Link to="/login">LOGIN</Link>
+                <Link
+                  to="/register"
+                  className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80"
                 >
-                  <Link to="/login">LOGIN</Link>
-                </div>
-                <div className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80">
-                  <Link to="/register">REGISTER</Link>
-                </div>
+                  REGISTER
+                </Link>
               </div>
             </div>
           )}
@@ -114,26 +117,26 @@ function Navbar() {
               </li>
             ))}
           </ul>
-          {isAuth ? (
-            <div className="flex flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold">
-              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">User Name</div>
-              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={logoutHandler}>
-                Log Out
-              </div>
-            </div>
-          ) : (
-            <div
-              id="not-logged"
-              className="flex h-full w-full flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold"
-            >
-              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={loginHandler}>
-                <Link to="/login">Login</Link>
-              </div>
-              <div className="cursor-pointer border border-[#472316] bg-black px-[56px] py-[9px] text-white transition duration-100 hover:translate-y-[-3px]">
-                <Link to="/register">Register</Link>
-              </div>
-            </div>
-          )}
+          {/* {isAuth ? ( */}
+          {/*   <div className="flex flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold"> */}
+          {/*     <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">User Name</div> */}
+          {/*     <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={logoutHandler}> */}
+          {/*       Log Out */}
+          {/*     </div> */}
+          {/*   </div> */}
+          {/* ) : ( */}
+          {/*   <div */}
+          {/*     id="not-logged" */}
+          {/*     className="flex h-full w-full flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold" */}
+          {/*   > */}
+          {/*     <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={loginHandler}> */}
+          {/*       <Link to="/login">Login</Link> */}
+          {/*     </div> */}
+          {/*     <div className="cursor-pointer border border-[#472316] bg-black px-[56px] py-[9px] text-white transition duration-100 hover:translate-y-[-3px]"> */}
+          {/*       <Link to="/register">Register</Link> */}
+          {/*     </div> */}
+          {/*   </div> */}
+          {/* )} */}
         </div>
       )}
     </>

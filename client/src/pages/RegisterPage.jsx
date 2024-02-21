@@ -36,7 +36,8 @@ export default function RegisterPage() {
         setStatus(data.message);
         isSubmit(false);
       }
-      document.cookie = `token=${data.token}`;
+      const oneMonth = new Date(Date.now() + 60 * 60 * 24 * 30 * 1000);
+      document.cookie = `token=${data.token};expires=${oneMonth};path=/;`;
       isSubmit(false);
       return navigate("/");
     },
