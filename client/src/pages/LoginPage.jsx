@@ -46,7 +46,8 @@ const LoginPage = () => {
         isSubmit(false);
         return;
       }
-      document.cookie = `token=${data.token}`;
+      const oneMonth = new Date(Date.now() + 60 * 60 * 24 * 30 * 1000);
+      document.cookie = `token=${data.token};expires=${oneMonth};path=/;`;
       isSubmit(false);
       const getCurrentUser = await fetchData("current-user", {
         method: "GET",
