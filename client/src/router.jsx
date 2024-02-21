@@ -7,6 +7,7 @@ import LatestPage from "./pages/LatestPage.jsx";
 import RandomPage from "./pages/RandomPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,17 @@ export const router = createBrowserRouter([
       {
         path: "/random",
         element: <RandomPage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          return user;
+        },
       },
     ],
   },
