@@ -1,14 +1,14 @@
-import { authAction } from "../store/index";
-import FormWrapper from "../components/ui/FormWrapper";
-import { yupResolver } from "mantine-form-yup-resolver";
 import { useForm } from "@mantine/form";
-import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import { Loader } from "lucide-react";
+import { yupResolver } from "mantine-form-yup-resolver";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import * as yup from "yup";
+import FormWrapper from "../components/ui/FormWrapper";
 import { fetchData } from "../shared/fetch";
+import { authAction } from "../store/index";
 
 const schemaPage = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -20,7 +20,6 @@ const LoginPage = () => {
   const [submit, isSubmit] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth.currentUser);
 
   const form = useForm({
     initialValues: {
@@ -46,7 +45,8 @@ const LoginPage = () => {
         isSubmit(false);
         return;
       }
-      document.cookie = `token=${data.token}`;
+      const oneMonth = new Date(Date.now() + 60 * 60 * 24 * 30 * 1000);
+      document.cookie = `token=${data.token};expires=${oneMonth};path=/;`;
       isSubmit(false);
       const getCurrentUser = await fetchData("current-user", {
         method: "GET",
@@ -58,11 +58,9 @@ const LoginPage = () => {
         setStatus("Something went wrong, please try again");
         return;
       }
-      console.log(getCurrentUser);
       dispatch(authAction.currentUser(getCurrentUser));
-      console.log("current user: ", auth);
-      return;
-      // return navigate("/");
+      isSubmit(false);
+      return navigate("/");
     },
   });
   const fields = Object.keys(schemaPage.fields);
