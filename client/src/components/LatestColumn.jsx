@@ -1,6 +1,7 @@
 import BookCard from "./BookCard";
 
 import { useFetch } from "../hooks/fetch-hooks";
+import { useSelector } from "react-redux";
 
 const formatDate = (createdAtString) => {
   const createdAtDate = new Date(createdAtString);
@@ -15,7 +16,11 @@ const formatDate = (createdAtString) => {
 };
 
 const LatestColumn = () => {
-  const [isLoading, data, error] = useFetch("fetchLatest", `stories?direction=desc`);
+  const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  const [isLoading, data, error] = useFetch(
+    "fetchLatest",
+    `stories?direction=desc${selectedGenre ? `&search=${selectedGenre}` : ""}`,
+  );
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;

@@ -1,9 +1,14 @@
 import BookCard from "./BookCard";
 
 import { useFetch } from "../hooks/fetch-hooks";
+import { useSelector } from "react-redux";
 
 const PopularColumn = () => {
-  const [isLoading, data, error] = useFetch("fetchPopular", `stories?popular=true`);
+  const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  const [isLoading, data, error] = useFetch(
+    "fetchPopular",
+    `stories?popular=true${selectedGenre ? `&search=${selectedGenre}` : ""}`,
+  );
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
