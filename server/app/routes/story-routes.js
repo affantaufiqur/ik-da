@@ -39,7 +39,8 @@ routes.get("/stories/:storyId", async (req, res) => {
 routes.get("/stories/author/:authorId", async (req, res) => {
     try {
         const { authorId } = req.params;
-        const stories = await storyService.getStoryByAuthor(authorId);
+        const { page } = req.query;
+        const stories = await storyService.getStoryByAuthor(authorId, Number(page));
         if (stories.length < 1) {
             return res.status(404).json({ message: "Stories not found" });
         }
