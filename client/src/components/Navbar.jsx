@@ -4,8 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { authAction, hamburgerAction } from "../store/index.js";
-import { getTokenFromCookies } from "../shared/token.js";
-import { useFetch } from "../hooks/fetch-hooks.js";
+import { useFetchUser } from "../hooks/user-hooks.js";
+import { Loader } from "lucide-react";
 
 const navLinks = [
   {
@@ -28,19 +28,13 @@ const navLinks = [
 function Navbar() {
   const location = useLocation();
   const { pathname } = location;
-
+  const [isLoading, data, error] = useFetchUser();
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  if (isLoading) return <Loader className="h-5 w-5" />;
+  if (error) return <p>error</p>;
 
-  //TODO: Use redux instead of this?
-  // const token = getTokenFromCookies();
-  // const [isLoading, data, error] = useFetch("fetchUser", `current-user`, {
-  //   method: "GET",
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
   const menuHandler = () => {
     dispatch(hamburgerAction.click());
   };
@@ -74,12 +68,12 @@ function Navbar() {
               ))}
             </ul>
           </div>
-          {isAuth ? (
+          {data?.user ? (
             <div
               id="logged"
               className="hidden h-full  w-full items-center justify-end md:flex md:flex-row md:gap-y-0 md:space-x-4"
             >
-              <div className="font-dm-sans font-bold">lalallal ada</div>
+              <div className="font-dm-sans font-bold">{data.user.name}</div>
               <Dropdown placement="bottom-end">
                 <MenuHandler>
                   <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
