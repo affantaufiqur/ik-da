@@ -23,14 +23,13 @@ const genreSlice = createSlice({
   initialState: initialGenreState,
   reducers: {
     setGenre: (state, action) => {
-      state.selectedGenre = action.payload;
+      state.selectedGenre = state.selectedGenre === action.payload ? null : action.payload;
     },
   },
 });
 
 const initialAuthState = {
   isAuthenticated: false,
-  currentUser: null,
 };
 
 const authSlice = createSlice({
@@ -42,9 +41,6 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isAuthenticated = false;
-    },
-    currentUser(state, action) {
-      state.currentUser = action.payload;
     },
   },
 });
@@ -62,4 +58,3 @@ export const genreAction = genreSlice.actions;
 export const authAction = authSlice.actions;
 
 export default store;
-
