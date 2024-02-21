@@ -5,9 +5,11 @@ import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { Bookmark, ChevronUp } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export default function StoryPage() {
   const { id } = useParams();
+  const searchChapterRef = useRef(null);
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -27,7 +29,8 @@ export default function StoryPage() {
   // const formattedDate = format(data?.created_at, "long");
   const formatNumberComma = new Intl.NumberFormat().format(data?.upvote);
   const progress = Math.round((checkChapters.length / TAGS.length) * 100);
-  console.log(formatNumberComma);
+  const searchValue = searchChapterRef.current?.value;
+  const filteredChapters = TAGS.filter((tag) => tag.toLowerCase().includes(searchValue?.toLowerCase()));
 
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
@@ -109,11 +112,12 @@ export default function StoryPage() {
                   </div>
                 </div>
               </section>
+              <input type="search" className="form-input-normal" placeholder="Search Chapters" ref={searchChapterRef} />
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
-                    <div className="text-base font-medium leading-normal">Chapters</div>
-                    {TAGS.map((tag) => (
+                    <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
+                    {filteredChapters.map((tag) => (
                       <div
                         className="border-t-mauve6 mt-2.5 border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
                         key={tag}
