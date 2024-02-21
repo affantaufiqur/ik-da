@@ -6,7 +6,7 @@ import chapterRoutes from "./app/routes/chapter-routes.js";
 import genreRoutes from "./app/routes/genre-routes.js";
 import bookmarkRoutes from "./app/routes/bookmark-routes.js";
 import upvoteRoutes from "./app/routes/upvote-routes.js";
-
+import cors from "cors";
 const app = express();
 const port = 3000;
 
@@ -15,6 +15,8 @@ app.use(express.json());
 app.get("/", (_req, res) => {
     res.json("Hello World!");
 });
+
+app.use(cors());
 
 app.use(authRoutes);
 app.use(userRoutes);

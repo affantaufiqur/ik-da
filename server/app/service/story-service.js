@@ -3,7 +3,7 @@
     class Story {
         async getListStory(pageNumber, search, popular, direction) {
             const page = pageNumber || 1;
-            const limit = 100;
+            const limit = 12;
             const offset = (page - 1) * limit;
             let orderBy = {};
 
@@ -78,6 +78,48 @@
             }
             return listStories;
         }
+        async getRandomStories(pageNumber) {
+            const page = pageNumber || 1;
+            const limit = 12;
+            const itemCount = await prisma.story.count();
+            const offset = Math.max(0, Math.floor(Math.random() * itemCount - limit * page));
+        
+            const stories = await prisma.story.findMany({
+                take: limit,
+                skip: offset,
+                include: {
+                    author: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                    genre: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            });
+            const shuffledStories = stories.sort(() => Math.random() - 0.5);
+        
+            const totalCount = await prisma.story.count();
+            const totalPage = Math.ceil(totalCount / limit);
+            const nextPage = page < totalPage ? page + 1 : null;
+            const prevPage = page > 1 ? page - 1 : null;
+        
+            const listStories = {
+                data: shuffledStories,
+                meta: {
+                    total: totalCount,
+                    total_page: totalPage,
+                    prev_page: prevPage,
+                    next_page: nextPage,
+                },
+            };
+        
+            return listStories;
+        }
+        
         async getStoryById(storyId) {
             const story = await prisma.story.findUnique({
             where: {
@@ -104,11 +146,19 @@
             });
             return story;
         }
-        async getStoryByAuthor(authorId) {
+        async getStoryByAuthor(authorId, pageNumber) {
+            const page = pageNumber || 1;
+            const limit = 12;
+            const offset = (page - 1) * limit;
+            if (isNaN(Number(page)) && page) {
+                throw new Error("Invalid page number");
+            }
             const stories = await prisma.story.findMany({
             where: {
                 author_id: authorId,
             },
+            take: limit,
+            skip: offset,
             include: {
                 author: {
                 select: {
@@ -122,7 +172,25 @@
                 },
             },
             });
-            return stories;
+            const totalCount = await prisma.story.count({
+                where: {
+                    author_id: authorId,
+                },
+            });
+            const totalPage = Math.ceil(totalCount / limit);
+            const nextPage = page < totalPage ? page + 1 : null;
+            const prevPage = page > 1 ? page - 1 : null;
+
+            const listStories = {
+                data: stories,
+                meta: {
+                    total: totalCount,
+                    total_page: totalPage,
+                    prev_page: prevPage,
+                    next_page: nextPage
+                }
+            }
+            return listStories;
         }
         async createStory(data) {
             const story = await prisma.story.create({

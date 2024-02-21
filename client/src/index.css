@@ -13,3 +13,13 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+@layer components {
+  .form-input-normal {
+    @apply w-full border-2 border-line/80 px-4 py-2 focus:border-primary focus:outline-none;
+  }
+
+  .btn-primary {
+    @apply border-2 border-transparent bg-black p-3 font-dm-display text-xl text-white  hover:border-black hover:bg-white hover:text-black;
+  }
+}
