@@ -108,6 +108,9 @@
             const page = pageNumber || 1;
             const limit = 12;
             const offset = (page - 1) * limit;
+            if (isNaN(Number(page)) && page) {
+                throw new Error("Invalid page number");
+            }
             const stories = await prisma.story.findMany({
             where: {
                 author_id: authorId,
