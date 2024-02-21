@@ -21,6 +21,21 @@ routes.get("/stories", async (req, res) => {
     }
 });
 
+routes.get("/stories/random", async (req, res) => {
+    try {
+        const { page } = req.query;
+        const stories = await storyService.getRandomStories(Number(page));
+        if (stories.data.length < 1) {
+            return res.status(404).json({ message: "Stories not found" });
+        }
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.json(stories);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 routes.get("/stories/:storyId", async (req, res) => {
     try {
         const { storyId } = req.params;
