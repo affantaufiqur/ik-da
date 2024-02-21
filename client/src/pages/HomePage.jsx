@@ -3,7 +3,7 @@ import Search from "../components/Search.jsx";
 import Category from "../components/Category.jsx";
 import PopularColumn from "../components/PopularColumn.jsx";
 import LatestColumn from "../components/LatestColumn.jsx";
-import BookmarkColumn from "../components/BookmarkColumn.jsx"
+import BookmarkColumn from "../components/BookmarkColumn.jsx";
 
 const HomePage = () => {
   return (
