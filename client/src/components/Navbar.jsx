@@ -92,7 +92,7 @@ function Navbar() {
             </div>
           ) : (
             <div id="not-logged" className="hidden w-2/5 md:flex ">
-              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0 md:pr-10">
+              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0">
                 <Link to="/login">LOGIN</Link>
                 <Link
                   to="/register"
