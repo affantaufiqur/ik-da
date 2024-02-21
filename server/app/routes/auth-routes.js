@@ -4,6 +4,7 @@ import { loginSchema, registerSchema } from "../validation/auth-validation.js";
 import prisma from "../prisma.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const routes = Router();
 
@@ -54,7 +55,7 @@ routes.post("/register", async (req, res) => {
     }
 });
 
-routes.get("/current-user", (req, res) => {
+routes.get("/current-user", authMiddleware, (req, res) => {
     const bearer = req.headers.authorization;
     if (!bearer) {
         return res.status(401).json({ message: "Unauthorized" });
