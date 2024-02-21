@@ -18,14 +18,14 @@ const WorkColumn = () => {
   const progress = 35;
 
   return (
-    <div className="my-12 px-4 md:px-12">
+    <div>
       <section className="mt-12">
         <div className="flex flex-col space-y-1 text-primary">
           <h1 className="font-dm-display text-2xl font-medium tracking-wide">Works</h1>
           <p className="font-dm-sans text-base tracking-wide">{userId ? "Here are your works" : "No works to show"}</p>
         </div>
         <section className="mt-4">
-          <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+          <div className="relative grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
             {getFourData.map((item) => (
               <BookCard
                 key={item.id}
