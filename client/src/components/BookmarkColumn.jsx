@@ -3,23 +3,11 @@ import BookCard from "./BookCard";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
-
-const LatestColumn = () => {
+const BookmarkColumn = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
   const [isLoading, data, error] = useFetch(
-    "fetchLatest",
-    `stories?direction=desc${selectedGenre ? `&search=${selectedGenre}` : ""}`,
+    "fetchStories",
+    `stories${selectedGenre ? `?search=${selectedGenre}` : ""}`,
   );
 
   if (isLoading) return <p>Loading...</p>;
@@ -31,10 +19,8 @@ const LatestColumn = () => {
     <div className="mt-12 px-4 md:px-12">
       <section className="mt-12">
         <div className="flex flex-col space-y-1 text-primary">
-          <h1 className="font-dm-display text-2xl font-medium tracking-wide">Latest</h1>
-          <p className="font-dm-sans text-base tracking-wide">
-            Here are the latest stories from your favorite authors ;)
-          </p>
+          <h1 className="font-dm-display text-2xl font-medium tracking-wide">Bookmark</h1>
+          <p className="font-dm-sans text-base tracking-wide">I think your should finish you bookmarks first ;)</p>
         </div>
         <section className="mt-4">
           <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
@@ -49,7 +35,6 @@ const LatestColumn = () => {
                   <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
                     <div className="h-full bg-black" style={{ width: `${progress}%` }} />
                     <p>{progress}%</p>
-                    <p>Published on {formatDate(item.created_at)}</p>
                   </div>
                 )}
               />
@@ -61,4 +46,4 @@ const LatestColumn = () => {
   );
 };
 
-export default LatestColumn;
+export default BookmarkColumn;
