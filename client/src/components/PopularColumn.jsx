@@ -14,9 +14,9 @@ const PopularColumn = () => {
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
   const progress = 35;
-  console.log(getFourData);
+
   return (
-    <div className="mt-24 px-4 md:px-12">
+    <div className="mt-12 px-4 md:px-12">
       <section className="mt-12">
         <div className="flex flex-col space-y-1 text-primary">
           <h1 className="font-dm-display text-2xl font-medium tracking-wide">Popular</h1>
