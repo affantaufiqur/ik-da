@@ -1,6 +1,6 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { useParams } from "react-router-dom";
-import { format } from "@formkit/tempo";
+// import { format } from "@formkit/tempo";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -14,17 +14,26 @@ export default function StoryPage() {
   const TAGS = Array.from({ length: 100 })
     .map((_, index) => `Chapter ${index}`)
     .reverse();
-  const alreadyReadChapters = ["Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5", "Chapter 90"];
+  const alreadyReadChapters = [
+    "Chapter 1",
+    "Chapter 2",
+    "Chapter 3",
+    "Chapter 4",
+    "Chapter 5",
+    "Chapter 90",
+    "Chapter 99",
+  ];
   const checkChapters = TAGS.filter((tag) => alreadyReadChapters.includes(tag));
-  const formattedDate = format(data?.created_at, "long");
+  // const formattedDate = format(data?.created_at, "long");
   const formatNumberComma = new Intl.NumberFormat().format(data?.upvote);
+  const progress = Math.round((checkChapters.length / TAGS.length) * 100);
   console.log(formatNumberComma);
 
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
-        <div className="flex flex-col space-y-3 ">
-          <img src={data?.cover_img} alt={data?.title} className="h-full w-full object-cover" />
+        <div className="flex flex-grow-0 flex-col space-y-3">
+          <img src={data?.cover_img} alt={data?.title} className="h-full w-full self-start object-cover" />
           {/* <section className="flex flex-col space-y-1 [&_h5]:font-dm-sans [&_h5]:text-sm [&_h5]:text-line"> */}
           {/*   <h2 className="font-dm-display text-2xl font-bold tracking-tight text-primary md:hidden">{data?.title}</h2> */}
           {/*   <h5 className="">{data?.author.name}</h5> */}
@@ -42,7 +51,7 @@ export default function StoryPage() {
           {/*   <button className="btn-primary w-full">Add to bookmarks</button> */}
           {/* </section> */}
         </div>
-        <section className="w-full flex-col">
+        <section className="w-full flex-grow flex-col">
           <div className="flex flex-col space-y-12">
             <section className="flex flex-col space-y-4 lg:space-y-2">
               <section className="flex flex-col items-baseline justify-between space-y-3 lg:flex-row lg:space-x-4">
@@ -75,11 +84,31 @@ export default function StoryPage() {
               scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
               electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
               of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum.`}
+              like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
+              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+              like Aldus PageMaker including versions of Lorem Ipsum. .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
+              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+              like Aldus PageMaker including versions of Lorem Ipsum. . .`}
             </Typography>
             <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
             <section className="flex flex-col space-y-2">
-              <h1 className="font-dm-sans text-sm text-primary md:text-lg">Chapters ({TAGS.length})</h1>
+              <section className="flex flex-row items-center justify-between">
+                <h1 className="font-dm-sans text-sm text-primary md:text-lg">
+                  Chapters ({checkChapters.length}/{TAGS.length})
+                </h1>
+                <div className="flex w-1/3 flex-row items-center space-x-2">
+                  <h6 className="text-sm text-line">{progress}%</h6>
+                  <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
+                    <div className="h-full bg-black" style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
+              </section>
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">

@@ -10,6 +10,11 @@ import { useCookies } from "react-cookie";
 
 const navLinks = [
   {
+    id: 0,
+    name: "Home",
+    link: "/",
+  },
+  {
     id: 1,
     name: "Popular",
     link: "/popular",
