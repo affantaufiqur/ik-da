@@ -1,11 +1,11 @@
-
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { authAction, hamburgerAction } from "../store/index.js";
+import { useFetchUser } from "../hooks/user-hooks.js";
+import { Loader } from "lucide-react";
 
 const navLinks = [
   {
@@ -28,22 +28,24 @@ const navLinks = [
 function Navbar() {
   const location = useLocation();
   const { pathname } = location;
-
-  const dispatch = useDispatch()
+  const [isLoading, data, error] = useFetchUser();
+  const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  if (isLoading) return <Loader className="h-5 w-5" />;
+  if (error) return <p>error</p>;
 
-const menuHandler = () =>{
-  dispatch(hamburgerAction.click())
-}
+  const menuHandler = () => {
+    dispatch(hamburgerAction.click());
+  };
 
-const loginHandler = () =>{
-  dispatch(authAction.login())
-}
+  const loginHandler = () => {
+    dispatch(authAction.login());
+  };
 
-const logoutHandler = () =>{
-  dispatch(authAction.logout())
-}
+  const logoutHandler = () => {
+    dispatch(authAction.logout());
+  };
 
   return (
     <>
@@ -66,12 +68,12 @@ const logoutHandler = () =>{
               ))}
             </ul>
           </div>
-          {isAuth ? (
+          {data?.user ? (
             <div
               id="logged"
               className="hidden h-full  w-full items-center justify-end md:flex md:flex-row md:gap-y-0 md:space-x-4"
             >
-              <div className="font-dm-sans font-bold">lalallal ada</div>
+              <div className="font-dm-sans font-bold">{data.user.name}</div>
               <Dropdown placement="bottom-end">
                 <MenuHandler>
                   <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
@@ -89,7 +91,7 @@ const logoutHandler = () =>{
                 <div
                   onClick={loginHandler}
                   className="cursor-pointer border-b-2 border-transparent transition duration-100 hover:border-b-2 hover:border-b-black"
-                > 
+                >
                   <Link to="/login">LOGIN</Link>
                 </div>
                 <div className="cursor-pointer border bg-black px-[56px] py-[9px]  text-white transition duration-100 hover:bg-black/80">
@@ -115,10 +117,7 @@ const logoutHandler = () =>{
           {isAuth ? (
             <div className="flex flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold">
               <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">User Name</div>
-              <div
-                className="cursor-pointer transition duration-100 hover:translate-y-[-3px]"
-                onClick={logoutHandler}
-              >
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={logoutHandler}>
                 Log Out
               </div>
             </div>
@@ -127,8 +126,7 @@ const logoutHandler = () =>{
               id="not-logged"
               className="flex h-full w-full flex-col items-center gap-y-1 py-5 text-[1.5rem] font-semibold"
             >
-              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]"
-              onClick={loginHandler}>
+              <div className="cursor-pointer transition duration-100 hover:translate-y-[-3px]" onClick={loginHandler}>
                 <Link to="/login">Login</Link>
               </div>
               <div className="cursor-pointer border border-[#472316] bg-black px-[56px] py-[9px] text-white transition duration-100 hover:translate-y-[-3px]">

@@ -4,6 +4,7 @@ import { loginSchema, registerSchema } from "../validation/auth-validation.js";
 import prisma from "../prisma.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const routes = Router();
 
@@ -19,6 +20,14 @@ routes.post("/register", async (req, res) => {
                 name: "user",
             },
         });
+        const checkIfUserExist = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (checkIfUserExist) {
+            return res.status(400).json({ message: "User already exist" });
+        }
         const hashPassword = bcrypt.hashSync(password, Number(process.env.BCRYPT_ROUND));
         const insertUser = await prisma.user.create({
             data: {
@@ -27,6 +36,11 @@ routes.post("/register", async (req, res) => {
                 name,
                 role_id: roleId.id,
             },
+        });
+        await prisma.profile.create({
+            data: {
+                user_id: insertUser.id,
+            }
         });
         const userData = {
             id: insertUser.id,
@@ -49,7 +63,7 @@ routes.post("/register", async (req, res) => {
     }
 });
 
-routes.get("/current-user", (req, res) => {
+routes.get("/current-user", authMiddleware, (req, res) => {
     const bearer = req.headers.authorization;
     if (!bearer) {
         return res.status(401).json({ message: "Unauthorized" });
