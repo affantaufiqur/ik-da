@@ -22,7 +22,7 @@ const navLinks = [
   {
     id: 2,
     name: "Latest",
-    link: "/latest",
+    link: "/latest?page=1",
   },
   {
     id: 3,
