@@ -16,13 +16,15 @@ const WorkColumn = () => {
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
   const progress = 35;
-
+  console.log(getFourData);
   return (
     <div>
       <section className="mt-12">
         <div className="flex flex-col space-y-1 text-primary">
           <h1 className="font-dm-display text-2xl font-medium tracking-wide">Works</h1>
-          <p className="font-dm-sans text-base tracking-wide">{userId ? "Here are your works" : "No works to show"}</p>
+          <p className="font-dm-sans text-base tracking-wide">
+            {getFourData.length === 0 ? "No works to show" : "Here are your works"}
+          </p>
         </div>
         <section className="mt-4">
           <div className="relative grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
