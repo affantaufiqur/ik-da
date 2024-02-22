@@ -3,12 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import FormWrapper from "../components/ui/FormWrapper";
 import { fetchData } from "../shared/fetch";
-import { authAction } from "../store/index";
 
 const schemaPage = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -18,7 +16,6 @@ const schemaPage = yup.object().shape({
 const LoginPage = () => {
   const [status, setStatus] = useState(null);
   const [submit, isSubmit] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const form = useForm({
@@ -58,7 +55,6 @@ const LoginPage = () => {
         setStatus("Something went wrong, please try again");
         return;
       }
-      dispatch(authAction.currentUser(getCurrentUser));
       isSubmit(false);
       return navigate("/");
     },
