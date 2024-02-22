@@ -1,4 +1,5 @@
 import { Router } from "express";
+import chapterService from "../service/chapter-service.js";
 
 const routes = Router();
 
@@ -7,6 +8,18 @@ routes.get("/stories/:storyId/chapters", async (req, res) => {
 });
 
 routes.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
+    try {
+        const { storyId, chapterId } = req.params;
+        const chapter = await chapterService.getDetailChapter(storyId, chapterId);
+        if (!chapter) {
+            return res.status(404).json({ message: "Chapter not found" });
+        }
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.json(chapter);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
     res.json({ message: "Route get detail stories chapters" });
 });
 
