@@ -20,11 +20,6 @@ const formatDate = (createdAtString) => {
 };
 
 const LatestPage = () => {
-  // const selectedGenre = useSelector((state) => state.genre.selectedGenre);
-  // const location = useLocation();
-  // const queryParams = queryString.parse(location.search);
-  // const page = queryParams.page || 1;
-
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
@@ -65,8 +60,6 @@ const LatestPage = () => {
   const progress = 35;
 
   const { total_page, prev_page, next_page } = data.meta;
-  // console.log(data.meta);
-  // console.log(typeof total_page);
 
   const renderEllipsis = () => {
     return <span className="text-gray-400">...</span>;
