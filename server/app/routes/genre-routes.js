@@ -6,11 +6,7 @@ const routes = Router();
 
 routes.get("/genres", async (req, res) => {
     try {
-        const { page } = req.query;
-        const genres = await genreService.getAllGenre(Number(page));
-        if (genres.data.length < 1) {
-            return res.status(404).json({ message: "Genres not found" });
-        }
+        const genres = await genreService.getAllGenre();
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(genres);
     } catch (err) {
@@ -37,7 +33,5 @@ routes.get("/genres/:genreId", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
-
 
 export default routes;
