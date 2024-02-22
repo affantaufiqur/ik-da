@@ -6,7 +6,7 @@ import bookmarkService from "../service/bookmark-service.js";
 const routes = Router();
 
 routes.get("/bookmarks", authMiddleware, async (req, res) => {
-    try {        
+    try {
         // @ts-ignore
         const user = req.user;
         const bookmarks = await bookmarkService.getBookmarks(user.id);
@@ -14,7 +14,7 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "Bookmarks is empty" });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.json({ bookmarks });
+        res.json(bookmarks);
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Internal server error" });
@@ -22,7 +22,7 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
 });
 
 routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
-    try {        
+    try {
         // @ts-ignore
         const message = req.isMark ? "Add to Bookmark successfully" : "Remove from Bookmark successfully";
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -32,6 +32,5 @@ routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
 
 export default routes;

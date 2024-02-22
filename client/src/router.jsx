@@ -8,6 +8,7 @@ import RandomPage from "./pages/RandomPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import StoryPage from "./pages/StoryPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,17 @@ export const router = createBrowserRouter([
           return user;
         },
       },
+      {
+        path: "/story/:id",
+        element: <StoryPage />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return null;
+          }
+          return user;
+        },
+      },
     ],
   },
   {
@@ -69,6 +81,7 @@ export const router = createBrowserRouter([
       if (token) {
         return redirect("/");
       }
+      return null;
     },
   },
 ]);

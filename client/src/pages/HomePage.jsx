@@ -18,8 +18,10 @@ const HomePage = () => {
       <div className="mt-24">
         <Banner />
       </div>
-      <PopularColumn />
-      <LatestColumn />
+      <section className="flex flex-col space-y-16">
+        <PopularColumn />
+        <LatestColumn />
+      </section>
     </div>
   );
 };
