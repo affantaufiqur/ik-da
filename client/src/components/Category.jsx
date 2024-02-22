@@ -25,9 +25,9 @@ export default function Category() {
       {genresArray.map((item) => (
         <button
           type="button"
+          key={item}
           className={`inline-flex items-center gap-x-2 text-nowrap border-2 border-line px-6 py-2 text-sm font-medium transition-all duration-100 hover:bg-black hover:text-white md:text-base 
           ${selectedGenre === item ? "bg-black text-white" : ""}`}
-          key={item}
           onClick={() => handleGenreToggle(item)}
         >
           {item}

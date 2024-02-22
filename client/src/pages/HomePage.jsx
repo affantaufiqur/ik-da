@@ -3,6 +3,7 @@ import Category from "../components/Category.jsx";
 import HomePageSection from "../components/HomePageSection.jsx";
 
 import { useSelector } from "react-redux";
+import HomePageGenreSection from "../components/HomePageGenreSection.jsx";
 
 const HomePage = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -15,7 +16,7 @@ const HomePage = () => {
           <Category />
         </section>
       </div>
-      {selectedGenre ? null : <HomePageSection />}
+      {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
     </div>
   );
 };

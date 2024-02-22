@@ -27,8 +27,10 @@ const LatestPage = () => {
   const [isLoading, data, error] = useFetch("fetchLatest", `stories?direction=desc&page=${currentPage}`);
 
   useEffect(() => {
-    if (!searchParams.get("page")) {
-      setSearchParams("page", 1);
+    const params = new URLSearchParams(searchParams);
+    if (!params.get("page")) {
+      params.set("page", "1");
+      setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);
 
@@ -76,8 +78,8 @@ const LatestPage = () => {
     // Determine the range of pages to show before the current page
     let startPage = Math.max(2, Number(currentPage) - 2);
     let endPage = Math.min(Number(currentPage) + 2, total_page - 1);
-    console.log(currentPage);
-    console.log("start,end", startPage, endPage);
+    // console.log(currentPage);
+    // console.log("start,end", startPage, endPage);
     // Show the range of pages before the current page
     for (let i = startPage; i <= endPage; i++) {
       pagesToShow.push(renderPaginationItem(i));
