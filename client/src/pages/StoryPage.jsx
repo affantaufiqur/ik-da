@@ -1,5 +1,5 @@
 import { useFetch } from "../hooks/fetch-hooks";
-import { useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData, useParams } from "react-router-dom";
 // import { format } from "@formkit/tempo";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
@@ -17,24 +17,8 @@ export default function StoryPage() {
   const [readMore, isReadMore] = useState(false);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
-  const TAGS = Array.from({ length: 100 })
-    .map((_, index) => `Chapter ${index}`)
-    .reverse();
-  const alreadyReadChapters = [
-    "Chapter 1",
-    "Chapter 2",
-    "Chapter 3",
-    "Chapter 4",
-    "Chapter 5",
-    "Chapter 90",
-    "Chapter 99",
-  ];
-  const checkChapters = TAGS.filter((tag) => alreadyReadChapters.includes(tag));
-  // const formattedDate = format(data?.created_at, "long");
+  const countTotalChapter = data?.chapters.length;
   const formatNumberComma = new Intl.NumberFormat().format(data?.upvote);
-  const progress = Math.round((checkChapters.length / TAGS.length) * 100);
-  const searchValue = searchChapterRef.current?.value;
-  const filteredChapters = TAGS.filter((tag) => tag.toLowerCase().includes(searchValue?.toLowerCase()));
 
   function handleReadMore() {
     isReadMore(!readMore);
@@ -71,7 +55,7 @@ export default function StoryPage() {
                 <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
                 <h6 className="">{data?.genre.name}</h6>
                 <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
-                <h6 className="">{TAGS.length} Chapters</h6>
+                <h6 className="">{countTotalChapter} Chapters</h6>
               </section>
             </section>
             <section className="flex flex-col justify-start">
@@ -81,7 +65,7 @@ export default function StoryPage() {
                   : truncateText(data?.synopsis, 500)}
               </Typography>
               <button
-                className="inline-flex w-1/2 items-center justify-start text-sm text-primary underline md:text-lg"
+                className="inline-flex  w-1/2 items-center justify-start text-sm text-primary underline md:text-lg"
                 onClick={handleReadMore}
               >
                 {readMore ? "Show Less" : "Read More"}
@@ -90,13 +74,11 @@ export default function StoryPage() {
             <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
             <section className="flex flex-col space-y-2">
               <section className="flex flex-row items-center justify-between">
-                <h1 className="font-dm-sans text-sm text-primary md:text-lg">
-                  Chapters ({checkChapters.length}/{TAGS.length})
-                </h1>
+                <h1 className="font-dm-sans text-sm text-primary md:text-lg">Chapters {countTotalChapter}</h1>
                 <div className="flex w-1/3 flex-row items-center space-x-2">
-                  <h6 className="text-sm text-line">{progress}%</h6>
+                  <h6 className="text-sm text-line">25%</h6>
                   <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: `${progress}%` }} />
+                    <div className="h-full bg-black" style={{ width: "25%" }} />
                   </div>
                 </div>
               </section>
@@ -110,16 +92,12 @@ export default function StoryPage() {
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {filteredChapters.map((tag) => (
+                    {data?.chapters.map((chapter) => (
                       <div
                         className="border-t-mauve6 mt-2.5 border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
-                        key={tag}
+                        key={chapter.id}
                       >
-                        {checkChapters.includes(tag) ? (
-                          <p className="font-dm-sans font-bold text-green-600">{tag}</p>
-                        ) : (
-                          <p>{tag}</p>
-                        )}
+                        <Link to={"/story/" + id + "/chapter/" + chapter.id}>{chapter.title}</Link>
                       </div>
                     ))}
                   </div>

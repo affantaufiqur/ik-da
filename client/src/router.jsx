@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import StoryPage from "./pages/StoryPage.jsx";
+import ChapterPage from "./pages/ChapterPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
           }
           return user;
         },
+      },
+      {
+        path: "/story/:storyId/chapter/:chapterId",
+        element: <ChapterPage />,
       },
     ],
   },
