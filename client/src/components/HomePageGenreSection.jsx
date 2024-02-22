@@ -7,24 +7,14 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
-
-const LatestPage = () => {
+const HomePageGenreSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
   const [active, setActive] = useState(currentPage);
   const [isLoading, data, error] = useFetch("fetchLatest", `stories?direction=desc&page=${currentPage}`);
+
+  const { total_page, prev_page, next_page } = data.meta;
 
   useEffect(() => {
     if (!searchParams.get("page")) {
@@ -36,7 +26,6 @@ const LatestPage = () => {
   if (error) return <p>Error</p>;
   const progress = 35;
 
-  const { total_page, prev_page, next_page } = data.meta;
   const renderPaginationItem = (page) => {
     return (
       <Link to={`/latest?page=${page}`} key={page}>
@@ -122,7 +111,6 @@ const LatestPage = () => {
                     <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
                       <div className="h-full bg-black" style={{ width: `${progress}%` }} />
                       <p>{progress}%</p>
-                      <p>Published on {formatDate(item.created_at)}</p>
                     </div>
                   )}
                 />
@@ -149,4 +137,4 @@ const LatestPage = () => {
   );
 };
 
-export default LatestPage;
+export default HomePageGenreSection;
