@@ -52,6 +52,13 @@ export const router = createBrowserRouter([
       {
         path: "/story/:id",
         element: <StoryPage />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return null;
+          }
+          return user;
+        },
       },
     ],
   },

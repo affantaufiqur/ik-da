@@ -46,9 +46,9 @@ function Navbar() {
     dispatch(hamburgerAction.click());
   };
 
-  async function logout() {
-    removeCookie("token");
-    return validator.revalidate();
+  function logout() {
+    removeCookie("token", { path: "/" });
+    return window.location.reload();
   }
 
   if (isLoading) return <Loader className="h-5 w-5" />;

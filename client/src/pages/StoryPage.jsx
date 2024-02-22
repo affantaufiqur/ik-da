@@ -1,16 +1,20 @@
 import { useFetch } from "../hooks/fetch-hooks";
-import { useParams } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 // import { format } from "@formkit/tempo";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { Bookmark, ChevronUp } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { truncateText } from "../shared/common";
+import { useState } from "react";
 
 export default function StoryPage() {
+  const userData = useLoaderData();
   const { id } = useParams();
   const searchChapterRef = useRef(null);
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
+  const [readMore, isReadMore] = useState(false);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const TAGS = Array.from({ length: 100 })
@@ -32,40 +36,28 @@ export default function StoryPage() {
   const searchValue = searchChapterRef.current?.value;
   const filteredChapters = TAGS.filter((tag) => tag.toLowerCase().includes(searchValue?.toLowerCase()));
 
+  function handleReadMore() {
+    isReadMore(!readMore);
+  }
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
         <div className="flex flex-grow-0 flex-col space-y-3">
-          <img src={data?.cover_img} alt={data?.title} className="h-full w-full self-start object-cover" />
-          {/* <section className="flex flex-col space-y-1 [&_h5]:font-dm-sans [&_h5]:text-sm [&_h5]:text-line"> */}
-          {/*   <h2 className="font-dm-display text-2xl font-bold tracking-tight text-primary md:hidden">{data?.title}</h2> */}
-          {/*   <h5 className="">{data?.author.name}</h5> */}
-          {/*   <h5 className="">{formattedDate}</h5> */}
-          {/* </section> */}
-          {/* <section className="flex flex-row space-x-2"> */}
-          {/*   <h4 className="inline-flex w-1/3 items-center justify-center border-[1px] border-line py-0.5 text-sm font-medium text-primary"> */}
-          {/*     {data?.genre.name} */}
-          {/*   </h4> */}
-          {/*   <h4 className="inline-flex w-1/3 items-center justify-center border-[1px] border-line bg-green-400 py-0.5 text-sm font-medium text-white"> */}
-          {/*     {formatNumberComma} */}
-          {/*   </h4> */}
-          {/* </section> */}
-          {/* <section className="w-full pt-6"> */}
-          {/*   <button className="btn-primary w-full">Add to bookmarks</button> */}
-          {/* </section> */}
+          <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] w-full self-start object-cover" />
         </div>
         <section className="w-full flex-grow flex-col">
           <div className="flex flex-col space-y-12">
             <section className="flex flex-col space-y-4 lg:space-y-2">
-              <section className="flex flex-col items-baseline justify-between space-y-3 lg:flex-row lg:space-x-4">
-                <h2 className="text-wrap font-dm-display text-4xl font-bold tracking-tight text-primary md:block ">
-                  {data?.title}
+              <section className="flex flex-col items-start justify-between space-y-3 lg:flex-row lg:space-x-4">
+                <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
+                  {truncateText(data?.title, 75)}
                 </h2>
                 <section className="flex flex-row space-x-3 lg:space-x-1">
-                  <div className="group inline-flex h-10 w-10 items-center justify-center border-2 border-line transition-all duration-100 hover:bg-black">
+                  <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
                     <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
                   </div>
-                  <div className="group flex flex-row items-center justify-center space-x-4 border-2 border-line px-6 transition-all duration-100 hover:bg-black">
+                  <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
                     <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
                       {formatNumberComma}
                     </h3>
@@ -73,32 +65,28 @@ export default function StoryPage() {
                   </div>
                 </section>
               </section>
-              <section className="no-scrollbar flex w-full flex-row justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-line md:max-w-fit md:justify-start md:space-x-4">
-                <h6 className="text-sm">{data?.author.name}</h6>
-                <div className="h-full w-[1px] bg-line/50" />
-                <h6 className="text-sm">{data?.genre.name}</h6>
-                <div className="h-full w-[1px] bg-line/50" />
-                <h6 className="text-sm">{TAGS.length} Chapters</h6>
+              <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
+              <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">
+                <h6 className="">{data?.author_id === userData?.user?.id ? "You" : data?.author.name}</h6>
+                <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
+                <h6 className="">{data?.genre.name}</h6>
+                <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
+                <h6 className="">{TAGS.length} Chapters</h6>
               </section>
             </section>
-            <Typography className="text-wrap font-dm-sans text-sm font-medium leading-normal tracking-normal text-line md:text-xl">
-              {`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum. .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-              of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-              like Aldus PageMaker including versions of Lorem Ipsum. . .`}
-            </Typography>
+            <section className="flex flex-col justify-start">
+              <Typography className="text-wrap font-dm-sans text-sm font-medium leading-normal tracking-normal text-line md:text-lg">
+                {readMore
+                  ? `Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.`
+                  : truncateText(data?.synopsis, 500)}
+              </Typography>
+              <button
+                className="inline-flex w-1/2 items-center justify-start text-sm text-primary underline md:text-lg"
+                onClick={handleReadMore}
+              >
+                {readMore ? "Show Less" : "Read More"}
+              </button>
+            </section>
             <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
             <section className="flex flex-col space-y-2">
               <section className="flex flex-row items-center justify-between">
@@ -112,7 +100,12 @@ export default function StoryPage() {
                   </div>
                 </div>
               </section>
-              <input type="search" className="form-input-normal" placeholder="Search Chapters" ref={searchChapterRef} />
+              <input
+                type="search"
+                className="form-input-normal border-[1px] border-[#5e5e5e]/50 placeholder:text-sm"
+                placeholder="Search Chapters"
+                ref={searchChapterRef}
+              />
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
