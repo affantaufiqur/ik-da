@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { useRevalidator, Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { hamburgerAction } from "../store/index.js";
@@ -40,7 +40,6 @@ function Navbar() {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
   // const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  const validator = useRevalidator();
 
   const menuHandler = () => {
     dispatch(hamburgerAction.click());
