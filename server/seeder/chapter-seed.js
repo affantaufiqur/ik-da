@@ -11,7 +11,7 @@ async function main() {
             await prisma.chapter.create({
                 data: {
                     title: faker.lorem.sentence(),
-                    content: faker.lorem.paragraph(),
+                    content: faker.lorem.paragraph(40),
                     story_id: stories[story].id,
                     created_at: faker.date.past(),
                 }

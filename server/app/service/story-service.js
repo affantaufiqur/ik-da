@@ -81,10 +81,15 @@
         async getRandomStories(pageNumber) {
             const page = pageNumber || 1;
             const limit = 12;
-            const itemCount = await prisma.story.count();
+            const itemCount = await prisma.story.count({where: {upvote: {gt: 90000}}});
             const offset = Math.max(0, Math.floor(Math.random() * itemCount - limit * page));
         
             const stories = await prisma.story.findMany({
+                where: {
+                    upvote: {
+                        gt: 90000
+                    }
+                },
                 take: limit,
                 skip: offset,
                 include: {
@@ -102,15 +107,14 @@
             });
             const shuffledStories = stories.sort(() => Math.random() - 0.5);
         
-            const totalCount = await prisma.story.count();
-            const totalPage = Math.ceil(totalCount / limit);
+            const totalPage = Math.ceil(itemCount / limit);
             const nextPage = page < totalPage ? page + 1 : null;
             const prevPage = page > 1 ? page - 1 : null;
         
             const listStories = {
                 data: shuffledStories,
                 meta: {
-                    total: totalCount,
+                    total: itemCount,
                     total_page: totalPage,
                     prev_page: prevPage,
                     next_page: nextPage,
