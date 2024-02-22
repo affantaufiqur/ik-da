@@ -26,7 +26,36 @@ class Chapter {
         });
         return chapter;
     }
-    async createChapter(chapter) {}
+    async createChapter(storyId, data) {
+        const chapter = await prisma.chapter.create({
+            data: {
+                story_id: storyId,
+                ...data,
+            }
+        });
+        return chapter;
+    }
+    async updateChapter(storyId, chapterId, data) {
+        const chapter = await prisma.chapter.update({
+            where: {
+                id: chapterId,
+                story_id: storyId,
+            },
+            data: {
+                ...data,
+            }
+        });
+        return chapter;
+    }
+    async deleteChapter(storyId, chapterId) {
+        const chapter = await prisma.chapter.delete({
+            where: {
+                id: chapterId,
+                story_id: storyId,
+            }
+        });
+        return chapter;
+    }
 }
 
 export default new Chapter();
