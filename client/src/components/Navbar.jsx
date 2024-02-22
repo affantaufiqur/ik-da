@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { useRevalidator, Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { hamburgerAction } from "../store/index.js";
@@ -10,6 +10,11 @@ import { useCookies } from "react-cookie";
 
 const navLinks = [
   {
+    id: 0,
+    name: "Home",
+    link: "/",
+  },
+  {
     id: 1,
     name: "Popular",
     link: "/popular",
@@ -17,7 +22,7 @@ const navLinks = [
   {
     id: 2,
     name: "Latest",
-    link: "/latest",
+    link: "/latest?page=1",
   },
   {
     id: 3,
@@ -35,15 +40,14 @@ function Navbar() {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.hamburger.isOpen);
   // const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  const validator = useRevalidator();
 
   const menuHandler = () => {
     dispatch(hamburgerAction.click());
   };
 
-  async function logout() {
-    removeCookie("token");
-    return validator.revalidate();
+  function logout() {
+    removeCookie("token", { path: "/" });
+    return window.location.reload();
   }
 
   if (isLoading) return <Loader className="h-5 w-5" />;
@@ -92,7 +96,7 @@ function Navbar() {
             </div>
           ) : (
             <div id="not-logged" className="hidden w-2/5 md:flex ">
-              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0 md:pr-10">
+              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0">
                 <Link to="/login">LOGIN</Link>
                 <Link
                   to="/register"
