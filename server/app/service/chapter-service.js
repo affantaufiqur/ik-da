@@ -26,7 +26,15 @@ class Chapter {
         });
         return chapter;
     }
-    async createChapter(chapter) {}
+    async createChapter(storyId, data) {
+        const chapter = await prisma.chapter.create({
+            data: {
+                story_id: storyId,
+                ...data,
+            }
+        });
+        return chapter;
+    }
 }
 
 export default new Chapter();
