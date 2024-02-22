@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import StoryPage from "./pages/StoryPage.jsx";
 import ChapterPage from "./pages/ChapterPage.jsx";
+import AddStory from "./pages/AddStoryPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +65,17 @@ export const router = createBrowserRouter([
       {
         path: "/story/:storyId/chapter/:chapterId",
         element: <ChapterPage />,
+      },
+      {
+        path: "/add-story",
+        element: <AddStory />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          return user;
+        },
       },
     ],
   },
