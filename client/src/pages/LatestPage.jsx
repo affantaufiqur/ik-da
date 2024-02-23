@@ -30,6 +30,7 @@ const LatestPage = () => {
     const params = new URLSearchParams(searchParams);
     if (!params.get("page")) {
       params.set("page", "1");
+
       setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);

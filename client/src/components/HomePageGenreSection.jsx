@@ -23,18 +23,18 @@ const HomePageGenreSection = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    setSearchParams(params.toString());
+    setActive(1);
+  }, [selectedGenre]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
     if (!params.get("page")) {
       params.set("page", "1");
       setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    setSearchParams(params.toString());
-    setActive(1);
-  }, [selectedGenre]);
 
   if (isLoadingGenres) {
     return <p>Loading Genres...</p>;
