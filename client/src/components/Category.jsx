@@ -14,7 +14,7 @@ export default function Category() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  const genresArray = data.data.map((item) => item.name);
+  const genresArray = data.data.map((item) => item.name).slice(0, 6);
 
   const handleGenreToggle = (genre) => {
     dispatch(genreAction.setGenre(genre));

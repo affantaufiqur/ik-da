@@ -27,7 +27,7 @@ const HomePageGenreSection = () => {
       params.set("page", "1");
       setSearchParams(params.toString());
     }
-  }, [selectedGenre, searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
