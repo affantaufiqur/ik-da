@@ -26,6 +26,7 @@ const HomePage = () => {
         </section>
       </div>
       {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
+      {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
     </div>
   );
 };

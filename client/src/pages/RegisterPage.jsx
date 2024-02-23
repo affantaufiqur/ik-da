@@ -35,6 +35,7 @@ export default function RegisterPage() {
       if (res.status !== 200) {
         setStatus(data.message);
         isSubmit(false);
+        return;
       }
       const oneMonth = new Date(Date.now() + 60 * 60 * 24 * 30 * 1000);
       document.cookie = `token=${data.token};expires=${oneMonth};path=/;`;
