@@ -12,7 +12,7 @@ const HomePageGenreSection = () => {
 
   const [isLoadingGenres, dataGenres, errorGenres] = useFetch("fetchGenres", `genres`);
 
-  const genresIdAndName = dataGenres.data.map((item) => ({ id: item.id, name: item.name }));
+  const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
   const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
 
   const [searchParams, setSearchParams] = useSearchParams();
