@@ -33,4 +33,18 @@ routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
     }
 });
 
+routes.get("/history/:storyId", authMiddleware, async (req, res) => {
+    try {
+        // @ts-ignore
+        const user = req.user;
+        const { storyId } = req.params;
+        const listBeenRead = await bookmarkService.getListReadChpater(storyId, user.id);
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.json(listBeenRead);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
+
 export default routes;

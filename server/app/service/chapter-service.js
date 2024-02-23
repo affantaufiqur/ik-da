@@ -48,6 +48,7 @@ class Chapter {
         return chapter;
     }
     async deleteChapter(storyId, chapterId) {
+        await prisma.chapterRead.deleteMany({where: {chapter_id: chapterId}});
         const chapter = await prisma.chapter.delete({
             where: {
                 id: chapterId,

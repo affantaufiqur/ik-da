@@ -137,8 +137,8 @@ model ChapterRead {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  stories Story @relation(fields: [story_id], references: [id], map: "chapterReadStories")
-  users User @relation(fields: [story_id], references: [id], map: "chapterReadUsers")
+  stories Story @relation(fields: [story_id], references: [id])
+  users User @relation(fields: [user_id], references: [id])
   chapters Chapter @relation(fields: [chapter_id], references: [id])
 
   @@map("chapter_read")
