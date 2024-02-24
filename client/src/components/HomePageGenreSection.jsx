@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
@@ -12,14 +12,19 @@ const HomePageGenreSection = () => {
 
   const [isLoadingGenres, dataGenres, errorGenres] = useFetch("fetchGenres", `genres`);
 
-  const genresIdAndName = dataGenres.data.map((item) => ({ id: item.id, name: item.name }));
+  const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
   const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [active, setActive] = useState(currentPage);
   const [isLoading, data, error] = useFetch("fetchOneGenre", `genres/${chosenGenre.id}?page=${currentPage}`);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    setSearchParams(params.toString());
+  }, [selectedGenre]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -28,13 +33,6 @@ const HomePageGenreSection = () => {
       setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    setSearchParams(params.toString());
-    setActive(1);
-  }, [selectedGenre]);
 
   if (isLoadingGenres) {
     return <p>Loading Genres...</p>;
@@ -57,21 +55,12 @@ const HomePageGenreSection = () => {
     return (
       <Link to={`/?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${active === page ? " bg-blue-gray-600" : "bg-white"}`}
-          onClick={() => setActive(page)}
+          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
         >
           {page}
         </IconButton>
       </Link>
     );
-  };
-  const next = () => {
-    if (active === total_page) return;
-    setActive(active + 1);
-  };
-  const prev = () => {
-    if (active === 1) return;
-    setActive(active - 1);
   };
 
   const renderEllipsis = () => {
@@ -125,7 +114,7 @@ const HomePageGenreSection = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+            <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {stories.map((item) => (
                 <BookCard
                   key={item.id}
@@ -149,16 +138,17 @@ const HomePageGenreSection = () => {
           </section>
         </section>
       </div>
-      <div className="my-12 flex items-center justify-end gap-4">
-        <Link to={`?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={prev} disabled={active === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> Previous
+      <div className="mt-24 flex items-center justify-end gap-4">
+        <Link to={`/?page=${prev_page ? prev_page : 1}`}>
+          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
+            <ChevronLeft strokeWidth={2} className="h-4 w-4" />
+            <span className="hidden md:inline">Previous</span>
           </Button>
         </Link>
         <div className="flex items-center gap-2">{renderPagination()}</div>
-        <Link to={`?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={next} disabled={active === total_page}>
-            Next
+        <Link to={`/?page=${next_page ? next_page : total_page}`}>
+          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
+            <span className="hidden md:inline">Next</span>
             <ChevronRight strokeWidth={2} className="h-4 w-4" />
           </Button>
         </Link>
