@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth-middleware.js";
-import { checkBookMark } from "../middleware/bookmark-middleware.js";
+import { checkBookMark, checkCapterRead } from "../middleware/bookmark-middleware.js";
 import bookmarkService from "../service/bookmark-service.js";
 
 const routes = Router();
@@ -45,6 +45,15 @@ routes.get("/history/:storyId", authMiddleware, async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Internal server error" });
     }
-})
+});
+
+routes.post("/history/:storyId/chapters/:chapterId", authMiddleware, checkCapterRead, async (req, res) => {
+    try {
+        res.json({ message:  "Chapter have been Read" });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 export default routes;
