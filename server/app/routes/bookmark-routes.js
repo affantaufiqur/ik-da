@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth-middleware.js";
-import { checkBookMark } from "../middleware/bookmark-middleware.js";
+import { checkBookMark, checkCapterRead } from "../middleware/bookmark-middleware.js";
 import bookmarkService from "../service/bookmark-service.js";
 
 const routes = Router();
@@ -27,6 +27,29 @@ routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
         const message = req.isMark ? "Add to Bookmark successfully" : "Remove from Bookmark successfully";
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+routes.get("/history/:storyId", authMiddleware, async (req, res) => {
+    try {
+        // @ts-ignore
+        const user = req.user;
+        const { storyId } = req.params;
+        const listBeenRead = await bookmarkService.getListReadChpater(storyId, user.id);
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.json(listBeenRead);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+routes.post("/history/:storyId/chapters/:chapterId", authMiddleware, checkCapterRead, async (req, res) => {
+    try {
+        res.json({ message:  "Chapter have been Read" });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Internal server error" });
