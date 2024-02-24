@@ -24,7 +24,7 @@ const LatestPage = () => {
   const currentPage = searchParams.get("page") || 1;
 
   const [active, setActive] = useState(currentPage);
-  const [isLoading, data, error] = useFetch("fetchLatest", `stories?direction=desc&page=${currentPage}`);
+  const [isLoading, data, error] = useFetch("fetchLatestPage", `stories`);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -112,7 +112,7 @@ const LatestPage = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+            <div className="grid gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {data.data.map((item) => (
                 <BookCard
                   key={item.id}
@@ -133,7 +133,7 @@ const LatestPage = () => {
           </section>
         </section>
       </div>
-      <div className="my-12 flex items-center justify-end gap-4">
+      <div className="mt-24 flex items-center justify-end gap-4">
         <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
           <Button variant="text" className="flex items-center gap-2" onClick={prev} disabled={active === 1}>
             <ChevronLeft strokeWidth={2} className="h-4 w-4" /> Previous

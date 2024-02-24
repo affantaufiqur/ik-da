@@ -125,7 +125,7 @@ const HomePageGenreSection = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+            <div className="grid  gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {stories.map((item) => (
                 <BookCard
                   key={item.id}
@@ -149,7 +149,7 @@ const HomePageGenreSection = () => {
           </section>
         </section>
       </div>
-      <div className="my-12 flex items-center justify-end gap-4">
+      <div className="mt-24 flex items-center justify-end gap-4">
         <Link to={`?page=${prev_page ? prev_page : 1}`}>
           <Button variant="text" className="flex items-center gap-2" onClick={prev} disabled={active === 1}>
             <ChevronLeft strokeWidth={2} className="h-4 w-4" /> Previous

@@ -22,7 +22,7 @@ const navLinks = [
   {
     id: 2,
     name: "Latest",
-    link: "/latest?page=1",
+    link: "/latest",
   },
   {
     id: 3,
@@ -55,13 +55,13 @@ function Navbar() {
 
   return (
     <>
-      <div className="flex flex-row justify-between md:px-12">
+      <div className="flex flex-row justify-between lg:px-12">
         <div
           id="navbar"
-          className="flex w-full flex-col items-center gap-y-3 py-5 font-dm-display text-primary md:h-[111px] md:flex-row md:gap-y-0 md:py-0"
+          className="flex w-full flex-col items-center gap-y-3 py-5 font-dm-display text-primary md:flex-row  lg:h-[111px]"
         >
-          <div id="navigation" className="hidden h-full w-full md:flex">
-            <ul className="flex h-full w-full items-center space-x-8  text-[1.5rem] font-semibold ">
+          <div id="navigation" className="hidden h-full w-full lg:flex">
+            <ul className="flex h-full w-full items-center font-semibold md:space-x-4 md:text-[1.2rem]  lg:space-x-8 lg:text-[1.5rem] ">
               {navLinks.map(({ id, name, link }) => (
                 <li
                   key={id}
@@ -77,7 +77,7 @@ function Navbar() {
           {data?.user ? (
             <div
               id="logged"
-              className="hidden h-full  w-full items-center justify-end md:flex md:flex-row md:gap-y-0 md:space-x-4"
+              className="hidden h-full  w-full items-center justify-end md:flex-row md:gap-y-0 md:space-x-4 lg:flex"
             >
               <div className="font-dm-sans font-bold">{data.user.name}</div>
               <Dropdown placement="bottom-end">
@@ -95,8 +95,8 @@ function Navbar() {
               </Dropdown>
             </div>
           ) : (
-            <div id="not-logged" className="hidden w-2/5 md:flex ">
-              <div className="flex h-full w-full items-center justify-end text-[1.5rem] font-semibold md:flex-row md:gap-10 md:gap-y-0">
+            <div id="not-logged" className="hidden w-2/5 lg:flex ">
+              <div className="flex h-full w-full items-center justify-end font-semibold md:flex-row md:gap-10  md:text-[1.2rem] lg:text-[1.5rem]">
                 <Link to="/login">LOGIN</Link>
                 <Link
                   to="/register"
@@ -108,12 +108,12 @@ function Navbar() {
             </div>
           )}
         </div>
-        <div onClick={menuHandler} id="hamburger-button" className="mr-10 inline-flex items-center md:hidden">
+        <div onClick={menuHandler} id="hamburger-button" className="mr-10 inline-flex items-center lg:hidden">
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </div>
       </div>
       {isOpen && (
-        <div className="absolute w-full border-b-2 border-black bg-white md:hidden">
+        <div className="absolute w-full border-b-2 border-black bg-white lg:hidden">
           <ul className="flex h-full w-full flex-col items-center gap-y-1 border-b-2 border-black  py-5 text-[1.5rem] font-semibold">
             {navLinks.map(({ id, name, link }) => (
               <li key={id} className="cursor-pointer transition duration-100 hover:translate-y-[-3px]">
