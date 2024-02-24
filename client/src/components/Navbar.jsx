@@ -79,10 +79,10 @@ function Navbar() {
               id="logged"
               className="hidden h-full  w-full items-center justify-end md:flex-row md:gap-y-0 md:space-x-4 lg:flex"
             >
-              <div className="font-dm-sans font-bold">{data.user.name}</div>
+              <div className="font-dm-sans text-[1.25rem] font-bold">{data.user.name}</div>
               <Dropdown placement="bottom-end">
                 <MenuHandler>
-                  <ChevronDown className="h-4 w-4 hover:cursor-pointer" />
+                  <ChevronDown className="h-5 w-5 hover:cursor-pointer" />
                 </MenuHandler>
                 <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
                   <Link to="/profile" className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
