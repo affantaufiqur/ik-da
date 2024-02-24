@@ -25,8 +25,10 @@ const PopularPage = () => {
   const [isLoading, data, error] = useFetch("fetchPopular", `stories?popular=true&page=${currentPage}`);
 
   useEffect(() => {
-    if (!searchParams.get("page")) {
-      setSearchParams("page", 1);
+    const params = new URLSearchParams(searchParams);
+    if (!params.get("page")) {
+      params.set("page", "1");
+      setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);
 
