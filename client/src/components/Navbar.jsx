@@ -109,7 +109,7 @@ function Navbar() {
           )}
         </div>
         <div onClick={menuHandler} id="hamburger-button" className="mr-10 inline-flex items-center lg:hidden">
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? <X className=" my-5 h-10 w-10" /> : <Menu className="my-5 h-10 w-10" />}
         </div>
       </div>
       {isOpen && (
