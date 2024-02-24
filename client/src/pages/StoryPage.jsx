@@ -28,7 +28,7 @@ export default function StoryPage() {
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
         <div className="flex flex-grow-0 flex-col space-y-3">
-          <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] w-full self-start object-cover" />
+          <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] max-w-[400px] object-cover" />
         </div>
         <section className="w-full flex-grow flex-col">
           <div className="flex flex-col space-y-12">

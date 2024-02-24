@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
@@ -23,8 +23,8 @@ const LatestPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [active, setActive] = useState(currentPage);
-  const [isLoading, data, error] = useFetch("fetchLatest", `stories?direction=desc&page=${currentPage}`);
+  // const [active, setActive] = useState(currentPage);
+  const [isLoading, data, error] = useFetch("fetchLatestPage", `stories?direction=desc&page=${currentPage}`);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -43,21 +43,12 @@ const LatestPage = () => {
     return (
       <Link to={`/latest?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${active === page ? " bg-blue-gray-600" : "bg-white"}`}
-          onClick={() => setActive(page)}
+          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
         >
           {page}
         </IconButton>
       </Link>
     );
-  };
-  const next = () => {
-    if (active === 5) return;
-    setActive(active + 1);
-  };
-  const prev = () => {
-    if (active === 1) return;
-    setActive(active - 1);
   };
 
   const renderEllipsis = () => {
@@ -78,8 +69,7 @@ const LatestPage = () => {
     // Determine the range of pages to show before the current page
     let startPage = Math.max(2, Number(currentPage) - 2);
     let endPage = Math.min(Number(currentPage) + 2, total_page - 1);
-    // console.log(currentPage);
-    // console.log("start,end", startPage, endPage);
+
     // Show the range of pages before the current page
     for (let i = startPage; i <= endPage; i++) {
       pagesToShow.push(renderPaginationItem(i));
@@ -112,7 +102,7 @@ const LatestPage = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+            <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {data.data.map((item) => (
                 <BookCard
                   key={item.id}
@@ -133,16 +123,16 @@ const LatestPage = () => {
           </section>
         </section>
       </div>
-      <div className="my-12 flex items-center justify-end gap-4">
+      <div className="mt-24 flex items-center justify-end gap-4">
         <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={prev} disabled={active === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> Previous
+          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
+            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> <span className="hidden md:inline">Previous</span>
           </Button>
         </Link>
         <div className="flex items-center gap-2">{renderPagination()}</div>
         <Link to={`/latest?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={next} disabled={active === total_page}>
-            Next
+          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
+            <span className="hidden md:inline">Next</span>
             <ChevronRight strokeWidth={2} className="h-4 w-4" />
           </Button>
         </Link>
