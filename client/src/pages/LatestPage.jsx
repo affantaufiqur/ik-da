@@ -23,8 +23,8 @@ const LatestPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [active, setActive] = useState(currentPage);
-  const [isLoading, data, error] = useFetch("fetchLatestPage", `stories`);
+  // const [active, setActive] = useState(currentPage);
+  const [isLoading, data, error] = useFetch("fetchLatestPage", `stories?direction=desc&page=${currentPage}`);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -43,22 +43,22 @@ const LatestPage = () => {
     return (
       <Link to={`/latest?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${active === page ? " bg-blue-gray-600" : "bg-white"}`}
-          onClick={() => setActive(page)}
+          className={`rounded-md border px-3 py-1 text-black ${currentPage == page ? " bg-blue-gray-600" : "bg-white"}`}
+          // onClick={() => setActive(page)}
         >
           {page}
         </IconButton>
       </Link>
     );
   };
-  const next = () => {
-    if (active === 5) return;
-    setActive(active + 1);
-  };
-  const prev = () => {
-    if (active === 1) return;
-    setActive(active - 1);
-  };
+  // const next = () => {
+  //   if (active === 5) return;
+  //   setActive(active + 1);
+  // };
+  // const prev = () => {
+  //   if (active === 1) return;
+  //   setActive(active - 1);
+  // };
 
   const renderEllipsis = () => {
     return <span className="text-gray-400">...</span>;
@@ -112,7 +112,7 @@ const LatestPage = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
+            <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {data.data.map((item) => (
                 <BookCard
                   key={item.id}
@@ -135,13 +135,13 @@ const LatestPage = () => {
       </div>
       <div className="mt-24 flex items-center justify-end gap-4">
         <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={prev} disabled={active === 1}>
+          <Button variant="text" className="flex items-center gap-2" disabled={currentPage == 1}>
             <ChevronLeft strokeWidth={2} className="h-4 w-4" /> Previous
           </Button>
         </Link>
         <div className="flex items-center gap-2">{renderPagination()}</div>
         <Link to={`/latest?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" onClick={next} disabled={active === total_page}>
+          <Button variant="text" className="flex items-center gap-2" disabled={currentPage == total_page}>
             Next
             <ChevronRight strokeWidth={2} className="h-4 w-4" />
           </Button>

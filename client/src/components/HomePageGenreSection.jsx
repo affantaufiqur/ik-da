@@ -125,7 +125,7 @@ const HomePageGenreSection = () => {
             </div>
           </div>
           <section className="mt-4">
-            <div className="grid  gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
+            <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
               {stories.map((item) => (
                 <BookCard
                   key={item.id}

@@ -23,7 +23,7 @@ const PopularColumn = () => {
           <p className="font-dm-sans text-base tracking-wide">This is what popular right now ;)</p>
         </div>
         <section className="mt-4">
-          <div className="grid gap-12 sm:grid-cols-6 lg:grid-cols-12">
+          <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12">
             {getFourData.map((item) => (
               <BookCard
                 key={item.id}
