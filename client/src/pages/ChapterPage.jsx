@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import EditorRender from "../components/ui/EditorRender";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
 
@@ -21,7 +22,7 @@ export default function ChapterPage() {
 
   return (
     <main className="mx-32">
-      <select className="max-h-[80px] w-full border-[1px] border-line/50 px-4 py-2">
+      <select className="my-4 max-h-[80px] w-full border-[1px] border-line/50 px-4 py-2">
         {data.story.chapters.map((item) => (
           <option key={item.id} value={item.id} className="text-black">
             {item.title}
@@ -50,6 +51,9 @@ export default function ChapterPage() {
           </div>
         </div>
       </div>
+      <section className="my-4">
+        <EditorRender content={data?.content} />
+      </section>
     </main>
   );
 }

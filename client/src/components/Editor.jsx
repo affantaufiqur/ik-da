@@ -4,13 +4,14 @@ import StarterKit from "@tiptap/starter-kit";
 import { Bold, Italic } from "lucide-react";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
 
 export default function Editor({ editable = true, content = "" }) {
   const params = useParams();
   const token = getTokenFromCookies();
+  const navigate = useNavigate();
   const storyId = params.storyId;
 
   const [validation, setValidation] = useState(false);
@@ -43,7 +44,7 @@ export default function Editor({ editable = true, content = "" }) {
     if (post.message === "Internal server error") {
       return setSubmitStatus("Failed on creating new chapter");
     }
-    return;
+    return navigate(`/story/${storyId}/chapter/${post.chapter.id}`);
   }
 
   function trigger() {
@@ -88,6 +89,7 @@ export default function Editor({ editable = true, content = "" }) {
       <button className="btn-primary" onClick={trigger}>
         Publish
       </button>
+      <Link to={`/story/sotryid/chapter/id`}>testing</Link>
       {submit && <p className="text-red-500">{submit}</p>}
     </main>
   );
