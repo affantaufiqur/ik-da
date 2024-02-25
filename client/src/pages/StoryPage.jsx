@@ -1,13 +1,12 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link, useLoaderData, useParams } from "react-router-dom";
-// import { format } from "@formkit/tempo";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { Bookmark, ChevronUp } from "lucide-react";
 import { useRef } from "react";
 import { truncateText } from "../shared/common";
 import { useState } from "react";
+import StoryToolbar from "../components/ui/StoryToolbar";
 
 export default function StoryPage() {
   const userData = useLoaderData();
@@ -24,6 +23,8 @@ export default function StoryPage() {
     isReadMore(!readMore);
   }
 
+  const isUserWriter = userData.user.id === data?.author_id;
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
@@ -37,20 +38,7 @@ export default function StoryPage() {
                 <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
                   {truncateText(data?.title, 75)}
                 </h2>
-                <section className="flex flex-row space-x-3 lg:space-x-1">
-                  <Link to={"new-chapter"} className="inline-flex h-10 items-center border-[1px] border-line/50 px-8">
-                    Write new chapter
-                  </Link>
-                  <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
-                    <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
-                  </div>
-                  <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
-                    <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
-                      {formatNumberComma}
-                    </h3>
-                    <ChevronUp className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
-                  </div>
-                </section>
+                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} />
               </section>
               <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
               <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">

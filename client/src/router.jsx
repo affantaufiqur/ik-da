@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter, redirect, useParams } from "react-router-dom";
 import App from "./App";
 import { getCurrentUser, getTokenFromCookies } from "./shared/token.js";
 import HomePage from "./pages/HomePage.jsx";
@@ -12,6 +12,10 @@ import StoryPage from "./pages/StoryPage.jsx";
 import ChapterPage from "./pages/ChapterPage.jsx";
 import AddStory from "./pages/AddStoryPage.jsx";
 import WriteChapter from "./pages/AddChapter.jsx";
+import EditStory from "./pages/EditStory.jsx";
+import { useFetch } from "./hooks/fetch-hooks.js";
+import { fetchData } from "./shared/fetch.js";
+
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +91,27 @@ export const router = createBrowserRouter([
             return redirect("/login");
           }
           return user;
+        },
+      },
+      {
+        path: "/story/:id/edit",
+        element: <EditStory />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          const storyData = await fetchData(`stories/${params.id}`);
+          if (storyData.message) {
+            return redirect("/");
+          }
+          if (storyData.author_id !== user.user.id) {
+            return redirect("/");
+          }
+          return {
+            user,
+            storyData,
+          };
         },
       },
     ],
