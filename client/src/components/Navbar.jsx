@@ -79,6 +79,9 @@ function Navbar() {
               id="logged"
               className="hidden h-full  w-full items-center justify-end md:flex-row md:gap-y-0 md:space-x-4 lg:flex"
             >
+              <Link to="/add-story" className="btn-primary">
+                WRITE
+              </Link>
               <div className="font-dm-sans text-[1.25rem] font-bold">{data.user.name}</div>
               <Dropdown placement="bottom-end">
                 <MenuHandler>
