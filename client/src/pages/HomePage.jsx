@@ -4,9 +4,18 @@ import HomePageSection from "../components/HomePageSection.jsx";
 
 import { useSelector } from "react-redux";
 import HomePageGenreSection from "../components/HomePageGenreSection.jsx";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const HomePage = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!selectedGenre) {
+      setSearchParams({});
+    }
+  }, [selectedGenre, setSearchParams]);
 
   return (
     <div className="pb-12">

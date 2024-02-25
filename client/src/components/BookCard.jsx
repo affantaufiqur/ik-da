@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function BookCard({ id, title, chapter, imgUrl, renderFn }) {
   return (
-    <div className="col-span-3 flex h-[700px] flex-col space-y-2">
+    <div className="col-span-3 flex h-[400px] flex-col space-y-2">
       <img src={imgUrl} alt={title} className="h-full w-full object-cover" />
       <div className="flex flex-col space-y-1">
         <Link

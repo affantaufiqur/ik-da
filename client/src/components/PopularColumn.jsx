@@ -23,7 +23,7 @@ const PopularColumn = () => {
           <p className="font-dm-sans text-base tracking-wide">This is what popular right now ;)</p>
         </div>
         <section className="mt-4">
-          <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+          <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12">
             {getFourData.map((item) => (
               <BookCard
                 key={item.id}
@@ -35,7 +35,7 @@ const PopularColumn = () => {
                   <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
                     <div className="h-full bg-black" style={{ width: `${progress}%` }} />
                     <p>{progress}%</p>
-                    <p>{item.upvote} upvotes</p>
+                    {/* <p>{item.upvote} upvotes</p> */}
                   </div>
                 )}
               />

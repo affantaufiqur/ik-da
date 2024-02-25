@@ -26,6 +26,7 @@ model User {
   stories Story[] // 1 user have many stories
   bookmarks Bookmark[] // 1 user have many bookmarks
   upvotes Upvote[] // 1 user can many upvotes
+  hsitory_read ChapterRead[]
 
   @@map("users")
 }
@@ -83,6 +84,7 @@ model Story {
   chapters Chapter[] // 1 story have many chapters
   bookmarks Bookmark[] // 1 story is in many bookmarks
   upvotes Upvote[] // 1 story have many upvotes
+  story_read ChapterRead[]
 
   @@map("stories")
 }
@@ -96,6 +98,7 @@ model Chapter {
   updated_at DateTime @updatedAt
 
   story Story @relation(fields: [story_id], references: [id])
+  chapter_read ChapterRead[]
 
   @@map("chapters")
 }
@@ -124,4 +127,19 @@ model Upvote {
   users User @relation(fields: [user_id], references: [id])
 
   @@map("upvotes")
+}
+
+model ChapterRead {
+  id String @id @default(uuid())
+  story_id String
+  chapter_id String
+  user_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  stories Story @relation(fields: [story_id], references: [id])
+  users User @relation(fields: [user_id], references: [id])
+  chapters Chapter @relation(fields: [chapter_id], references: [id])
+
+  @@map("chapter_read")
 }
