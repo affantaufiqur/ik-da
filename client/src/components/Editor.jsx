@@ -4,16 +4,8 @@ import StarterKit from "@tiptap/starter-kit";
 import { Bold, Italic } from "lucide-react";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { fetchData } from "../shared/fetch.js";
-import { getTokenFromCookies } from "../shared/token.js";
 
 export default function Editor({ editable = true, content = "", title = null, onSubmit }) {
-  const params = useParams();
-  const token = getTokenFromCookies();
-  const navigate = useNavigate();
-  const storyId = params.storyId;
-
   const [validation, setValidation] = useState(false);
   const [submit, setSubmitStatus] = useState(false);
   const inputRef = useRef(null);
@@ -24,31 +16,9 @@ export default function Editor({ editable = true, content = "", title = null, on
   });
   if (!editor) return null;
 
-  async function handleEditor() {
-    const content = editor?.getJSON();
-    const title = inputRef?.current?.value;
-
-    const data = {
-      title,
-      content,
-    };
-
-    const post = await fetchData(`stories/${storyId}/chapters`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (post.message === "Internal server error") {
-      return setSubmitStatus("Failed on creating new chapter");
-    }
-    return navigate(`/story/${storyId}/chapter/${post.chapter.id}`);
-  }
-
   function trigger() {
     setValidation(false);
+    setSubmitStatus(true);
     const title = inputRef?.current?.value;
     if (title.length < 1) {
       return setValidation("Title cannot be empty");
@@ -69,7 +39,7 @@ export default function Editor({ editable = true, content = "", title = null, on
           ref={inputRef}
           className="w-full border-2 border-line px-3 py-2.5 focus:outline-none focus:ring-transparent lg:w-1/3"
           name="title"
-          value={title ? title : ""}
+          defaultValue={title ? title : ""}
         />
         {validation && <p className="text-red-500">{validation}</p>}
       </section>

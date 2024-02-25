@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import { generateHTML } from "@tiptap/core";
 import Editor from "../components/Editor.jsx";
+import { toast } from "sonner";
 import StarterKit from "@tiptap/starter-kit";
 import { useMemo } from "react";
 import { getTokenFromCookies } from "../shared/token.js";
@@ -26,7 +27,7 @@ export default function EditChapter() {
       body: JSON.stringify(data),
     });
     if (update.message === "Internal server error" || update.message === "Error") {
-      return alert("Failed on creating new chapter");
+      return toast.error("Failed on creating new chapter");
     }
     return navigate(`/story/${pageData.storyData.story_id}/chapter/${pageData.storyData.id}`);
   }

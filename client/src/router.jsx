@@ -84,12 +84,16 @@ export const router = createBrowserRouter([
       {
         path: "/story/:storyId/new-chapter",
         element: <WriteChapter />,
-        loader: async () => {
+        loader: async ({ params }) => {
           const user = await getCurrentUser();
           if (!user) {
             return redirect("/login");
           }
-          return user;
+          const { storyId } = params;
+          return {
+            user,
+            storyId,
+          };
         },
       },
       {
