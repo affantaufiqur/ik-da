@@ -12,6 +12,7 @@ import StoryPage from "./pages/StoryPage.jsx";
 import ChapterPage from "./pages/ChapterPage.jsx";
 import AddStory from "./pages/AddStoryPage.jsx";
 import WriteChapter from "./pages/AddChapter.jsx";
+import EditStory from "./pages/EditStory.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +82,17 @@ export const router = createBrowserRouter([
       {
         path: "/story/:storyId/new-chapter",
         element: <WriteChapter />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          return user;
+        },
+      },
+      {
+        path: "/story/:id/edit",
+        element: <EditStory />,
         loader: async () => {
           const user = await getCurrentUser();
           if (!user) {
