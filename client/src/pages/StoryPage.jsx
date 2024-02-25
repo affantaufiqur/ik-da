@@ -38,7 +38,9 @@ export default function StoryPage() {
                   {truncateText(data?.title, 75)}
                 </h2>
                 <section className="flex flex-row space-x-3 lg:space-x-1">
-                  <Link to={"new-chapter"}>Write new chapter</Link>
+                  <Link to={"new-chapter"} className="inline-flex h-10 items-center border-[1px] border-line/50 px-8">
+                    Write new chapter
+                  </Link>
                   <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
                     <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
                   </div>
