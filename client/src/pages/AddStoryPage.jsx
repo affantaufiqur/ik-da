@@ -5,7 +5,7 @@ import { Loader } from "lucide-react";
 import FormWrapper from "../components/ui/FormWrapper";
 import { insertStorySchema, MAX_FILE_SIZE } from "../schema/story.schema";
 import { useFetch } from "../hooks/fetch-hooks";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { base, info } from "@uploadcare/upload-client";
 import { useState } from "react";
 import { fetchData } from "../shared/fetch";
@@ -15,6 +15,7 @@ export default function AddStory() {
   const [uploadStatus, setUploadStatus] = useState(false);
   const [isLoading, data, error] = useFetch("fetchGenres", "genres");
   const userData = useLoaderData();
+  const navigate = useNavigate();
   const form = useForm({
     initialValues: {
       title: "",
@@ -76,7 +77,7 @@ export default function AddStory() {
       }
 
       setUploadStatus(false);
-      return;
+      return navigate(`/story/${insertToDb.story.id}`);
     } catch (err) {
       console.log(err);
       setImageStatus(err);
