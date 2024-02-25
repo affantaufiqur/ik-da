@@ -1,6 +1,6 @@
 import { generateHTML } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import PropTypes from "prop-types";
 
@@ -15,6 +15,9 @@ export default function EditorRender({ content }) {
     editable: false,
   });
 
+  useEffect(() => {
+    editor?.commands.setContent(generateHtml);
+  }, [generateHtml, editor]);
   if (!editor) return null;
   return <EditorContent editor={editor} />;
 }

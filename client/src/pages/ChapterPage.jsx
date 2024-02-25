@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, ScrollRestoration } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
 
 export default function ChapterPage() {
   const params = useParams();
+  const navigate = useNavigate();
   const [isLoading, data, error] = useFetch(
     `read-chapter-${params.chapterId}`,
     `stories/${params.storyId}/chapters/${params.chapterId}`,
@@ -22,9 +23,12 @@ export default function ChapterPage() {
 
   return (
     <main className="mx-32">
-      <select className="my-4 max-h-[80px] w-full border-[1px] border-line/50 px-4 py-2">
+      <select
+        className="my-4 max-h-[80px] w-full border-[1px] border-line/50 px-4 py-2"
+        onChange={(e) => navigate(`/story/${params.storyId}/chapter/${e.target.value}`)}
+      >
         {data.story.chapters.map((item) => (
-          <option key={item.id} value={item.id} className="text-black">
+          <option key={item.id} value={item.id} className="text-black" selected={item.id === params.chapterId}>
             {item.title}
           </option>
         ))}
@@ -54,6 +58,7 @@ export default function ChapterPage() {
       <section className="my-4">
         <EditorRender content={data?.content} />
       </section>
+      <ScrollRestoration />
     </main>
   );
 }
