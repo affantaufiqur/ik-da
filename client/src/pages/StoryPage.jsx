@@ -4,7 +4,6 @@ import { Link, useLoaderData, useParams } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { useRef } from "react";
 import { truncateText } from "../shared/common";
 import { useState } from "react";
 import StoryToolbar from "../components/ui/StoryToolbar";
@@ -18,7 +17,6 @@ export default function StoryPage() {
   const userData = useLoaderData();
   const { id } = useParams();
   const token = getTokenFromCookies();
-  const searchChapterRef = useRef(null);
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
 
@@ -95,12 +93,6 @@ export default function StoryPage() {
                   </div>
                 </div>
               </section>
-              <input
-                type="search"
-                className="form-input-normal border-[1px] border-[#5e5e5e]/50 placeholder:text-sm"
-                placeholder="Search Chapters"
-                ref={searchChapterRef}
-              />
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
