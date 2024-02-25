@@ -2,8 +2,25 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { Bookmark, ChevronUp, MoreVertical } from "lucide-react";
+import { fetchData } from "../../shared/fetch.js";
+import { useParams, useNavigate } from "react-router-dom";
+import { getTokenFromCookies } from "../../shared/token.js";
 
 export default function StoryToolbar({ isUser, upvote }) {
+  const params = useParams();
+  const navigate = useNavigate();
+  async function deleteStory() {
+    const operation = await fetchData(`stories/${params.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getTokenFromCookies()}`,
+      },
+    });
+    if (operation.message === "Internal server error") {
+      return alert("failed deleting story");
+    }
+    return navigate("/profile");
+  }
   return (
     <section className="flex flex-row space-x-3 lg:space-x-1">
       {isUser ? (
@@ -33,6 +50,9 @@ export default function StoryToolbar({ isUser, upvote }) {
               <Link to={"edit"} className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
                 Edit
               </Link>
+              <button className="inline-flex justify-start p-1.5 hover:bg-gray-100" onClick={deleteStory}>
+                Delete
+              </button>
             </MenuList>
           </Dropdown>
         </div>
@@ -43,5 +63,5 @@ export default function StoryToolbar({ isUser, upvote }) {
 
 StoryToolbar.propTypes = {
   isUser: PropTypes.bool.isRequired,
-  upvote: PropTypes.number.isRequired,
+  upvote: PropTypes.string.isRequired,
 };
