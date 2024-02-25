@@ -4,20 +4,22 @@ import { useRef, useState } from "react";
 import { Bold, Italic } from "lucide-react";
 import * as Toggle from "@radix-ui/react-toggle";
 import { fetchData } from "../shared/fetch.js";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getTokenFromCookies } from "../shared/token.js";
+import PropTypes from "prop-types";
 
-export default function Editor() {
-  const userData = useLoaderData();
+export default function Editor({ editable = true, content = "" }) {
   const params = useParams();
   const token = getTokenFromCookies();
-  const userId = userData.user.id;
   const storyId = params.storyId;
 
   const [validation, setValidation] = useState(false);
+  const [submit, setSubmitStatus] = useState(false);
   const inputRef = useRef(null);
   const editor = useEditor({
     extensions: [StarterKit],
+    content,
+    editable,
   });
   if (!editor) return null;
 
@@ -38,8 +40,9 @@ export default function Editor() {
       },
       body: JSON.stringify(data),
     });
-
-    console.log(post);
+    if (post.message === "Internal server error") {
+      return setSubmitStatus("Failed on creating new chapter");
+    }
     return;
   }
 
@@ -85,6 +88,12 @@ export default function Editor() {
       <button className="btn-primary" onClick={trigger}>
         Publish
       </button>
+      {submit && <p className="text-red-500">{submit}</p>}
     </main>
   );
 }
+
+Editor.propTypes = {
+  editable: PropTypes.bool,
+  content: PropTypes.string,
+};
