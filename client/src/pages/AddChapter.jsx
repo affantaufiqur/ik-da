@@ -14,10 +14,10 @@ export default function WriteChapter() {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    console.log(post);
     if (post.message === "Internal server error" || post.message === "Error") {
       return toast.error("Failed on creating new chapter");
     }
