@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, ScrollRestoration } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
@@ -54,6 +54,7 @@ export default function ChapterPage() {
       <section className="my-4">
         <EditorRender content={data?.content} />
       </section>
+      <ScrollRestoration />
     </main>
   );
 }

@@ -17,7 +17,7 @@ class Chapter {
                                 title: true,
                             },
                             orderBy: {
-                                created_at: "desc",
+                                created_at: "asc",
                             },
                         },
                     },
@@ -31,7 +31,7 @@ class Chapter {
             data: {
                 story_id: storyId,
                 ...data,
-            }
+            },
         });
         return chapter;
     }
@@ -43,17 +43,17 @@ class Chapter {
             },
             data: {
                 ...data,
-            }
+            },
         });
         return chapter;
     }
     async deleteChapter(storyId, chapterId) {
-        await prisma.chapterRead.deleteMany({where: {chapter_id: chapterId}});
+        await prisma.chapterRead.deleteMany({ where: { chapter_id: chapterId } });
         const chapter = await prisma.chapter.delete({
             where: {
                 id: chapterId,
                 story_id: storyId,
-            }
+            },
         });
         return chapter;
     }
