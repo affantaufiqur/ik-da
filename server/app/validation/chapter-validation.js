@@ -7,6 +7,5 @@ export const createChapterSchema = Joi.object({
 
 export const updateChapterSchema = Joi.object({
     title: Joi.string(),
-    content: Joi.string(),
+    content: Joi.object(),
 });
-

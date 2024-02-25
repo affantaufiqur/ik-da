@@ -118,7 +118,7 @@ export default function StoryPage() {
                             </MenuHandler>
                             <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
                               <Link
-                                to="/profile"
+                                to={`chapter/${chapter.id}/edit`}
                                 className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
                               >
                                 Edit

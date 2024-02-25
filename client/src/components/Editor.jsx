@@ -4,11 +4,11 @@ import StarterKit from "@tiptap/starter-kit";
 import { Bold, Italic } from "lucide-react";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
 
-export default function Editor({ editable = true, content = "" }) {
+export default function Editor({ editable = true, content = "", title = null, onSubmit }) {
   const params = useParams();
   const token = getTokenFromCookies();
   const navigate = useNavigate();
@@ -53,17 +53,23 @@ export default function Editor({ editable = true, content = "" }) {
     if (title.length < 1) {
       return setValidation("Title cannot be empty");
     }
-    return handleEditor();
+    const content = editor?.getJSON();
+    const data = {
+      title,
+      content,
+    };
+    return onSubmit(data);
   }
 
   return (
     <main className="flex flex-col space-y-8">
       <section className="flex flex-col space-y-2">
-        <label htmlFor="title">Chapter title</label>
+        <label htmlFor="title">Title</label>
         <input
           ref={inputRef}
           className="w-full border-2 border-line px-3 py-2.5 focus:outline-none focus:ring-transparent lg:w-1/3"
           name="title"
+          value={title ? title : ""}
         />
         {validation && <p className="text-red-500">{validation}</p>}
       </section>
@@ -89,7 +95,6 @@ export default function Editor({ editable = true, content = "" }) {
       <button className="btn-primary" onClick={trigger}>
         Publish
       </button>
-      <Link to={`/story/sotryid/chapter/id`}>testing</Link>
       {submit && <p className="text-red-500">{submit}</p>}
     </main>
   );
@@ -98,4 +103,6 @@ export default function Editor({ editable = true, content = "" }) {
 Editor.propTypes = {
   editable: PropTypes.bool,
   content: PropTypes.string,
+  title: PropTypes.string,
+  onSubmit: PropTypes.func,
 };
