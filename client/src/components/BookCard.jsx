@@ -13,7 +13,7 @@ export default function BookCard({ id, title, chapter, imgUrl, renderFn }) {
           {title}
         </Link>
         <h6 className="font-dm-sans text-sm tracking-wide text-[#5E5E5E] md:text-base">{chapter}</h6>
-        {renderFn()}
+        {renderFn && renderFn()}
       </div>
     </div>
   );
@@ -24,5 +24,5 @@ BookCard.propTypes = {
   title: PropTypes.string.isRequired,
   chapter: PropTypes.string.isRequired,
   imgUrl: PropTypes.string.isRequired,
-  renderFn: PropTypes.func.isRequired,
+  renderFn: PropTypes.func,
 };
