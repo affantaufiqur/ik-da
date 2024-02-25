@@ -3,8 +3,17 @@ import StarterKit from "@tiptap/starter-kit";
 import { useRef, useState } from "react";
 import { Bold, Italic } from "lucide-react";
 import * as Toggle from "@radix-ui/react-toggle";
+import { fetchData } from "../shared/fetch.js";
+import { useLoaderData, useParams } from "react-router-dom";
+import { getTokenFromCookies } from "../shared/token.js";
 
 export default function Editor() {
+  const userData = useLoaderData();
+  const params = useParams();
+  const token = getTokenFromCookies();
+  const userId = userData.user.id;
+  const storyId = params.storyId;
+
   const [validation, setValidation] = useState(false);
   const inputRef = useRef(null);
   const editor = useEditor({
@@ -16,7 +25,22 @@ export default function Editor() {
     const content = editor?.getJSON();
     const title = inputRef?.current?.value;
 
-    console.log(content, title);
+    const data = {
+      title,
+      content,
+    };
+
+    const post = await fetchData(`stories/${storyId}/chapters`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(post);
+    return;
   }
 
   function trigger() {
