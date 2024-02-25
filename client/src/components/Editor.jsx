@@ -1,12 +1,12 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useRef, useState } from "react";
-import { Bold, Italic } from "lucide-react";
 import * as Toggle from "@radix-ui/react-toggle";
-import { fetchData } from "../shared/fetch.js";
-import { useParams } from "react-router-dom";
-import { getTokenFromCookies } from "../shared/token.js";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Bold, Italic } from "lucide-react";
 import PropTypes from "prop-types";
+import { useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchData } from "../shared/fetch.js";
+import { getTokenFromCookies } from "../shared/token.js";
 
 export default function Editor({ editable = true, content = "" }) {
   const params = useParams();
