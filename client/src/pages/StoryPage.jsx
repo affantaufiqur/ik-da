@@ -1,19 +1,25 @@
 import { useFetch } from "../hooks/fetch-hooks";
+import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { Link, useLoaderData, useParams } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { useRef } from "react";
 import { truncateText } from "../shared/common";
 import { useState } from "react";
 import StoryToolbar from "../components/ui/StoryToolbar";
+import { MoreVertical } from "lucide-react";
+import { fetchData } from "../shared/fetch.js";
+import { getTokenFromCookies } from "../shared/token.js";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function StoryPage() {
+  const queryClient = useQueryClient();
   const userData = useLoaderData();
   const { id } = useParams();
-  const searchChapterRef = useRef(null);
+  const token = getTokenFromCookies();
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters.length;
@@ -24,6 +30,20 @@ export default function StoryPage() {
   }
 
   const isUserWriter = userData.user.id === data?.author_id;
+
+  async function handleDelete(chapterId) {
+    const request = await fetchData(`stories/${id}/chapters/${chapterId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (request.message === "Internal server error") {
+      return alert("failed deleting chapter");
+    }
+    queryClient.invalidateQueries({ queryKey: [`fetchStory-${id}`] });
+    return request;
+  }
 
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
@@ -73,22 +93,37 @@ export default function StoryPage() {
                   </div>
                 </div>
               </section>
-              <input
-                type="search"
-                className="form-input-normal border-[1px] border-[#5e5e5e]/50 placeholder:text-sm"
-                placeholder="Search Chapters"
-                ref={searchChapterRef}
-              />
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {data?.chapters.map((chapter) => (
+                    {data?.chapters?.map((chapter) => (
                       <div
-                        className="border-t-mauve6 mt-2.5 border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
+                        className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
                         key={chapter.id}
                       >
                         <Link to={"/story/" + id + "/chapter/" + chapter.id}>{chapter.title}</Link>
+                        {isUserWriter && (
+                          <Dropdown placement="bottom-end">
+                            <MenuHandler>
+                              <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
+                            </MenuHandler>
+                            <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                              <Link
+                                to={`chapter/${chapter.id}/edit`}
+                                className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
+                              >
+                                Edit
+                              </Link>
+                              <button
+                                onClick={() => handleDelete(chapter.id)}
+                                className="inline-flex justify-start p-1.5 hover:bg-gray-100"
+                              >
+                                Delete
+                              </button>
+                            </MenuList>
+                          </Dropdown>
+                        )}
                       </div>
                     ))}
                   </div>

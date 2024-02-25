@@ -13,7 +13,7 @@ import ChapterPage from "./pages/ChapterPage.jsx";
 import AddStory from "./pages/AddStoryPage.jsx";
 import WriteChapter from "./pages/AddChapter.jsx";
 import EditStory from "./pages/EditStory.jsx";
-import { useFetch } from "./hooks/fetch-hooks.js";
+import EditChapter from "./pages/EditChapter.jsx";
 import { fetchData } from "./shared/fetch.js";
 
 export const router = createBrowserRouter([
@@ -84,12 +84,16 @@ export const router = createBrowserRouter([
       {
         path: "/story/:storyId/new-chapter",
         element: <WriteChapter />,
-        loader: async () => {
+        loader: async ({ params }) => {
           const user = await getCurrentUser();
           if (!user) {
             return redirect("/login");
           }
-          return user;
+          const { storyId } = params;
+          return {
+            user,
+            storyId,
+          };
         },
       },
       {
@@ -105,6 +109,27 @@ export const router = createBrowserRouter([
             return redirect("/");
           }
           if (storyData.author_id !== user.user.id) {
+            return redirect("/");
+          }
+          return {
+            user,
+            storyData,
+          };
+        },
+      },
+      {
+        path: "/story/:id/chapter/:chapterId/edit",
+        element: <EditChapter />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          const storyData = await fetchData(`stories/${params.id}/chapters/${params.chapterId}`);
+          if (storyData.message) {
+            return redirect("/");
+          }
+          if (storyData.story.author.id !== user.user.id) {
             return redirect("/");
           }
           return {

@@ -20,6 +20,11 @@ class Chapter {
                                 created_at: "asc",
                             },
                         },
+                        author: {
+                            select: {
+                                id: true,
+                            },
+                        },
                     },
                 },
             },
