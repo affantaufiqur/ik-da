@@ -26,17 +26,18 @@ routes.get("/bookmarks/:storyId", authMiddleware, async (req, res) => {
         const { storyId } = req.params;
         // @ts-ignore
         const user = req.user;
+        console.log(req.params, user.id);
         const bookmark = await bookmarkService.getCheckBookmarks(storyId, user.id);
         if (!bookmark) {
-            return res.status(404).json({ message: false });
+            return res.status(404).json({ is_bookmarked: false });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
-        return res.json({ message: true });
+        return res.json({ is_bookmarked: true });
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: "Internal server error" });
     }
-})
+});
 
 routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
     try {
@@ -66,7 +67,7 @@ routes.get("/history/:storyId", authMiddleware, async (req, res) => {
 
 routes.post("/history/:storyId/chapters/:chapterId", authMiddleware, checkCapterRead, async (req, res) => {
     try {
-        return res.json({ message:  "Chapter have been Read" });
+        return res.json({ message: "Chapter have been Read" });
     } catch (err) {
         console.log(err);
         return res.status(500).json({ message: "Internal server error" });

@@ -1,14 +1,25 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { Bookmark, ChevronUp, MoreVertical } from "lucide-react";
 import { fetchData } from "../../shared/fetch.js";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTokenFromCookies } from "../../shared/token.js";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
-export default function StoryToolbar({ isUser, upvote }) {
+export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
   const params = useParams();
   const navigate = useNavigate();
+  const pageData = useLoaderData();
+  const handleBookmarkmt = useMutation({
+    mutationKey: [`bookmark-${params.id}`],
+    mutationFn: async () => {
+      await bookmarkHandle();
+      return;
+    },
+  });
+
   async function deleteStory() {
     const operation = await fetchData(`stories/${params.id}`, {
       method: "DELETE",
@@ -17,10 +28,15 @@ export default function StoryToolbar({ isUser, upvote }) {
       },
     });
     if (operation.message === "Internal server error") {
-      return alert("failed deleting story");
+      return toast.error("failed deleting story");
     }
     return navigate("/profile");
   }
+
+  function handleBookmark() {
+    handleBookmarkmt.mutate();
+  }
+
   return (
     <section className="flex flex-row space-x-3 lg:space-x-1">
       {isUser ? (
@@ -31,8 +47,13 @@ export default function StoryToolbar({ isUser, upvote }) {
           New chapter
         </Link>
       ) : null}
-      <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
-        <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
+      <div
+        className={`group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:cursor-pointer hover:bg-black ${pageData.isMarked ? "bg-black text-white" : ""} `}
+        onClick={handleBookmark}
+      >
+        <Bookmark
+          className={`h-4 w-4 text-primary transition-all duration-100 group-hover:cursor-pointer group-hover:text-white ${pageData.isMarked ? "text-white" : ""}`}
+        />
       </div>
       <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
         <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
@@ -64,4 +85,5 @@ export default function StoryToolbar({ isUser, upvote }) {
 StoryToolbar.propTypes = {
   isUser: PropTypes.bool.isRequired,
   upvote: PropTypes.string.isRequired,
+  bookmarkHandle: PropTypes.func.isRequired,
 };
