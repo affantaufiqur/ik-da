@@ -6,9 +6,10 @@ import { fetchData } from "../../shared/fetch.js";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTokenFromCookies } from "../../shared/token.js";
 
-export default function StoryToolbar({ isUser, upvote }) {
+export default function StoryToolbar({ isUser, upvote, bookMark }) {
   const params = useParams();
   const navigate = useNavigate();
+
   async function deleteStory() {
     const operation = await fetchData(`stories/${params.id}`, {
       method: "DELETE",
@@ -21,6 +22,18 @@ export default function StoryToolbar({ isUser, upvote }) {
     }
     return navigate("/profile");
   }
+
+  async function addToBookmark() {
+    const token = getTokenFromCookies();
+    const data = await fetchData(`bookmarks`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(data);
+  }
+
   return (
     <section className="flex flex-row space-x-3 lg:space-x-1">
       {isUser ? (
@@ -31,7 +44,10 @@ export default function StoryToolbar({ isUser, upvote }) {
           New chapter
         </Link>
       ) : null}
-      <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
+      <div
+        className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black"
+        onClick={addToBookmark}
+      >
         <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
       </div>
       <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">

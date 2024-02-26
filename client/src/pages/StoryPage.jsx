@@ -19,17 +19,19 @@ export default function StoryPage() {
   const token = getTokenFromCookies();
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
+  console.log("data here", data);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
-  const countTotalChapter = data?.chapters.length;
+  const countTotalChapter = data?.chapters?.length;
   const formatNumberComma = new Intl.NumberFormat().format(data?.upvote);
 
   function handleReadMore() {
     isReadMore(!readMore);
   }
+  console.log(userData);
 
-  const isUserWriter = userData?.user.id === data?.author_id;
+  const isUserWriter = userData?.user.user.id === data?.author_id;
 
   async function handleDelete(chapterId) {
     const request = await fetchData(`stories/${id}/chapters/${chapterId}`, {
@@ -58,11 +60,11 @@ export default function StoryPage() {
                 <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
                   {truncateText(data?.title, 75)}
                 </h2>
-                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} />
+                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} bookMark={userData?.bookMarkData} />
               </section>
               <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
               <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">
-                <h6 className="">{data?.author_id === userData?.user?.id ? "You" : data?.author.name}</h6>
+                <h6 className="">{data?.author_id === userData?.user.user?.id ? "You" : data?.author.name}</h6>
                 <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
                 <h6 className="">{data?.genre.name}</h6>
                 <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />

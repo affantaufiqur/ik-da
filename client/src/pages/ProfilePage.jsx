@@ -36,7 +36,7 @@ export default function ProfilePage() {
                 .map((item) => (
                   <BookCard
                     key={item.id}
-                    id={item.id}
+                    id={item.story_id}
                     title={item.stories.title}
                     imgUrl={item.stories.cover_img}
                     chapter={"chapter 21"}

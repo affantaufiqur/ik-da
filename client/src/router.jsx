@@ -63,7 +63,17 @@ export const router = createBrowserRouter([
           if (!user) {
             return null;
           }
-          return user;
+          const token = getTokenFromCookies();
+          const bookMarkData = await fetchData(`bookmarks`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          return {
+            user,
+            bookMarkData,
+          };
         },
       },
       {
