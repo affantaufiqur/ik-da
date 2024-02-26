@@ -12,7 +12,6 @@ export const createStorySchema = Joi.object({
 export const updateStorySchema = Joi.object({
     title: Joi.string(),
     synopsis: Joi.string(),
-    genreId: Joi.string(),
-    image: Joi.string(),
+    genre_id: Joi.string(),
     status: Joi.string(),
 });

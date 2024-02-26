@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter, redirect, useParams } from "react-router-dom";
 import App from "./App";
 import { getCurrentUser, getTokenFromCookies } from "./shared/token.js";
 import HomePage from "./pages/HomePage.jsx";
@@ -11,6 +11,10 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import StoryPage from "./pages/StoryPage.jsx";
 import ChapterPage from "./pages/ChapterPage.jsx";
 import AddStory from "./pages/AddStoryPage.jsx";
+import WriteChapter from "./pages/AddChapter.jsx";
+import EditStory from "./pages/EditStory.jsx";
+import EditChapter from "./pages/EditChapter.jsx";
+import { fetchData } from "./shared/fetch.js";
 
 export const router = createBrowserRouter([
   {
@@ -75,6 +79,63 @@ export const router = createBrowserRouter([
             return redirect("/login");
           }
           return user;
+        },
+      },
+      {
+        path: "/story/:storyId/new-chapter",
+        element: <WriteChapter />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          const { storyId } = params;
+          return {
+            user,
+            storyId,
+          };
+        },
+      },
+      {
+        path: "/story/:id/edit",
+        element: <EditStory />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          const storyData = await fetchData(`stories/${params.id}`);
+          if (storyData.message) {
+            return redirect("/");
+          }
+          if (storyData.author_id !== user.user.id) {
+            return redirect("/");
+          }
+          return {
+            user,
+            storyData,
+          };
+        },
+      },
+      {
+        path: "/story/:id/chapter/:chapterId/edit",
+        element: <EditChapter />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          const storyData = await fetchData(`stories/${params.id}/chapters/${params.chapterId}`);
+          if (storyData.message) {
+            return redirect("/");
+          }
+          if (storyData.story.author.id !== user.user.id) {
+            return redirect("/");
+          }
+          return {
+            user,
+            storyData,
+          };
         },
       },
     ],

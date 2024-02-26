@@ -9,3 +9,9 @@ export const insertStorySchema = yup.object().shape({
   genreId: yup.string().required("Genre is required"),
   image: yup.string(),
 });
+
+export const updateStorySchema = yup.object().shape({
+  title: yup.string().required("Title is required"),
+  synopsis: yup.string().required("Content is required"),
+  genre_id: yup.string().required("Genre is required"),
+});
