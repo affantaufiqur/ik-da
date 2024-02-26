@@ -1,19 +1,24 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Bookmark, ChevronUp, Loader, MoreVertical } from "lucide-react";
+import { Bookmark, ChevronUp, MoreVertical } from "lucide-react";
 import { fetchData } from "../../shared/fetch.js";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTokenFromCookies } from "../../shared/token.js";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
-export default function StoryToolbar({ isUser, upvote, bookMark }) {
+export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
   const params = useParams();
   const navigate = useNavigate();
-  const [updateState, setUpdateState] = useState(false);
-  const queryClient = useQueryClient();
+  const pageData = useLoaderData();
+  const handleBookmarkmt = useMutation({
+    mutationKey: [`bookmark-${params.id}`],
+    mutationFn: async () => {
+      await bookmarkHandle();
+      return;
+    },
+  });
 
   async function deleteStory() {
     const operation = await fetchData(`stories/${params.id}`, {
@@ -28,25 +33,8 @@ export default function StoryToolbar({ isUser, upvote, bookMark }) {
     return navigate("/profile");
   }
 
-  async function bookMarkAction() {
-    setUpdateState(true);
-    const token = getTokenFromCookies();
-    const data = await fetchData(`bookmarks`, {
-      method: "POST",
-      body: JSON.stringify({
-        storyId: params.id,
-      }),
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    if (data.message === "Internal server error") {
-      return toast.error("failed bookmarking");
-    }
-    queryClient.invalidateQueries({ queryKey: [`fetchStory-${params.id}`] });
-    setUpdateState(false);
-    return;
+  function handleBookmark() {
+    handleBookmarkmt.mutate();
   }
 
   return (
@@ -59,18 +47,14 @@ export default function StoryToolbar({ isUser, upvote, bookMark }) {
           New chapter
         </Link>
       ) : null}
-      {!updateState ? (
-        <div
-          className={`group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black ${bookMark.is_bookmarked ? "bg-black text-white" : ""}`}
-          onClick={bookMarkAction}
-        >
-          <Bookmark
-            className={`h-4 w-4 text-primary transition-all duration-100 group-hover:text-white ${bookMark.is_bookmarked ? "bg-black text-white" : ""} `}
-          />
-        </div>
-      ) : (
-        <Loader className="h-4 w-4" />
-      )}
+      <div
+        className={`group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:cursor-pointer hover:bg-black ${pageData.isMarked ? "bg-black text-white" : ""} `}
+        onClick={handleBookmark}
+      >
+        <Bookmark
+          className={`h-4 w-4 text-primary transition-all duration-100 group-hover:cursor-pointer group-hover:text-white ${pageData.isMarked ? "text-white" : ""}`}
+        />
+      </div>
       <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
         <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
           {upvote}
@@ -101,5 +85,5 @@ export default function StoryToolbar({ isUser, upvote, bookMark }) {
 StoryToolbar.propTypes = {
   isUser: PropTypes.bool.isRequired,
   upvote: PropTypes.string.isRequired,
-  bookMark: PropTypes.any.isRequired,
+  bookmarkHandle: PropTypes.func.isRequired,
 };

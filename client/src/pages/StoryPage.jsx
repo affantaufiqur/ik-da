@@ -1,6 +1,6 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData, useParams, useRevalidator } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -11,6 +11,7 @@ import { MoreVertical } from "lucide-react";
 import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function StoryPage() {
   const queryClient = useQueryClient();
@@ -19,6 +20,7 @@ export default function StoryPage() {
   const token = getTokenFromCookies();
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
+  const revalidate = useRevalidator();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -45,6 +47,33 @@ export default function StoryPage() {
     return request;
   }
 
+  async function handleBookmark() {
+    const token = getTokenFromCookies();
+    const operation = await fetchData(`bookmarks`, {
+      method: "POST",
+      body: JSON.stringify({
+        storyId: id,
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (operation.message !== "Add to Bookmark successfully") {
+      revalidate.revalidate();
+      return toast("Removed from bookmark", {
+        action: {
+          label: "Undo",
+          onClick: async () => handleBookmark(),
+        },
+      });
+    }
+    queryClient.invalidateQueries({ queryKey: [`fetchStory-${id}`] });
+    revalidate.revalidate();
+    toast.success("Story is bookmarked!");
+    return operation;
+  }
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
@@ -58,7 +87,7 @@ export default function StoryPage() {
                 <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
                   {truncateText(data?.title, 75)}
                 </h2>
-                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} bookMark={userData?.bookMarkData} />
+                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} bookmarkHandle={handleBookmark} />
               </section>
               <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
               <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">

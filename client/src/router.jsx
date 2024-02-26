@@ -70,9 +70,10 @@ export const router = createBrowserRouter([
               Authorization: `Bearer ${token}`,
             },
           });
+          const isMarked = bookMarkData.is_bookmarked;
           return {
             user,
-            bookMarkData,
+            isMarked,
           };
         },
       },
