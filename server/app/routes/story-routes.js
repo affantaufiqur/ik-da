@@ -18,7 +18,7 @@ routes.get("/stories", async (req, res) => {
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -34,7 +34,7 @@ routes.get("/stories/random", async (req, res) => {
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -50,7 +50,7 @@ routes.get("/stories/:storyId", async (req, res) => {
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -67,7 +67,7 @@ routes.get("/stories/author/:authorId", async (req, res) => {
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -83,7 +83,7 @@ routes.post("/stories", authMiddleware, async (req, res) => {
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -104,7 +104,7 @@ routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async 
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -117,9 +117,8 @@ routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, asy
         return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
-    res.json({ message: "Route delete stories" });
 });
 
 export default routes;
