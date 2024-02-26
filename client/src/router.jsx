@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter, redirect, useParams } from "react-router-dom";
 import App from "./App";
 import { getCurrentUser, getTokenFromCookies } from "./shared/token.js";
 import HomePage from "./pages/HomePage.jsx";
