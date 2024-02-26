@@ -7,52 +7,31 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
-
 const RandomPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [active, setActive] = useState(currentPage);
   const [randomData, setRandomData] = useState(null);
 
   const renderPaginationItem = (page) => {
     return (
       <Link to={`/random?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${active === page ? " bg-blue-gray-600" : "bg-white"}`}
-          onClick={() => setActive(page)}
+          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
         >
           {page}
         </IconButton>
       </Link>
     );
   };
-  const next = () => {
-    if (active === 5) return;
-    setActive(active + 1);
-  };
-  const prev = () => {
-    if (active === 1) return;
-
-    setActive(active - 1);
-  };
 
   const [isLoading, data, error] = useFetch("fetchRandom", `stories/random?page=${currentPage}`);
 
   useEffect(() => {
-    if (!searchParams.get("page")) {
-      setSearchParams("page", 1);
+    const params = new URLSearchParams(searchParams);
+    if (!params.get("page")) {
+      params.set("page", "1");
+      setSearchParams(params.toString());
     }
   }, [searchParams, setSearchParams]);
 
@@ -87,8 +66,7 @@ const RandomPage = () => {
     // Determine the range of pages to show before the current page
     let startPage = Math.max(2, Number(currentPage) - 2);
     let endPage = Math.min(Number(currentPage) + 2, total_page - 1);
-    console.log(currentPage);
-    console.log("start,end", startPage, endPage);
+
     // Show the range of pages before the current page
     for (let i = startPage; i <= endPage; i++) {
       pagesToShow.push(renderPaginationItem(i));
