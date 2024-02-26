@@ -10,6 +10,7 @@ import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
 
 const HomePage = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  const searchKey = useSelector((state) => state.search.searchKey);
   // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -27,8 +28,7 @@ const HomePage = () => {
           <Category />
         </section>
       </div>
-      <HomePageSearchSection />
-      {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
+      {searchKey ? <HomePageSearchSection /> : selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
     </div>
   );
 };

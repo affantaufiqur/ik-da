@@ -2,21 +2,19 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 
 const HomePageSearchSection = () => {
   const searchKey = useSelector((state) => state.search.searchKey);
+  //   const [search, setSearch] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [isLoading, data, error] = useFetch(
-    "fetchSearch",
-    `stories?search=${searchKey ? searchKey : ""}&page=${currentPage}`,
-  );
+  const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${currentPage}`);
 
   //   const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
   //   const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
@@ -31,20 +29,33 @@ const HomePageSearchSection = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  //   if (isLoadingGenres) {
-  //     return <p>Loading Genres...</p>;
-  //   }
-
-  //   if (errorGenres) {
-  //     return <p>Error</p>;
-  //   }
+  //   useEffect(() => {
+  //     setSearch(searchKey);
+  //   }, [searchKey]);
 
   if (isLoading) return <p>Loading Books...</p>;
   if (error) return <p>Error</p>;
-  const progress = 35;
-  console.log(data.data);
+
+  console.log(searchKey, data);
   console.log(searchKey);
   console.log(currentPage);
+
+  if (!data.meta) {
+    return (
+      <div className="mt-12 px-4 md:px-12">
+        <section className="mt-12">
+          <div className="text-primary">
+            <h1 className="font-dm-display text-2xl font-medium tracking-wide">
+              No stories found for &quot;{searchKey}&quot;
+            </h1>
+            <p className="font-dm-sans text-base tracking-wide">Please try a different search term.</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const progress = 35;
   const stories = data.data;
   // console.log(stories);
 
