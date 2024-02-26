@@ -15,9 +15,10 @@ routes.get("/stories", async (req, res) => {
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(stories);
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -30,9 +31,10 @@ routes.get("/stories/random", async (req, res) => {
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(stories);
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -45,9 +47,10 @@ routes.get("/stories/:storyId", async (req, res) => {
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(story);
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -61,9 +64,10 @@ routes.get("/stories/author/:authorId", async (req, res) => {
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json(stories);
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -76,9 +80,10 @@ routes.post("/stories", authMiddleware, async (req, res) => {
         const story = await storyService.createStory(value);
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message: "Create story successfully", story });
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -96,9 +101,10 @@ routes.put("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, async 
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message: "Update story successfully", story });
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -108,11 +114,11 @@ routes.delete("/stories/:storyId", authMiddleware, authorOnChangeMiddleware, asy
         const story = await storyService.deleteStory(storyId);
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({ message: "Delete story successfully", story });
+        return;
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
-    res.json({ message: "Route delete stories" });
 });
 
 export default routes;
