@@ -21,6 +21,23 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
     }
 });
 
+routes.get("/bookmarks/:storyId", authMiddleware, async (req, res) => {
+    try {
+        const { storyId } = req.params;
+        // @ts-ignore
+        const user = req.user;
+        const bookmark = await bookmarkService.getCheckBookmarks(storyId, user.id);
+        if (!bookmark) {
+            return res.status(404).json({ message: false });
+        }
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return res.json({ message: true });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+})
+
 routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
     try {
         // @ts-ignore
