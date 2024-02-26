@@ -38,6 +38,15 @@ class Bookmark {
         }
         return listStories;
     }
+    async getCheckBookmarks(userId, storyId) {
+        const bookmark = await prisma.bookmark.findFirst({
+            where: {
+                user_id: userId,
+                story_id: storyId
+            }
+        });
+        return bookmark;
+    }
     async getListReadChpater (storyId, userId) {
         const readChapter = await prisma.chapterRead.findMany({
             where: {
