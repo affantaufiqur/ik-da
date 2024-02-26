@@ -12,6 +12,7 @@ import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Dot } from "lucide-react";
 
 export default function StoryPage() {
   const queryClient = useQueryClient();
@@ -25,7 +26,7 @@ export default function StoryPage() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters?.length;
-  const formatNumberComma = new Intl.NumberFormat().format(data?.upvote);
+  const formatUpvote = new Intl.NumberFormat().format(data?.upvote);
 
   function handleReadMore() {
     isReadMore(!readMore);
@@ -99,31 +100,65 @@ export default function StoryPage() {
         <div className="flex flex-grow-0 flex-col space-y-3">
           <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] max-w-[400px] object-cover" />
         </div>
-        <section className="w-full flex-grow flex-col">
-          <div className="flex flex-col space-y-12">
-            <section className="flex flex-col space-y-4 lg:space-y-2">
-              <section className="flex flex-col items-start justify-between space-y-3 lg:flex-row lg:space-x-4">
-                <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
-                  {truncateText(data?.title, 75)}
-                </h2>
-                <StoryToolbar
-                  upvoteHandle={handleUpvote}
-                  isUser={isUserWriter}
-                  upvote={formatNumberComma}
-                  bookmarkHandle={handleBookmark}
-                />
+        <section className="mt-4 w-full flex-grow flex-col md:mt-0">
+          <div className="flex flex-col space-y-8">
+            <section className="flex flex-col space-y-4">
+              <section className="flex flex-col items-start justify-between space-y-3 md:space-y-0 lg:flex-row lg:space-x-4">
+                <section className="flex w-full flex-row justify-between">
+                  <h2 className="max-w-fit text-wrap font-dm-display text-3xl font-bold tracking-tight text-primary md:block md:text-4xl">
+                    {truncateText(data?.title, 75)}
+                  </h2>
+                </section>
+                <div className="flex flex-col space-y-4 md:hidden">
+                  <section className="flex flex-row items-center space-x-1">
+                    <h2 className="font-dm-sans text-sm text-line">{data?.author.name}</h2>
+                    <Dot className="h-4 w-4 text-line/50" />
+                    <h2 className="font-dm-sans text-sm text-line">{data?.genre.name}</h2>
+                    <Dot className="h-4 w-4 text-line/50" />
+                    {userData?.user ? null : <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>}
+                  </section>
+
+                  <section className="md:hidden">
+                    {userData?.user ? (
+                      <StoryToolbar
+                        upvoteHandle={handleUpvote}
+                        isUser={isUserWriter}
+                        upvote={formatUpvote}
+                        bookmarkHandle={handleBookmark}
+                      />
+                    ) : null}
+                  </section>
+                </div>
+                <section className="hidden md:block">
+                  {userData?.user ? (
+                    <StoryToolbar
+                      upvoteHandle={handleUpvote}
+                      isUser={isUserWriter}
+                      upvote={formatUpvote}
+                      bookmarkHandle={handleBookmark}
+                    />
+                  ) : null}
+                </section>
               </section>
-              <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
-              <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">
-                <h6 className="">{data?.author_id === userData?.user.user?.id ? "You" : data?.author.name}</h6>
-                <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
-                <h6 className="">{data?.genre.name}</h6>
-                <div className="h-6 w-[0.5px] border-[0.5px] border-line/20 bg-line/50" />
-                <h6 className="">{countTotalChapter} Chapters</h6>
+              <section className="hidden md:flex">
+                <section className="flex flex-row items-center space-x-2">
+                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
+                    <span className="text-primary">{data?.author.name}</span>
+                  </div>
+                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
+                    <span className="text-primary">{data?.genre.name}</span>
+                  </div>
+                  {userData?.user ? null : (
+                    <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
+                      <span className="text-primary">{formatUpvote} Upvote</span>
+                    </div>
+                  )}
+                </section>
               </section>
             </section>
-            <section className="flex flex-col justify-start">
-              <Typography className="text-wrap font-dm-sans text-sm font-medium leading-normal tracking-normal text-line md:text-lg">
+            <div className="h-[1px] w-full bg-line/20" />
+            <section className="flex flex-col justify-start space-y-2">
+              <Typography className="text-wrap font-dm-sans text-sm font-medium leading-normal tracking-normal text-primary md:text-lg">
                 {readMore
                   ? `Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.`
                   : truncateText(data?.synopsis, 500)}
