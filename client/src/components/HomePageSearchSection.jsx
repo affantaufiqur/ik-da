@@ -33,10 +33,6 @@ const HomePageSearchSection = () => {
   if (isLoading) return <p>Loading Books...</p>;
   if (error) return <p>Error</p>;
 
-  //   console.log(searchKey, data);
-  //   console.log(searchKey);
-  //   console.log(currentPage);
-
   if (!data.meta) {
     return (
       <div className="mt-12 px-4 md:px-12">
