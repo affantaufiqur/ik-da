@@ -38,6 +38,22 @@ class Bookmark {
         }
         return listStories;
     }
+    async getListReadChpater (storyId, userId) {
+        const readChapter = await prisma.chapterRead.findMany({
+            where: {
+                story_id: storyId,
+                user_id: userId
+            }
+        });
+        const listChapter = await prisma.chapter.count({
+            where: {
+                story_id: storyId,
+            }
+        });
+        const progress = Math.floor(listChapter ? (readChapter.length / listChapter) * 100 : 0);
+        return ({ data: readChapter, progress });
+    }
+
 }
 
 export default new Bookmark();

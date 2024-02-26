@@ -1,20 +1,25 @@
 import { useFetch } from "../hooks/fetch-hooks";
+import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { Link, useLoaderData, useParams } from "react-router-dom";
-// import { format } from "@formkit/tempo";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { Bookmark, ChevronUp } from "lucide-react";
-import { useRef } from "react";
 import { truncateText } from "../shared/common";
 import { useState } from "react";
+import StoryToolbar from "../components/ui/StoryToolbar";
+import { MoreVertical } from "lucide-react";
+import { fetchData } from "../shared/fetch.js";
+import { getTokenFromCookies } from "../shared/token.js";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function StoryPage() {
+  const queryClient = useQueryClient();
   const userData = useLoaderData();
   const { id } = useParams();
-  const searchChapterRef = useRef(null);
+  const token = getTokenFromCookies();
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters.length;
@@ -24,11 +29,27 @@ export default function StoryPage() {
     isReadMore(!readMore);
   }
 
+  const isUserWriter = userData.user.id === data?.author_id;
+
+  async function handleDelete(chapterId) {
+    const request = await fetchData(`stories/${id}/chapters/${chapterId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (request.message === "Internal server error") {
+      return alert("failed deleting chapter");
+    }
+    queryClient.invalidateQueries({ queryKey: [`fetchStory-${id}`] });
+    return request;
+  }
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
         <div className="flex flex-grow-0 flex-col space-y-3">
-          <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] w-full self-start object-cover" />
+          <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] max-w-[400px] object-cover" />
         </div>
         <section className="w-full flex-grow flex-col">
           <div className="flex flex-col space-y-12">
@@ -37,17 +58,7 @@ export default function StoryPage() {
                 <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
                   {truncateText(data?.title, 75)}
                 </h2>
-                <section className="flex flex-row space-x-3 lg:space-x-1">
-                  <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
-                    <Bookmark className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
-                  </div>
-                  <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
-                    <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
-                      {formatNumberComma}
-                    </h3>
-                    <ChevronUp className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
-                  </div>
-                </section>
+                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} />
               </section>
               <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
               <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">
@@ -82,22 +93,37 @@ export default function StoryPage() {
                   </div>
                 </div>
               </section>
-              <input
-                type="search"
-                className="form-input-normal border-[1px] border-[#5e5e5e]/50 placeholder:text-sm"
-                placeholder="Search Chapters"
-                ref={searchChapterRef}
-              />
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {data?.chapters.map((chapter) => (
+                    {data?.chapters?.map((chapter) => (
                       <div
-                        className="border-t-mauve6 mt-2.5 border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
+                        className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
                         key={chapter.id}
                       >
                         <Link to={"/story/" + id + "/chapter/" + chapter.id}>{chapter.title}</Link>
+                        {isUserWriter && (
+                          <Dropdown placement="bottom-end">
+                            <MenuHandler>
+                              <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
+                            </MenuHandler>
+                            <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                              <Link
+                                to={`chapter/${chapter.id}/edit`}
+                                className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
+                              >
+                                Edit
+                              </Link>
+                              <button
+                                onClick={() => handleDelete(chapter.id)}
+                                className="inline-flex justify-start p-1.5 hover:bg-gray-100"
+                              >
+                                Delete
+                              </button>
+                            </MenuList>
+                          </Dropdown>
+                        )}
                       </div>
                     ))}
                   </div>

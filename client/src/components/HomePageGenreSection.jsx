@@ -2,29 +2,29 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-// import { useState } from "react";
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
+const HomePageGenreSection = () => {
+  const selectedGenre = useSelector((state) => state.genre.selectedGenre);
 
-const LatestPage = () => {
+  const [isLoadingGenres, dataGenres, errorGenres] = useFetch("fetchGenres", `genres`);
+
+  const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
+  const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  // const [active, setActive] = useState(currentPage);
-  const [isLoading, data, error] = useFetch("fetchLatestPage", `stories?direction=desc&page=${currentPage}`);
+  const [isLoading, data, error] = useFetch("fetchOneGenre", `genres/${chosenGenre.id}?page=${currentPage}`);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    setSearchParams(params.toString());
+  }, [selectedGenre]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -34,14 +34,26 @@ const LatestPage = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoadingGenres) {
+    return <p>Loading Genres...</p>;
+  }
+
+  if (errorGenres) {
+    return <p>Error</p>;
+  }
+
+  if (isLoading) return <p>Loading Books...</p>;
   if (error) return <p>Error</p>;
   const progress = 35;
 
+  const stories = data.genre.stories;
+  // console.log(stories);
+
   const { total_page, prev_page, next_page } = data.meta;
+
   const renderPaginationItem = (page) => {
     return (
-      <Link to={`/latest?page=${page}`} key={page}>
+      <Link to={`/?page=${page}`} key={page}>
         <IconButton
           className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
         >
@@ -92,9 +104,9 @@ const LatestPage = () => {
         <section className="mt-12">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
-              <h1 className="font-dm-display text-2xl font-medium tracking-wide">Latest</h1>
+              <h1 className="font-dm-display text-2xl font-medium tracking-wide">For Genre {chosenGenre.name}</h1>
               <p className="font-dm-sans text-base tracking-wide">
-                Here are the latest stories from your favorite authors ;)
+                These are the best stories for {chosenGenre.name} lovers!
               </p>
             </div>
             <div className="flex flex-row space-x-2">
@@ -103,20 +115,23 @@ const LatestPage = () => {
           </div>
           <section className="mt-4">
             <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
-              {data.data.map((item) => (
+              {stories.map((item) => (
                 <BookCard
                   key={item.id}
                   id={item.id}
                   title={item.title}
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
-                  renderFn={() => (
-                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                      <p>{progress}%</p>
-                      <p>Published on {formatDate(item.created_at)}</p>
-                    </div>
-                  )}
+                  renderFn={() => {
+                    const genreName = genresIdAndName.find((genre) => genre.id === item.genre_id)?.name;
+                    return (
+                      <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
+                        <div className="h-full bg-black" style={{ width: `${progress}%` }} />
+                        <p>{progress}%</p>
+                        Genre : {genreName}
+                      </div>
+                    );
+                  }}
                 />
               ))}
             </div>
@@ -124,13 +139,14 @@ const LatestPage = () => {
         </section>
       </div>
       <div className="mt-24 flex items-center justify-end gap-4">
-        <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
+        <Link to={`/?page=${prev_page ? prev_page : 1}`}>
           <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> <span className="hidden md:inline">Previous</span>
+            <ChevronLeft strokeWidth={2} className="h-4 w-4" />
+            <span className="hidden md:inline">Previous</span>
           </Button>
         </Link>
         <div className="flex items-center gap-2">{renderPagination()}</div>
-        <Link to={`/latest?page=${next_page ? next_page : total_page}`}>
+        <Link to={`/?page=${next_page ? next_page : total_page}`}>
           <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
             <span className="hidden md:inline">Next</span>
             <ChevronRight strokeWidth={2} className="h-4 w-4" />
@@ -141,4 +157,4 @@ const LatestPage = () => {
   );
 };
 
-export default LatestPage;
+export default HomePageGenreSection;
