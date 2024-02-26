@@ -6,10 +6,6 @@ import { createChapterSchema, updateChapterSchema } from "../validation/chapter-
 
 const routes = Router();
 
-routes.get("/stories/:storyId/chapters", async (req, res) => {
-    res.json({ message: "Route get stories chapters" });
-});
-
 routes.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
     try {
         const { storyId, chapterId } = req.params;

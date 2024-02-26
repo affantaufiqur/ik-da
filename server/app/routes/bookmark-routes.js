@@ -14,10 +14,10 @@ routes.get("/bookmarks", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "Bookmarks is empty" });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.json(bookmarks);
+        return res.json(bookmarks);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -26,10 +26,10 @@ routes.post("/bookmarks", authMiddleware, checkBookMark, async (req, res) => {
         // @ts-ignore
         const message = req.isMark ? "Add to Bookmark successfully" : "Remove from Bookmark successfully";
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.json({ message });
+        return res.json({ message });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -40,19 +40,19 @@ routes.get("/history/:storyId", authMiddleware, async (req, res) => {
         const { storyId } = req.params;
         const listBeenRead = await bookmarkService.getListReadChpater(storyId, user.id);
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.json(listBeenRead);
+        return res.json(listBeenRead);
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
 routes.post("/history/:storyId/chapters/:chapterId", authMiddleware, checkCapterRead, async (req, res) => {
     try {
-        res.json({ message:  "Chapter have been Read" });
+        return res.json({ message:  "Chapter have been Read" });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
