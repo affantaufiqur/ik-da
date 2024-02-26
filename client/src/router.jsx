@@ -70,10 +70,18 @@ export const router = createBrowserRouter([
               Authorization: `Bearer ${token}`,
             },
           });
+          const upvoteData = await fetchData(`likes-story/${params.id}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const isLiked = upvoteData.is_liked;
           const isMarked = bookMarkData.is_bookmarked;
           return {
             user,
             isMarked,
+            isLiked,
           };
         },
       },

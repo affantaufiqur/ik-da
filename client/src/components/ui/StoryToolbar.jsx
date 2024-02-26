@@ -8,7 +8,7 @@ import { getTokenFromCookies } from "../../shared/token.js";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 
-export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
+export default function StoryToolbar({ isUser, upvote, bookmarkHandle, upvoteHandle }) {
   const params = useParams();
   const navigate = useNavigate();
   const pageData = useLoaderData();
@@ -16,6 +16,14 @@ export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
     mutationKey: [`bookmark-${params.id}`],
     mutationFn: async () => {
       await bookmarkHandle();
+      return;
+    },
+  });
+
+  const handleUpvotemt = useMutation({
+    mutationKey: [`upvote-${params.id}`],
+    mutationFn: async () => {
+      await upvoteHandle();
       return;
     },
   });
@@ -37,6 +45,10 @@ export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
     handleBookmarkmt.mutate();
   }
 
+  function handleUpvote() {
+    handleUpvotemt.mutate();
+  }
+
   return (
     <section className="flex flex-row space-x-3 lg:space-x-1">
       {isUser ? (
@@ -55,11 +67,18 @@ export default function StoryToolbar({ isUser, upvote, bookmarkHandle }) {
           className={`h-4 w-4 text-primary transition-all duration-100 group-hover:cursor-pointer group-hover:text-white ${pageData.isMarked ? "text-white" : ""}`}
         />
       </div>
-      <div className="group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black">
-        <h3 className="tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white">
+      <div
+        onClick={handleUpvote}
+        className={`group flex flex-row items-center justify-center space-x-4 border-[1px] border-line/50 px-6 transition-all duration-100 hover:bg-black ${pageData.isLiked ? "bg-black" : ""}`}
+      >
+        <h3
+          className={`tansition-all cursor-pointer font-dm-sans text-sm font-medium text-primary duration-100 group-hover:text-white ${pageData.isLiked ? "text-white" : ""}`}
+        >
           {upvote}
         </h3>
-        <ChevronUp className="tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white" />
+        <ChevronUp
+          className={`tansition-all h-4 w-4 text-primary duration-100 group-hover:text-white ${pageData.isLiked ? "text-white" : ""}`}
+        />
       </div>
       {isUser ? (
         <div className="group inline-flex h-10 w-10 items-center justify-center border-[1px] border-line/50 transition-all duration-100 hover:bg-black">
@@ -86,4 +105,5 @@ StoryToolbar.propTypes = {
   isUser: PropTypes.bool.isRequired,
   upvote: PropTypes.string.isRequired,
   bookmarkHandle: PropTypes.func.isRequired,
+  upvoteHandle: PropTypes.func.isRequired,
 };
