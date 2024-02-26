@@ -58,13 +58,13 @@ export const router = createBrowserRouter([
       {
         path: "/story/:id",
         element: <StoryPage />,
-        loader: async () => {
+        loader: async ({ params }) => {
           const user = await getCurrentUser();
           if (!user) {
             return null;
           }
           const token = getTokenFromCookies();
-          const bookMarkData = await fetchData(`bookmarks`, {
+          const bookMarkData = await fetchData(`bookmarks/${params.id}`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

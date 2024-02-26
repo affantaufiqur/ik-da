@@ -19,7 +19,6 @@ export default function StoryPage() {
   const token = getTokenFromCookies();
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
-  console.log("data here", data);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -29,7 +28,6 @@ export default function StoryPage() {
   function handleReadMore() {
     isReadMore(!readMore);
   }
-  console.log(userData);
 
   const isUserWriter = userData?.user.user.id === data?.author_id;
 
