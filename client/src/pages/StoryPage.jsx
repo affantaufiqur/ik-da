@@ -28,8 +28,8 @@ export default function StoryPage() {
   function handleReadMore() {
     isReadMore(!readMore);
   }
-
-  const isUserWriter = userData.user.id === data?.author_id;
+  console.log(userData);
+  const isUserWriter = userData?.user.id === data?.author_id;
 
   async function handleDelete(chapterId) {
     const request = await fetchData(`stories/${id}/chapters/${chapterId}`, {
