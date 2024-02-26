@@ -2,20 +2,25 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 
 const HomePageSearchSection = () => {
   const searchKey = useSelector((state) => state.search.searchKey);
-  //   const [search, setSearch] = useState("");
+  const [page, setPage] = useState("1");
+
+  const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${page}`);
+  //   console.log("currentPage", currentPage);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${currentPage}`);
-  //   console.log("currentPage", currentPage);
+  useEffect(() => {
+    setPage(currentPage);
+  }, [currentPage]);
+
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
