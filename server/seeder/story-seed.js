@@ -2,6 +2,7 @@ import prisma from "../app/prisma.js";
 import { faker } from "@faker-js/faker";
 
 async function main() {
+    await prisma.chapterRead.deleteMany();
     await prisma.bookmark.deleteMany();
     await prisma.upvote.deleteMany();
     await prisma.chapter.deleteMany();
