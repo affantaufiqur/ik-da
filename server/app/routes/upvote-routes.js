@@ -29,10 +29,10 @@ routes.get("/likes-story/:storyId", authMiddleware, async (req, res) => {
             }
         })
         if (!story) {
-            return res.status(404).json({ isLiked: false });
+            return res.status(404).json({ is_liked: false });
         }
         res.setHeader("Access-Control-Allow-Origin", "*");
-        return res.json({ isLiked: true });
+        return res.json({ is_liked: true });
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" });
