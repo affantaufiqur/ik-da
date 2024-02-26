@@ -45,16 +45,35 @@ const authSlice = createSlice({
   },
 });
 
+const initialSearchState = {
+  searchKey: null,
+};
+
+const searchSlice = createSlice({
+  name: "search",
+  initialState: initialSearchState,
+  reducers: {
+    setSearchKey: (state, action) => {
+      state.searchKey = action.payload;
+    },
+    clearSearchText: (state) => {
+      state.searchText = null;
+    },
+  },
+});
+
 const store = configureStore({
   reducer: {
     hamburger: hamburgerSlice.reducer,
     genre: genreSlice.reducer,
     auth: authSlice.reducer,
+    search: searchSlice.reducer,
   },
 });
 
 export const hamburgerAction = hamburgerSlice.actions;
 export const genreAction = genreSlice.actions;
 export const authAction = authSlice.actions;
+export const searchActions = searchSlice.actions;
 
 export default store;

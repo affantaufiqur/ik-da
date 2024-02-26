@@ -6,9 +6,11 @@ import { useSelector } from "react-redux";
 import HomePageGenreSection from "../components/HomePageGenreSection.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
 
 const HomePage = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const HomePage = () => {
           <Category />
         </section>
       </div>
+      <HomePageSearchSection />
       {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
     </div>
   );

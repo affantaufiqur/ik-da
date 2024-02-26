@@ -6,7 +6,7 @@ export default function Banner() {
   if (isLoading) return <p>Loading</p>;
   if (error) return <p>Error</p>;
   const rand = data.data[Math.floor(Math.random() * 0.5)];
-  console.log(rand);
+  // console.log(rand);
 
   return (
     <div className="bg-[#E2C6E5] xl:h-[600px]">
