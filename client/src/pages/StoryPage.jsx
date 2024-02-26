@@ -48,7 +48,6 @@ export default function StoryPage() {
   }
 
   async function handleBookmark() {
-    const token = getTokenFromCookies();
     const operation = await fetchData(`bookmarks`, {
       method: "POST",
       body: JSON.stringify({
@@ -74,6 +73,26 @@ export default function StoryPage() {
     return operation;
   }
 
+  async function handleUpvote() {
+    const operation = await fetchData(`likes-story`, {
+      method: "POST",
+      body: JSON.stringify({
+        storyId: id,
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (operation.message === "Internal server error") {
+      revalidate.revalidate();
+      return toast.error("Failed on upvote");
+    }
+    queryClient.invalidateQueries({ queryKey: [`fetchStory-${id}`] });
+    revalidate.revalidate();
+    return operation;
+  }
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
@@ -87,7 +106,12 @@ export default function StoryPage() {
                 <h2 className="max-w-fit text-wrap font-dm-display text-2xl font-bold tracking-tight text-primary md:block md:text-4xl">
                   {truncateText(data?.title, 75)}
                 </h2>
-                <StoryToolbar isUser={isUserWriter} upvote={formatNumberComma} bookmarkHandle={handleBookmark} />
+                <StoryToolbar
+                  upvoteHandle={handleUpvote}
+                  isUser={isUserWriter}
+                  upvote={formatNumberComma}
+                  bookmarkHandle={handleBookmark}
+                />
               </section>
               <h6 className="text-sm text-line/70">full title: {data?.title}</h6>
               <section className="no-scrollbar flex w-full flex-row items-center justify-around space-x-2 overflow-x-scroll text-wrap border-[1px] border-line/20 px-4 py-1.5 text-xs text-line md:max-w-fit md:justify-start md:space-x-4 md:text-sm">
