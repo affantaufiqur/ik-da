@@ -15,10 +15,21 @@ const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!selectedGenre) {
+    if (!selectedGenre && !searchKey) {
       setSearchParams({});
     }
-  }, [selectedGenre, setSearchParams]);
+  }, [searchKey, selectedGenre, setSearchParams]);
+
+  // useEffect(() => {
+  //   if(selectedGenre){
+
+  //   }
+  // })
+  // useEffect(() => {
+  //   if (!searchKey) {
+  //     setSearchParams({});
+  //   }
+  // }, [searchKey, setSearchParams]);
 
   return (
     <div className="pb-12">

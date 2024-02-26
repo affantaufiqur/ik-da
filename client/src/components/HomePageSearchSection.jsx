@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
@@ -15,11 +15,12 @@ const HomePageSearchSection = () => {
   const currentPage = searchParams.get("page") || 1;
 
   const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${currentPage}`);
-
-  //   const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
-  //   const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
-
-  //   const [isLoading, data, error] = useFetch("fetchOneGenre", `genres/${chosenGenre.id}?page=${currentPage}`);
+  //   console.log("currentPage", currentPage);
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+    setSearchParams(params.toString());
+  }, [searchKey]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -29,16 +30,12 @@ const HomePageSearchSection = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  //   useEffect(() => {
-  //     setSearch(searchKey);
-  //   }, [searchKey]);
-
   if (isLoading) return <p>Loading Books...</p>;
   if (error) return <p>Error</p>;
 
-  console.log(searchKey, data);
-  console.log(searchKey);
-  console.log(currentPage);
+  //   console.log(searchKey, data);
+  //   console.log(searchKey);
+  //   console.log(currentPage);
 
   if (!data.meta) {
     return (
@@ -57,7 +54,6 @@ const HomePageSearchSection = () => {
 
   const progress = 35;
   const stories = data.data;
-  // console.log(stories);
 
   const { total_page, prev_page, next_page } = data.meta;
 

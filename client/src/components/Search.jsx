@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { searchActions } from "../store/index.js";
+import { searchActions, genreAction } from "../store/index.js";
 
 export default function Search() {
   const dispatch = useDispatch();
-  // const searchKey = useSelector((state) => state.search.searchKey);
+
   const [searchText, setSearchText] = useState("");
-  // const [latestSearchKey, setLatestSearchKey] = useState("");
 
   const handleSearchChange = (event) => {
     setSearchText(event.target.value);
@@ -14,18 +13,10 @@ export default function Search() {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
+      dispatch(genreAction.setGenre(""));
       dispatch(searchActions.setSearchKey(searchText));
-
-      console.log("searchText", searchText);
     }
   };
-  // const handleSearch = () => {
-  //   dispatch(searchActions.setSearchKey(searchText));
-  // };
-  // useEffect(() => {
-  //   // Update the latestSearchKey variable whenever searchKey changes
-  //   setLatestSearchKey(searchKey);
-  // }, [searchKey]);
 
   return (
     <input

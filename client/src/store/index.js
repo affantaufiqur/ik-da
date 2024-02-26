@@ -57,7 +57,7 @@ const searchSlice = createSlice({
       state.searchKey = action.payload;
     },
     clearSearchText: (state) => {
-      state.searchText = null;
+      state.searchKey = "";
     },
   },
 });

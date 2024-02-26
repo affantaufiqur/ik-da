@@ -47,7 +47,6 @@ const HomePageGenreSection = () => {
   const progress = 35;
 
   const stories = data.genre.stories;
-  // console.log(stories);
 
   const { total_page, prev_page, next_page } = data.meta;
 
