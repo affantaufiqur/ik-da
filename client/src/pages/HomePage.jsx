@@ -6,16 +6,30 @@ import { useSelector } from "react-redux";
 import HomePageGenreSection from "../components/HomePageGenreSection.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
 
 const HomePage = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+  const searchKey = useSelector((state) => state.search.searchKey);
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!selectedGenre) {
+    if (!selectedGenre && !searchKey) {
       setSearchParams({});
     }
-  }, [selectedGenre, setSearchParams]);
+  }, [searchKey, selectedGenre, setSearchParams]);
+
+  // useEffect(() => {
+  //   if(selectedGenre){
+
+  //   }
+  // })
+  // useEffect(() => {
+  //   if (!searchKey) {
+  //     setSearchParams({});
+  //   }
+  // }, [searchKey, setSearchParams]);
 
   return (
     <div className="pb-12">
@@ -25,7 +39,7 @@ const HomePage = () => {
           <Category />
         </section>
       </div>
-      {selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
+      {searchKey ? <HomePageSearchSection /> : selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
     </div>
   );
 };

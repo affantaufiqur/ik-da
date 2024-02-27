@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { genreAction } from "../store/index.js";
+import { genreAction, searchActions } from "../store/index.js";
 import { useFetch } from "../hooks/fetch-hooks";
 
 // const dummy = ["Action", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
@@ -17,6 +17,7 @@ export default function Category() {
   const genresArray = data.map((item) => item.name).slice(0, 6);
 
   const handleGenreToggle = (genre) => {
+    dispatch(searchActions.clearSearchText());
     dispatch(genreAction.setGenre(genre));
   };
 
