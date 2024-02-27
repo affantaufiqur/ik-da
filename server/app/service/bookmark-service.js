@@ -157,15 +157,13 @@ class Bookmark {
             skip: offset,
         });
 
-        const storyIds = historyRead.map((entry) => entry.stories.id);
+        const storyIds = historyRead.map((entry) => entry.story_id);
 
-        const totalCount = await prisma.chapterRead.count({
+        const totalCount = await prisma.chapterRead.findMany({
             where: {
                 user_id: userId,
-                story_id: {
-                    in: storyIds,
-                },
             },
+            distinct: ["story_id"],
         });
 
         const dataWithProgress = await Promise.all(
@@ -192,14 +190,14 @@ class Bookmark {
             }),
         );
 
-        const totalPage = Math.ceil(totalCount / limit);
+        const totalPage = Math.ceil(totalCount.length / limit);
         const nextPage = page < totalPage ? page + 1 : null;
         const prevPage = page > 1 ? page - 1 : null;
 
         const listStories = {
             data: dataWithProgress,
             meta: {
-                total: totalCount,
+                total: totalCount.length,
                 total_page: totalPage,
                 prev_page: prevPage,
                 next_page: nextPage,
