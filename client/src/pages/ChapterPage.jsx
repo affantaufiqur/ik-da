@@ -10,6 +10,7 @@ export default function ChapterPage() {
     `read-chapter-${params.chapterId}`,
     `stories/${params.storyId}/chapters/${params.chapterId}`,
   );
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const chapterNavigation = data.story.chapters

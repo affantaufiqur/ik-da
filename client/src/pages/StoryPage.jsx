@@ -1,6 +1,6 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Link, useLoaderData, useParams, useRevalidator } from "react-router-dom";
+import { Link, useLoaderData, useParams, useRevalidator, Await } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -22,6 +22,7 @@ export default function StoryPage() {
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
+  console.log(userData);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -93,6 +94,9 @@ export default function StoryPage() {
     revalidate.revalidate();
     return operation;
   }
+
+  const historySet = new Set(userData?.history?.map((data) => data.chapter_id));
+  const history = data?.chapters?.filter((item) => historySet.has(item.id)).map((item) => item.id);
 
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
@@ -175,9 +179,9 @@ export default function StoryPage() {
               <section className="flex flex-row items-center justify-between">
                 <h1 className="font-dm-sans text-sm text-primary md:text-lg">Chapters {countTotalChapter}</h1>
                 <div className="flex w-1/3 flex-row items-center space-x-2">
-                  <h6 className="text-sm text-line">25%</h6>
+                  <h6 className="text-sm text-line">{userData?.progress}%</h6>
                   <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: "25%" }} />
+                    <div className="h-full bg-black" style={{ width: userData?.progress }} />
                   </div>
                 </div>
               </section>
@@ -190,7 +194,12 @@ export default function StoryPage() {
                         className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
                         key={chapter.id}
                       >
-                        <Link to={"/story/" + id + "/chapter/" + chapter.id}>{chapter.title}</Link>
+                        <Link
+                          to={"/story/" + id + "/chapter/" + chapter.id}
+                          className={`${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
+                        >
+                          {chapter.title}
+                        </Link>
                         {isUserWriter && (
                           <Dropdown placement="bottom-end">
                             <MenuHandler>
