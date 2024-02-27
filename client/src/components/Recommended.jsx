@@ -1,5 +1,6 @@
 import BookCard from "./BookCard";
 import { useFetch } from "../hooks/fetch-hooks";
+import Chip from "./ui/Chip";
 
 export default function Recommended() {
   const [isLoading, data, error] = useFetch("fetchRandomHome", "stories/random");
@@ -25,12 +26,8 @@ export default function Recommended() {
                 chapter={"chapter 21"}
                 renderFn={() => (
                   <div className="flex flex-row space-x-1">
-                    <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                      <span className="text-primary">{item?.author.name}</span>
-                    </div>
-                    <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                      <span className="text-primary">{item?.genre.name}</span>
-                    </div>
+                    <Chip text={item?.author.name} href={`story/author/${item.author_id}`} />
+                    <Chip text={item?.genre.name} />
                   </div>
                 )}
               />
