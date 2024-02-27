@@ -89,7 +89,7 @@ export default function AddStory() {
   console.log(imageStatus);
 
   return (
-    <main className="mx-24">
+    <main className="mx-4 lg:mx-24">
       <section className="flex flex-col space-y-8">
         <h1 className="font-dm-display text-2xl">Add new story</h1>
         <form
