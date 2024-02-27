@@ -2,29 +2,30 @@ import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 
-const HomePageGenreSection = () => {
-  const selectedGenre = useSelector((state) => state.genre.selectedGenre);
+const HomePageSearchSection = () => {
+  const searchKey = useSelector((state) => state.search.searchKey);
+  const [page, setPage] = useState("1");
 
-  const [isLoadingGenres, dataGenres, errorGenres] = useFetch("fetchGenres", `genres`);
-
-  const genresIdAndName = dataGenres.map((item) => ({ id: item.id, name: item.name }));
-  const chosenGenre = genresIdAndName.find((genre) => genre.name === selectedGenre);
+  const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${page}`);
+  //   console.log("currentPage", currentPage);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
-  const [isLoading, data, error] = useFetch("fetchOneGenre", `genres/${chosenGenre.id}?page=${currentPage}`);
+  useEffect(() => {
+    setPage(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     params.set("page", "1");
     setSearchParams(params.toString());
-  }, [selectedGenre]);
+  }, [searchKey]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -34,19 +35,26 @@ const HomePageGenreSection = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoadingGenres) {
-    return <p>Loading Genres...</p>;
-  }
-
-  if (errorGenres) {
-    return <p>Error</p>;
-  }
-
   if (isLoading) return <p>Loading Books...</p>;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
-  const stories = data.genre.stories;
+  if (!data.meta) {
+    return (
+      <div className="mt-12 px-4 md:px-12">
+        <section className="mt-12">
+          <div className="text-primary">
+            <h1 className="font-dm-display text-2xl font-medium tracking-wide">
+              No stories found for &quot;{searchKey}&quot;
+            </h1>
+            <p className="font-dm-sans text-base tracking-wide">Please try a different search term.</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const progress = 35;
+  const stories = data.data;
 
   const { total_page, prev_page, next_page } = data.meta;
 
@@ -92,8 +100,9 @@ const HomePageGenreSection = () => {
     }
 
     // Always show the last page
-    pagesToShow.push(renderPaginationItem(total_page));
-
+    if (total_page > 1) {
+      pagesToShow.push(renderPaginationItem(total_page));
+    }
     return pagesToShow;
   };
 
@@ -103,10 +112,10 @@ const HomePageGenreSection = () => {
         <section className="mt-12">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
-              <h1 className="font-dm-display text-2xl font-medium tracking-wide">For Genre {chosenGenre.name}</h1>
-              <p className="font-dm-sans text-base tracking-wide">
-                These are the best stories for {chosenGenre.name} lovers!
-              </p>
+              <h1 className="font-dm-display text-2xl font-medium tracking-wide">
+                Search Rresult for &quot;{searchKey}&quot;
+              </h1>
+              <p className="font-dm-sans text-base tracking-wide">Here you go</p>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
@@ -122,12 +131,10 @@ const HomePageGenreSection = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => {
-                    const genreName = genresIdAndName.find((genre) => genre.id === item.genre_id)?.name;
                     return (
                       <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
                         <div className="h-full bg-black" style={{ width: `${progress}%` }} />
                         <p>{progress}%</p>
-                        Genre : {genreName}
                       </div>
                     );
                   }}
@@ -156,4 +163,4 @@ const HomePageGenreSection = () => {
   );
 };
 
-export default HomePageGenreSection;
+export default HomePageSearchSection;
