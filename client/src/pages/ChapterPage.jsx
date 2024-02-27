@@ -1,6 +1,6 @@
 import { useNavigate, useParams, ScrollRestoration } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
-import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
 import LoaderComponent from "../components/ui/LoaderComponent";

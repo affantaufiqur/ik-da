@@ -8,7 +8,6 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
 import { useLoaderData } from "react-router-dom";
-import Skeleton from "../components/ui/Skeleton.jsx";
 
 const HomePage = () => {
   const pageData = useLoaderData();
