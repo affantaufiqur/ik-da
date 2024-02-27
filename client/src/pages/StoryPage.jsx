@@ -14,6 +14,7 @@ import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
 import LoaderComponent from "../components/ui/LoaderComponent";
 
+
 export default function StoryPage() {
   const queryClient = useQueryClient();
   const userData = useLoaderData();
@@ -22,6 +23,7 @@ export default function StoryPage() {
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
+  console.log(userData);
 
   if (isLoading) return <LoaderComponent />;
   if (error) return <p>Error</p>;

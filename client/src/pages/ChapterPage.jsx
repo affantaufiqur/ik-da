@@ -1,4 +1,4 @@
-import { useNavigate, useParams, ScrollRestoration } from "react-router-dom";
+import { useNavigate, useParams, ScrollRestoration, Navigate } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useFetch } from "../hooks/fetch-hooks";
