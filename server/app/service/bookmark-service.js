@@ -103,7 +103,6 @@ class Bookmark {
                 story_id: storyId,
             },
         });
-        console.log(bookmark);
         return bookmark;
     }
     async getListReadChpater(storyId, userId) {
@@ -120,6 +119,93 @@ class Bookmark {
         });
         const progress = Math.floor(listChapter ? (readChapter.length / listChapter) * 100 : 0);
         return { data: readChapter, progress };
+    }
+    async getHistoryRead(userId, pageNumber) {
+        const page = pageNumber || 1;
+        const limit = 12;
+        const offset = (page - 1) * limit;
+
+        if (isNaN(Number(page)) && page) {
+            throw new Error("Invalid page number");
+        }
+
+        const historyRead = await prisma.chapterRead.findMany({
+            where: {
+                user_id: userId,
+            },
+            include: {
+                stories: {
+                    include: {
+                        genre: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                        author: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
+            distinct: ["story_id"],
+            orderBy: {
+                created_at: "desc",
+            },
+            take: limit,
+            skip: offset,
+        });
+
+        const storyIds = historyRead.map((entry) => entry.stories.id);
+
+        const totalCount = await prisma.chapterRead.count({
+            where: {
+                user_id: userId,
+                story_id: {
+                    in: storyIds,
+                },
+            },
+        });
+
+        const dataWithProgress = await Promise.all(
+            historyRead.map(async (entry) => {
+                const totalChapter = await prisma.chapter.count({
+                    where: {
+                        story_id: entry.stories.id,
+                    },
+                });
+
+                const chapterRead = await prisma.chapterRead.count({
+                    where: {
+                        user_id: userId,
+                        story_id: entry.stories.id,
+                    },
+                });
+
+                const progress = Math.floor((chapterRead / totalChapter) * 100);
+
+                return {
+                    stories: entry.stories,
+                    progress: progress,
+                };
+            }),
+        );
+
+        const totalPage = Math.ceil(totalCount / limit);
+        const nextPage = page < totalPage ? page + 1 : null;
+        const prevPage = page > 1 ? page - 1 : null;
+
+        const listStories = {
+            data: dataWithProgress,
+            meta: {
+                total: totalCount,
+                total_page: totalPage,
+                prev_page: prevPage,
+                next_page: nextPage,
+            },
+        };
+        return listStories;
     }
 }
 

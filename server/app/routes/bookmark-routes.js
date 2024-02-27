@@ -76,4 +76,21 @@ routes.post("/history/:storyId/chapters/:chapterId", authMiddleware, checkCapter
     }
 });
 
+routes.get("/history/", authMiddleware, async (req, res) => {
+    try {
+        // @ts-ignore
+        const user = req.user;
+        const { page } = req.query;
+        const historyRead = await bookmarkService.getHistoryRead(user.id, Number(page));
+        if (historyRead.data.length < 1) {
+            return res.status(404).json({ message: "History read is empty" });
+        }
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return res.json(historyRead);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 export default routes;
