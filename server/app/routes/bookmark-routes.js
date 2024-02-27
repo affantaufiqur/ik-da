@@ -7,9 +7,10 @@ const routes = Router();
 
 routes.get("/bookmarks", authMiddleware, async (req, res) => {
     try {
+        const { page } = req.query;
         // @ts-ignore
         const user = req.user;
-        const bookmarks = await bookmarkService.getBookmarks(user.id);
+        const bookmarks = await bookmarkService.getBookmarks(user.id, Number(page));
         if (bookmarks.data.length < 1) {
             return res.status(404).json({ message: "Bookmarks is empty" });
         }
