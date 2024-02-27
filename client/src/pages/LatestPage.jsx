@@ -1,22 +1,11 @@
 import BookCard from "../components/BookCard";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, IconButton } from "@material-tailwind/react";
+import { IconButton } from "@material-tailwind/react";
 import Pagination from "../components/ui/Pagination.jsx";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
-
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
+import Chip from "../components/ui/Chip.jsx";
+import { format } from "@formkit/tempo";
 
 const LatestPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -110,11 +99,13 @@ const LatestPage = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => (
-                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                      <p>{progress}%</p>
-                      <p>Published on {formatDate(item.created_at)}</p>
-                    </div>
+                    <section className="flex flex-col space-y-2">
+                      <div className="flex flex-row gap-1">
+                        <Chip text={item?.author.name} />
+                        <Chip text={item?.genre.name} />
+                        <Chip text={format(item.created_at, { date: "medium" })} />
+                      </div>
+                    </section>
                   )}
                 />
               ))}

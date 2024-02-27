@@ -20,6 +20,22 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    id: "root",
+    loader: async () => {
+      const user = await getCurrentUser();
+      if (!user) {
+        return null;
+      }
+      const token = getTokenFromCookies();
+      const bookmarks = await fetchData("bookmarks", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return bookmarks;
+    },
+
     children: [
       {
         path: "/",

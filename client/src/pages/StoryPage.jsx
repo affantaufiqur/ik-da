@@ -193,7 +193,7 @@ export default function StoryPage() {
                     <div className="flex w-1/3 flex-row items-center space-x-2">
                       <h6 className="text-sm text-line">{userData?.progress}%</h6>
                       <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                        <div className="h-full bg-black" style={{ width: userData?.progress }} />
+                        <div className="h-full bg-black" style={{ width: userData?.progress + "%" }} />
                       </div>
                     </div>
                   </>

@@ -4,6 +4,7 @@ import Pagination from "../components/ui/Pagination.jsx";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { IconButton } from "@material-tailwind/react";
+import Chip from "../components/ui/Chip.jsx";
 
 const PopularPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,7 +34,6 @@ const PopularPage = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
   const { total_page, prev_page, next_page } = data.meta;
 
@@ -95,12 +95,17 @@ const PopularPage = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => (
-                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                      <p>{progress}%</p>
-
-                      <p>{item.upvote} upvotes</p>
-                    </div>
+                    <section className="flex flex-col space-y-3">
+                      <div className="flex flex-row flex-wrap gap-2 ">
+                        <Chip text={item?.author.name} />
+                        <Chip text={item?.genre.name} />
+                        <div className="bg-[#E2EFDE] p-1.5">
+                          <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
+                            {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                          </h4>
+                        </div>
+                      </div>
+                    </section>
                   )}
                 />
               ))}
