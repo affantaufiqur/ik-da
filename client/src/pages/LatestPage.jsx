@@ -99,7 +99,7 @@ const LatestPage = () => {
                   chapter={"chapter 21"}
                   renderFn={() => (
                     <section className="flex flex-col space-y-2">
-                      <div className="flex flex-row gap-1">
+                      <div className="flex flex-row flex-wrap gap-1">
                         <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
                         <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
                         <Chip text={format(item.created_at, { date: "medium" })} />

@@ -25,7 +25,7 @@ export default function Recommended() {
                 imgUrl={item.cover_img}
                 chapter={"chapter 21"}
                 renderFn={() => (
-                  <div className="flex flex-row space-x-1">
+                  <div className="flex flex-row flex-wrap space-x-1">
                     <Chip text={item?.author.name} href={`story/author/${item.author_id}`} />
                     <Chip text={item?.genre.name} href={`/genre/${item?.genre_id}`} />
                   </div>

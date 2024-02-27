@@ -122,7 +122,11 @@ function Navbar() {
                           key={id}
                           className={`border-b-2  ${pathname === link ? "border-b-black" : "border-b-transparent hover:border-b-black"}`}
                         >
-                          <Link to={link} className="font-dm-display text-2xl font-bold tracking-wide text-line">
+                          <Link
+                            to={link}
+                            className="font-dm-display text-2xl font-bold tracking-wide text-line"
+                            onClick={toggleDrawer}
+                          >
                             {name.toUpperCase()}
                           </Link>
                         </li>
@@ -133,13 +137,13 @@ function Navbar() {
                   {data?.user ? (
                     <div id="logged" className="items-end">
                       <div className="flex flex-col items-end space-y-6 text-2xl font-bold tracking-wide text-line">
-                        <Link to="/profile" className="font-dm-display">
+                        <Link to="/profile" className="font-dm-display" onClick={toggleDrawer}>
                           PROFILE
                         </Link>
                         <button onClick={logout} className="font-dm-display">
                           LOGOUT
                         </button>
-                        <Link to="/add-story" className="btn-primary w-full">
+                        <Link to="/add-story" className="btn-primary w-full" onClick={toggleDrawer}>
                           New Story
                         </Link>
                       </div>
@@ -147,10 +151,10 @@ function Navbar() {
                   ) : (
                     <div id="not-logged" className="items-end">
                       <div className="flex flex-col items-end space-y-6 text-2xl font-bold tracking-wide text-line">
-                        <Link to="/login" className="font-dm-display">
+                        <Link to="/login" className="font-dm-display" onClick={toggleDrawer}>
                           LOGIN
                         </Link>
-                        <Link to="/register" className="font-dm-display text-line">
+                        <Link to="/register" className="font-dm-display text-line" onClick={toggleDrawer}>
                           REGISTER
                         </Link>
                       </div>
