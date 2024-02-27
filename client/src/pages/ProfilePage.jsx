@@ -4,6 +4,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { getTokenFromCookies } from "../shared/token";
 import BookCard from "../components/BookCard";
 import TitleSection from "../components/ui/TitleSection.jsx";
+import Chip from "../components/ui/Chip.jsx";
 
 export default function ProfilePage() {
   const { user } = useLoaderData();
@@ -46,7 +47,10 @@ export default function ProfilePage() {
                     chapter={"chapter 21"}
                     renderFn={() => (
                       <section className="flex flex-col space-y-2">
-                        <h6 className="font-dm-sans text-sm text-line/70">{item.stories.author_name}</h6>
+                        <div className="flex flex-row flex-wrap gap-2 ">
+                          <Chip text={item?.stories.author_name} href={`/story/author/${item.stories.author_id}`} />
+                          <Chip text={item?.stories.genre_name} />
+                        </div>
                         <div className="h-[6px] w-full  space-y-2 border-[1px] border-line/50 bg-transparent">
                           <div className="h-full bg-black" style={{ width: `${item.stories.progress}%` }} />
                         </div>
