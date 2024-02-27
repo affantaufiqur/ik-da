@@ -1,8 +1,7 @@
 import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, IconButton } from "@material-tailwind/react";
-
-// import { useState } from "react";
+import Pagination from "../components/ui/Pagination.jsx";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
@@ -43,7 +42,7 @@ const LatestPage = () => {
     return (
       <Link to={`/latest?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
         >
           {page}
         </IconButton>
@@ -122,20 +121,13 @@ const LatestPage = () => {
             </div>
           </section>
         </section>
-      </div>
-      <div className="mt-24 flex items-center justify-end gap-4">
-        <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> <span className="hidden md:inline">Previous</span>
-          </Button>
-        </Link>
-        <div className="flex items-center gap-2">{renderPagination()}</div>
-        <Link to={`/latest?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
-            <span className="hidden md:inline">Next</span>
-            <ChevronRight strokeWidth={2} className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Pagination
+          prevPage={prev_page}
+          currentPage={currentPage}
+          nextPage={next_page}
+          totalPage={total_page}
+          renderPagination={renderPagination}
+        />
       </div>
     </>
   );
