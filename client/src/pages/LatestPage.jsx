@@ -1,23 +1,12 @@
 import BookCard from "../components/BookCard";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, IconButton } from "@material-tailwind/react";
-
-// import { useState } from "react";
+import { IconButton } from "@material-tailwind/react";
+import Pagination from "../components/ui/Pagination.jsx";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
-
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
+import Chip from "../components/ui/Chip.jsx";
+import { format } from "@formkit/tempo";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 const LatestPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,16 +23,15 @@ const LatestPage = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
   const { total_page, prev_page, next_page } = data.meta;
   const renderPaginationItem = (page) => {
     return (
       <Link to={`/latest?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
         >
           {page}
         </IconButton>
@@ -111,31 +99,26 @@ const LatestPage = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => (
-                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                      <p>{progress}%</p>
-                      <p>Published on {formatDate(item.created_at)}</p>
-                    </div>
+                    <section className="flex flex-col space-y-2">
+                      <div className="flex flex-row flex-wrap gap-1">
+                        <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
+                        <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
+                        <Chip text={format(item.created_at, { date: "medium" })} />
+                      </div>
+                    </section>
                   )}
                 />
               ))}
             </div>
           </section>
         </section>
-      </div>
-      <div className="mt-24 flex items-center justify-end gap-4">
-        <Link to={`/latest?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" /> <span className="hidden md:inline">Previous</span>
-          </Button>
-        </Link>
-        <div className="flex items-center gap-2">{renderPagination()}</div>
-        <Link to={`/latest?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
-            <span className="hidden md:inline">Next</span>
-            <ChevronRight strokeWidth={2} className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Pagination
+          prevPage={prev_page}
+          currentPage={currentPage}
+          nextPage={next_page}
+          totalPage={total_page}
+          renderPagination={renderPagination}
+        />
       </div>
     </>
   );

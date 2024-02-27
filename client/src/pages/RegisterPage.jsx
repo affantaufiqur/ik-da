@@ -53,8 +53,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center p-4 font-dm-sans">
-      <form className="flex w-1/2 flex-col space-y-6 p-12" onSubmit={form.onSubmit((values) => handler(values))}>
+    <div className="flex h-screen items-center justify-center p-1 font-dm-sans lg:p-4">
+      <form
+        className="flex w-full flex-col space-y-6 p-12 lg:w-1/2"
+        onSubmit={form.onSubmit((values) => handler(values))}
+      >
         <div className="flex flex-col space-y-1">
           <h1 className="font-dm-display text-4xl font-bold">Register</h1>
           <h5 className="font-dm-sans text-base  font-normal">Create your account to enjoy all of our stuff</h5>

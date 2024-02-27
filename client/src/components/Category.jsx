@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { genreAction, searchActions } from "../store/index.js";
 import { useFetch } from "../hooks/fetch-hooks";
+import { Loader } from "lucide-react"
 
 // const dummy = ["Action", "Fantasy", "Horror", "Sci-Fi", "Thriller"];
 // const dummy = ["Pop", "Folk", "Reggae", "Rap", "Latin", "Metal"];
@@ -11,7 +12,7 @@ export default function Category() {
   const dispatch = useDispatch();
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader className="w-6 h-6" />;
   if (error) return <p>Error</p>;
 
   const genresArray = data.map((item) => item.name).slice(0, 6);

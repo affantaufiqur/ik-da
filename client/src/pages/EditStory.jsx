@@ -44,8 +44,6 @@ export default function EditStory() {
         },
       });
 
-      console.log("insertToDb", insertToDb);
-
       if (insertToDb.message === "Error") {
         setUploadStatus(false);
         return;

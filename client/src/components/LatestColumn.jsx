@@ -2,18 +2,10 @@ import BookCard from "./BookCard";
 
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
-
-const formatDate = (createdAtString) => {
-  const createdAtDate = new Date(createdAtString);
-  // Options for formatting the date
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  // Format the date using the options
-  return createdAtDate.toLocaleDateString("en-US", options);
-};
+import Chip from "./ui/Chip.jsx";
+import { format } from "@formkit/tempo";
+import TitleSection from "./ui/TitleSection.jsx";
+import Skeleton from "./ui/Skeleton.jsx";
 
 const LatestColumn = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -22,20 +14,14 @@ const LatestColumn = () => {
     `stories?direction=desc${selectedGenre ? `&search=${selectedGenre}` : ""}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
-  const progress = 35;
 
   return (
     <div className="mt-12 px-4 md:px-12">
       <section className="mt-12">
-        <div className="flex flex-col space-y-1 text-primary">
-          <h1 className="font-dm-display text-2xl font-medium tracking-wide">Latest</h1>
-          <p className="font-dm-sans text-base tracking-wide">
-            Here are the latest stories from your favorite authors ;)
-          </p>
-        </div>
+        <TitleSection title="Latest" subtitle="Latest right now" href="/latest?page=1" />
         <section className="mt-4">
           <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 ">
             {getFourData.map((item) => (
@@ -46,11 +32,13 @@ const LatestColumn = () => {
                 imgUrl={item.cover_img}
                 chapter={"chapter 21"}
                 renderFn={() => (
-                  <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                    <p>{progress}%</p>
-                    <p>Published on {formatDate(item.created_at)}</p>
-                  </div>
+                  <section className="flex flex-col space-y-2">
+                    <div className="flex flex-row gap-1">
+                      <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
+                      <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
+                      <Chip text={format(item.created_at, { date: "medium" })} />
+                    </div>
+                  </section>
                 )}
               />
             ))}

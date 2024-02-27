@@ -8,7 +8,7 @@ export default function BookCard({ id, title, imgUrl, renderFn }) {
       <div className="flex flex-col space-y-3">
         <Link
           to={`/story/${id}`}
-          className="truncate font-dm-display text-lg font-medium tracking-normal hover:underline md:text-3xl"
+          className="truncate font-dm-display text-xl font-medium tracking-normal hover:underline md:text-3xl"
         >
           {title}
         </Link>
@@ -19,7 +19,7 @@ export default function BookCard({ id, title, imgUrl, renderFn }) {
 }
 
 BookCard.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   chapter: PropTypes.string.isRequired,
   imgUrl: PropTypes.string.isRequired,

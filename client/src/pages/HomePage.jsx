@@ -7,12 +7,16 @@ import HomePageGenreSection from "../components/HomePageGenreSection.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
+import { useLoaderData } from "react-router-dom";
 
 const HomePage = () => {
+  const pageData = useLoaderData();
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
   const searchKey = useSelector((state) => state.search.searchKey);
   // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const isUserExist = pageData?.user ? true : false;
 
   useEffect(() => {
     if (!selectedGenre && !searchKey) {
@@ -39,7 +43,13 @@ const HomePage = () => {
           <Category />
         </section>
       </div>
-      {searchKey ? <HomePageSearchSection /> : selectedGenre ? <HomePageGenreSection /> : <HomePageSection />}
+      {searchKey ? (
+        <HomePageSearchSection />
+      ) : selectedGenre ? (
+        <HomePageGenreSection />
+      ) : (
+        <HomePageSection user={isUserExist} />
+      )}
     </div>
   );
 };
