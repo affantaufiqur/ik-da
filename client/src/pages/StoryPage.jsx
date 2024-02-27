@@ -13,6 +13,7 @@ import { getTokenFromCookies } from "../shared/token.js";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Dot } from "lucide-react";
+import { format } from "@formkit/tempo";
 
 export default function StoryPage() {
   const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ export default function StoryPage() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters?.length;
-  const formatUpvote = new Intl.NumberFormat().format(data?.upvote);
+  const formatUpvote = new Intl.NumberFormat().format(data?.upvote || 0);
 
   function handleReadMore() {
     isReadMore(!readMore);
@@ -119,7 +120,7 @@ export default function StoryPage() {
                     <Dot className="h-4 w-4 text-line/50" />
                     <h2 className="font-dm-sans text-sm text-line">{data?.genre.name}</h2>
                     <Dot className="h-4 w-4 text-line/50" />
-                    {userData?.user ? null : <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>}
+                    <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>
                   </section>
 
                   <section className="md:hidden">
@@ -189,40 +190,47 @@ export default function StoryPage() {
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {data?.chapters?.map((chapter) => (
-                      <div
-                        className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
-                        key={chapter.id}
-                      >
-                        <Link
-                          to={"/story/" + id + "/chapter/" + chapter.id}
-                          className={`${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
+                    {data?.chapters?.map((chapter) => {
+                      return (
+                        <div
+                          className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
+                          key={chapter.id}
                         >
-                          {chapter.title}
-                        </Link>
-                        {isUserWriter && (
-                          <Dropdown placement="bottom-end">
-                            <MenuHandler>
-                              <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
-                            </MenuHandler>
-                            <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
-                              <Link
-                                to={`chapter/${chapter.id}/edit`}
-                                className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
-                              >
-                                Edit
-                              </Link>
-                              <button
-                                onClick={() => handleDelete(chapter.id)}
-                                className="inline-flex justify-start p-1.5 hover:bg-gray-100"
-                              >
-                                Delete
-                              </button>
-                            </MenuList>
-                          </Dropdown>
-                        )}
-                      </div>
-                    ))}
+                          <Link
+                            to={"/story/" + id + "/chapter/" + chapter.id}
+                            className={`whitespace-normal text-wrap ${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
+                          >
+                            {chapter.title}
+                          </Link>
+                          <section className="flex flex-row items-center justify-end space-x-1">
+                            <p className="whitespace-nowrap text-sm">
+                              {format(chapter.created_at, { date: "medium" })}
+                            </p>
+                            {isUserWriter && (
+                              <Dropdown placement="bottom-end">
+                                <MenuHandler>
+                                  <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
+                                </MenuHandler>
+                                <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                                  <Link
+                                    to={`chapter/${chapter.id}/edit`}
+                                    className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
+                                  >
+                                    Edit
+                                  </Link>
+                                  <button
+                                    onClick={() => handleDelete(chapter.id)}
+                                    className="inline-flex justify-start p-1.5 hover:bg-gray-100"
+                                  >
+                                    Delete
+                                  </button>
+                                </MenuList>
+                              </Dropdown>
+                            )}
+                          </section>
+                        </div>
+                      );
+                    })}
                   </div>
                 </ScrollArea.Viewport>
                 <ScrollArea.Scrollbar
