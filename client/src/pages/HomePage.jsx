@@ -51,9 +51,6 @@ const HomePage = () => {
       ) : (
         <HomePageSection user={isUserExist} />
       )}
-      <div className="mt-12 px-12">
-        <Skeleton />
-      </div>
     </div>
   );
 };
