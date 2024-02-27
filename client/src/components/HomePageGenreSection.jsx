@@ -1,5 +1,6 @@
 import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Pagination from "../components/ui/Pagination";
 import { Button, IconButton } from "@material-tailwind/react";
 
 import { useEffect } from "react";
@@ -54,7 +55,7 @@ const HomePageGenreSection = () => {
     return (
       <Link to={`/?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? "bg-black text-white" : "bg-white"}`}
         >
           {page}
         </IconButton>
@@ -101,7 +102,7 @@ const HomePageGenreSection = () => {
     <>
       <div className="mb-12 mt-12 px-4 md:px-12">
         <section className="mt-12">
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-col justify-between md:flex-row">
             <div className="flex flex-col space-y-1 text-primary">
               <h1 className="font-dm-display text-2xl font-medium tracking-wide">For Genre {chosenGenre.name}</h1>
               <p className="font-dm-sans text-base tracking-wide">
@@ -136,21 +137,13 @@ const HomePageGenreSection = () => {
             </div>
           </section>
         </section>
-      </div>
-      <div className="mt-24 flex items-center justify-end gap-4">
-        <Link to={`/?page=${prev_page ? prev_page : 1}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === 1}>
-            <ChevronLeft strokeWidth={2} className="h-4 w-4" />
-            <span className="hidden md:inline">Previous</span>
-          </Button>
-        </Link>
-        <div className="flex items-center gap-2">{renderPagination()}</div>
-        <Link to={`/?page=${next_page ? next_page : total_page}`}>
-          <Button variant="text" className="flex items-center gap-2" disabled={Number(currentPage) === total_page}>
-            <span className="hidden md:inline">Next</span>
-            <ChevronRight strokeWidth={2} className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Pagination
+          prevPage={prev_page}
+          currentPage={currentPage}
+          nextPage={next_page}
+          totalPage={total_page}
+          renderPagination={renderPagination}
+        />
       </div>
     </>
   );

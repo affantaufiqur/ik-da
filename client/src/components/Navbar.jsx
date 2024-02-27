@@ -52,13 +52,13 @@ function Navbar() {
 
   return (
     <>
-      <div className="flex flex-row  lg:px-12">
+      <div className="flex flex-row lg:px-12">
         <div
           id="navbar"
-          className="flex w-full items-center justify-end gap-y-3 py-5 font-dm-display text-primary md:flex-row "
+          className="flex w-full items-center justify-end gap-y-3 py-5 font-dm-display text-primary md:flex-row md:justify-between "
         >
           <div id="navigation" className="hidden h-full w-full lg:flex">
-            <ul className="flex w-full items-center  font-semibold md:space-x-4 md:text-[1.2rem] lg:space-x-8 lg:text-[1.5rem] ">
+            <ul className="flex w-full items-center font-semibold md:space-x-4 md:text-[1.2rem] lg:space-x-8 lg:text-[1.5rem] ">
               {navLinks.map(({ id, name, link }) => (
                 <li
                   key={id}
@@ -71,21 +71,21 @@ function Navbar() {
               ))}
             </ul>
           </div>
-          <section className="hidden md:block">
+          <section className="hidden md:inline-block">
             {data?.user ? (
               <div
                 id="logged"
                 className="hidden h-full w-full items-center md:flex-row md:gap-y-0 md:space-x-4 lg:flex"
               >
-                <Link to="/add-story" className="btn-primary">
-                  WRITE
-                </Link>
                 <div className="font-dm-sans text-[1.25rem] font-bold">{data.user.name}</div>
                 <Dropdown placement="bottom-end">
                   <MenuHandler>
                     <ChevronDown className="h-5 w-5 hover:cursor-pointer" />
                   </MenuHandler>
                   <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                    <Link to="/add-story" className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
+                      New story
+                    </Link>
                     <Link to="/profile" className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent">
                       Profile
                     </Link>
@@ -96,7 +96,7 @@ function Navbar() {
                 </Dropdown>
               </div>
             ) : (
-              <div id="not-logged" className="hidden w-2/5 lg:flex ">
+              <div id="not-logged" className="hidden lg:flex ">
                 <div className="flex h-full w-full items-center justify-end font-semibold md:flex-row md:gap-10  md:text-[1.2rem] lg:text-[1.5rem]">
                   <Link to="/login">LOGIN</Link>
                   <Link
