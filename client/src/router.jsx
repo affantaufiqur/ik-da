@@ -70,7 +70,17 @@ export const router = createBrowserRouter([
           if (!user) {
             return redirect("/login");
           }
-          return user;
+          const history = await fetchData("history?page=1", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${getTokenFromCookies()}`,
+            },
+          });
+          const { user: currentUser } = user;
+          return {
+            user: currentUser,
+            history,
+          };
         },
       },
       {
