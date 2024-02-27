@@ -17,7 +17,7 @@ const RandomPage = () => {
     return (
       <Link to={`/random?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? "bg-black text-white" : "bg-white"}`}
         >
           {page}
         </IconButton>
@@ -83,8 +83,6 @@ const RandomPage = () => {
     return pagesToShow;
   };
 
-  console.log("daata", data);
-
   return (
     <>
       <div className="over mb-12 mt-12 px-4 md:px-12">
@@ -92,7 +90,7 @@ const RandomPage = () => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
               <h1 className="font-dm-display text-2xl font-medium tracking-wide">Random</h1>
-              <p className="font-dm-sans text-base tracking-wide">This is what random right now ;)</p>
+              <p className="font-dm-sans text-base tracking-wide">Just pick one</p>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
