@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware/auth-middleware.js";
 import { checkBookMark, checkCapterRead } from "../middleware/bookmark-middleware.js";
 import bookmarkService from "../service/bookmark-service.js";
+import prisma from "../prisma.js";
 
 const routes = Router();
 

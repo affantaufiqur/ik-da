@@ -1,8 +1,9 @@
-import { createBrowserRouter, redirect, useParams } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import App from "./App";
 import { getCurrentUser, getTokenFromCookies } from "./shared/token.js";
 import HomePage from "./pages/HomePage.jsx";
 import PopularPage from "./pages/PopularPage.jsx";
+import AuthorPage from "./pages/AuthorPage.jsx";
 import LatestPage from "./pages/LatestPage.jsx";
 import RandomPage from "./pages/RandomPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -35,11 +36,11 @@ export const router = createBrowserRouter([
       });
       return bookmarks;
     },
-
     children: [
       {
         path: "/",
         element: <HomePage />,
+        id: "root-user",
         loader: async () => {
           const user = await getCurrentUser();
           if (!user) {
@@ -68,13 +69,6 @@ export const router = createBrowserRouter([
           if (!user) {
             return redirect("/login");
           }
-          const bookmarks = await fetchData("bookmarks", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${getTokenFromCookies()}`,
-            },
-          });
-          console.log(bookmarks);
           return user;
         },
       },
@@ -221,6 +215,10 @@ export const router = createBrowserRouter([
             storyData,
           };
         },
+      },
+      {
+        path: "/story/author/:id",
+        element: <AuthorPage />,
       },
     ],
   },
