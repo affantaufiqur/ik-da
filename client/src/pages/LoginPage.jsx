@@ -68,8 +68,11 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center p-4 font-dm-sans">
-      <form className="flex w-1/2 flex-col space-y-6 p-12" onSubmit={form.onSubmit((values) => handler(values))}>
+    <div className="flex h-screen items-center justify-center p-1 font-dm-sans lg:p-4">
+      <form
+        className="flex w-full flex-col space-y-6 p-12 lg:w-1/2"
+        onSubmit={form.onSubmit((values) => handler(values))}
+      >
         <div className="flex flex-col space-y-1">
           <h1 className="font-dm-display text-4xl font-bold">Login</h1>
           <h5 className="font-dm-sans text-base  font-normal">Enter your credentials to access all of our features</h5>
