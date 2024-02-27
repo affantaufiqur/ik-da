@@ -3,6 +3,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 import { useRouteLoaderData } from "react-router-dom";
 import TitleSection from "./ui/TitleSection.jsx";
+import Chip from "./ui/Chip.jsx";
 
 const BookmarkColumn = () => {
   const pageData = useRouteLoaderData("root");
@@ -33,16 +34,12 @@ const BookmarkColumn = () => {
                 renderFn={() => (
                   <div className="flex flex-col space-y-6">
                     <div className="flex flex-row space-x-1">
-                      <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                        <span className="text-primary">{item?.stories.author_name}</span>
-                      </div>
-                      <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                        <span className="text-primary">{item?.stories.genre_name}</span>
-                      </div>
+                      <Chip text={item?.stories.author_name} href={`story/author/${item.stories.author_id}`} />
+                      <Chip text={item?.stories.genre_name} />
                     </div>
                     <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
                       <div className="h-full bg-black" style={{ width: `${item.stories.progress}%` }} />
-                      <p>{item.stories.progress}%</p>
+                      <p className="text-sm text-primary">{item.stories.progress}%</p>
                     </div>
                   </div>
                 )}
