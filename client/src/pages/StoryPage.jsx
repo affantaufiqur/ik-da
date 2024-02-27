@@ -99,6 +99,9 @@ export default function StoryPage() {
   const historySet = new Set(userData?.history?.map((data) => data.chapter_id));
   const history = data?.chapters?.filter((item) => historySet.has(item.id)).map((item) => item.id);
 
+  const deviceWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  console.log("Device width:", deviceWidth);
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
@@ -115,12 +118,16 @@ export default function StoryPage() {
                   </h2>
                 </section>
                 <div className="flex flex-col space-y-4 md:hidden">
-                  <section className="flex flex-row items-center space-x-1">
+                  <section className="flex flex-col  space-y-2 whitespace-nowrap md:flex-row md:items-center md:space-x-1">
                     <h2 className="font-dm-sans text-sm text-line">{data?.author.name}</h2>
-                    <Dot className="h-4 w-4 text-line/50" />
+                    <Dot className="hidden h-4 w-4 text-line/50 md:block" />
                     <h2 className="font-dm-sans text-sm text-line">{data?.genre.name}</h2>
-                    <Dot className="h-4 w-4 text-line/50" />
-                    <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>
+                    {userData?.user ? null : (
+                      <>
+                        <Dot className="hidden h-4 w-4 text-line/50 md:block" />
+                        <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>
+                      </>
+                    )}
                   </section>
 
                   <section className="md:hidden">
@@ -146,7 +153,7 @@ export default function StoryPage() {
                 </section>
               </section>
               <section className="hidden md:flex">
-                <section className="flex flex-row items-center space-x-2">
+                <section className="flex flex-row items-center lg:space-x-2">
                   <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
                     <span className="text-primary">{data?.author.name}</span>
                   </div>
@@ -178,7 +185,9 @@ export default function StoryPage() {
             <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
             <section className="flex flex-col space-y-2">
               <section className="flex flex-row items-center justify-between">
-                <h1 className="font-dm-sans text-sm text-primary md:text-lg">Chapters {countTotalChapter}</h1>
+                <h1 className="font-dm-sans text-sm text-primary md:text-lg">
+                  Chapters {history.length}/{countTotalChapter}
+                </h1>
                 {userData?.user ? (
                   <>
                     <div className="flex w-1/3 flex-row items-center space-x-2">
@@ -204,7 +213,7 @@ export default function StoryPage() {
                         >
                           <Link
                             to={"/story/" + id + "/chapter/" + chapter.id}
-                            className={`whitespace-normal text-wrap ${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
+                            className={`truncate whitespace-normal text-wrap ${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
                           >
                             {chapter.title}
                           </Link>
