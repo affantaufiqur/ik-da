@@ -52,6 +52,13 @@ export const router = createBrowserRouter([
           if (!user) {
             return redirect("/login");
           }
+          const bookmarks = await fetchData("bookmarks", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${getTokenFromCookies()}`,
+            },
+          });
+          console.log(bookmarks);
           return user;
         },
       },
@@ -76,6 +83,9 @@ export const router = createBrowserRouter([
               Authorization: `Bearer ${token}`,
             },
           });
+          if (bookMarkData.message === "Internal server error") {
+            return null;
+          }
           const readHistory = await fetchData(`history/${params.id}`, {
             method: "GET",
             headers: {
