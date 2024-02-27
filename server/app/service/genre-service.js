@@ -20,6 +20,18 @@ class Genre {
             },
             include: {
                 stories: {
+                    include: {
+                        author: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                        genre: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
                     take: limit,
                     skip: offset,
                 },
@@ -53,4 +65,3 @@ class Genre {
 }
 
 export default new Genre();
-

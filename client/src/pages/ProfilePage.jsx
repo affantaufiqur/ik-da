@@ -49,7 +49,7 @@ export default function ProfilePage() {
                       <section className="flex flex-col space-y-2">
                         <div className="flex flex-row flex-wrap gap-2 ">
                           <Chip text={item?.stories.author_name} href={`/story/author/${item.stories.author_id}`} />
-                          <Chip text={item?.stories.genre_name} />
+                          <Chip text={item?.stories.genre_name} href={`/genre/${item.stories.genre_id}`} />
                         </div>
                         <div className="h-[6px] w-full  space-y-2 border-[1px] border-line/50 bg-transparent">
                           <div className="h-full bg-black" style={{ width: `${item.stories.progress}%` }} />

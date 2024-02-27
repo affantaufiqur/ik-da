@@ -15,6 +15,7 @@ import AddStory from "./pages/AddStoryPage.jsx";
 import WriteChapter from "./pages/AddChapter.jsx";
 import EditStory from "./pages/EditStory.jsx";
 import EditChapter from "./pages/EditChapter.jsx";
+import GenrePage from "./pages/GenrePage.jsx";
 import { fetchData } from "./shared/fetch.js";
 
 export const router = createBrowserRouter([
@@ -219,6 +220,10 @@ export const router = createBrowserRouter([
       {
         path: "/story/author/:id",
         element: <AuthorPage />,
+      },
+      {
+        path: "/genre/:id",
+        element: <GenrePage />,
       },
     ],
   },
