@@ -2,10 +2,10 @@ import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
 import { useFetchUser } from "../hooks/user-hooks.js";
-import { Loader } from "lucide-react";
 import { useCookies } from "react-cookie";
 import { Dialog, DialogBody } from "@material-tailwind/react";
 import { useState } from "react";
+import LoaderComponent from "../components/ui/LoaderComponent.jsx";
 
 const navLinks = [
   {
@@ -47,7 +47,7 @@ function Navbar() {
     setOpen(!open);
   }
 
-  if (isLoading) return <Loader className="h-5 w-5" />;
+  if (isLoading) return <LoaderComponent />;
   if (error) return <p>error</p>;
 
   return (

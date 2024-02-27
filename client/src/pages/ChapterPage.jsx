@@ -3,6 +3,7 @@ import EditorRender from "../components/ui/EditorRender";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
+import LoaderComponent from "../components/ui/LoaderComponent";
 
 export default function ChapterPage() {
   const params = useParams();
@@ -12,7 +13,7 @@ export default function ChapterPage() {
     `stories/${params.storyId}/chapters/${params.chapterId}`,
   );
 
-  if (isLoading) return <Loader className="h-5 w-5" />;
+  if (isLoading) return <LoaderComponent />;
   if (error) return <p>Error</p>;
   const chapterNavigation = data.story.chapters
     .map((item, i, arr) => {
