@@ -182,7 +182,7 @@ export default function StoryPage() {
                 {readMore ? "Show Less" : "Read More"}
               </button>
             </section>
-            <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
+            <div className="h-[1px] w-full bg-line/20" />
             <section className="flex flex-col space-y-2">
               <section className="flex flex-row items-center justify-between">
                 <h1 className="font-dm-sans text-sm text-primary md:text-lg">
