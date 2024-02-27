@@ -1,19 +1,17 @@
-import { useFetch } from "../hooks/fetch-hooks";
-import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Link, useLoaderData, useParams, useRevalidator } from "react-router-dom";
-import { Typography } from "@material-tailwind/react";
-import { ScrollRestoration } from "react-router-dom";
+import { format } from "@formkit/tempo";
+import { Menu as Dropdown, MenuHandler, MenuList, Typography } from "@material-tailwind/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { truncateText } from "../shared/common";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dot, MoreVertical } from "lucide-react";
 import { useState } from "react";
+import { Link, ScrollRestoration, useLoaderData, useParams, useRevalidator } from "react-router-dom";
+import { toast } from "sonner";
+import Chip from "../components/ui/Chip";
 import StoryToolbar from "../components/ui/StoryToolbar";
-import { MoreVertical } from "lucide-react";
+import { useFetch } from "../hooks/fetch-hooks";
+import { truncateText } from "../shared/common";
 import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { Dot } from "lucide-react";
-import { format } from "@formkit/tempo";
 
 export default function StoryPage() {
   const queryClient = useQueryClient();
@@ -115,9 +113,12 @@ export default function StoryPage() {
                 </section>
                 <div className="flex flex-col space-y-4 md:hidden">
                   <section className="flex flex-col  space-y-2 whitespace-nowrap md:flex-row md:items-center md:space-x-1">
-                    <h2 className="font-dm-sans text-sm text-line">{data?.author.name}</h2>
-                    <Dot className="hidden h-4 w-4 text-line/50 md:block" />
-                    <h2 className="font-dm-sans text-sm text-line">{data?.genre.name}</h2>
+                    <Link className="font-dm-sans text-sm text-line underline" to={`/story/author/${data?.author_id}`}>
+                      {data?.author.name}
+                    </Link>
+                    <Link className="font-dm-sans text-sm text-line underline" to={`/genre/${data?.genre_id}`}>
+                      {data?.genre.name}
+                    </Link>
                     {userData?.user ? null : (
                       <>
                         <Dot className="hidden h-4 w-4 text-line/50 md:block" />
@@ -150,12 +151,8 @@ export default function StoryPage() {
               </section>
               <section className="hidden md:flex">
                 <section className="flex flex-row items-center lg:space-x-2">
-                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                    <span className="text-primary">{data?.author.name}</span>
-                  </div>
-                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                    <span className="text-primary">{data?.genre.name}</span>
-                  </div>
+                  <Chip text={data?.author.name} href={`/story/author/${data.author_id}`} />
+                  <Chip text={data?.genre.name} href={`/genre/${data.genre_id}`} />
                   {userData?.user ? null : (
                     <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
                       <span className="text-primary">{formatUpvote} Upvote</span>
@@ -194,7 +191,7 @@ export default function StoryPage() {
                     </div>
                   </>
                 ) : (
-                  <p>Login to track your progress</p>
+                  <p className="text-sm text-line/80">Login to track your progress</p>
                 )}
               </section>
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">

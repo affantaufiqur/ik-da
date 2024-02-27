@@ -18,8 +18,6 @@ export default function ProfilePage() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  console.log(history);
-
   return (
     <main className="px-4 md:px-12">
       <div className="py-6">

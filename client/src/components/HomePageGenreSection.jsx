@@ -1,8 +1,7 @@
 import BookCard from "../components/BookCard";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import Pagination from "../components/ui/Pagination";
-import { Button, IconButton } from "@material-tailwind/react";
-
+import { IconButton } from "@material-tailwind/react";
+import Chip from "../components/ui/Chip.jsx";
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
@@ -123,13 +122,18 @@ const HomePageGenreSection = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => {
-                    const genreName = genresIdAndName.find((genre) => genre.id === item.genre_id)?.name;
                     return (
-                      <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                        <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                        <p>{progress}%</p>
-                        Genre : {genreName}
-                      </div>
+                      <section className="flex flex-col space-y-3">
+                        <div className="flex flex-row flex-wrap gap-2 ">
+                          <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
+                          <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
+                          <div className="bg-[#E2EFDE] p-1.5">
+                            <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
+                              {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                            </h4>
+                          </div>
+                        </div>
+                      </section>
                     );
                   }}
                 />

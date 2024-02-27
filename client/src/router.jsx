@@ -16,6 +16,8 @@ import WriteChapter from "./pages/AddChapter.jsx";
 import EditStory from "./pages/EditStory.jsx";
 import EditChapter from "./pages/EditChapter.jsx";
 import GenrePage from "./pages/GenrePage.jsx";
+import ContinuePage from "./pages/ContinuePage.jsx";
+import BookmarkPage from "./pages/BookmarkPage.jsx";
 import { fetchData } from "./shared/fetch.js";
 
 export const router = createBrowserRouter([
@@ -35,6 +37,9 @@ export const router = createBrowserRouter([
           Authorization: `Bearer ${token}`,
         },
       });
+      if (bookmarks.message === "Bookmarks is empty") {
+        return null;
+      }
       return bookmarks;
     },
     children: [
@@ -227,6 +232,31 @@ export const router = createBrowserRouter([
           };
         },
       },
+      {
+        path: "/continue",
+        element: <ContinuePage />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          return {
+            user,
+          };
+        },
+      },
+      {
+        path: "/bookmarks",
+        element: <BookmarkPage />,
+        loader: async () => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return redirect("/login");
+          }
+          return user;
+        },
+      },
+
       {
         path: "/story/author/:id",
         element: <AuthorPage />,

@@ -1,32 +1,36 @@
 import BookCard from "../components/BookCard";
-import { IconButton } from "@material-tailwind/react";
-
-import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useLoaderData } from "react-router-dom";
+import Pagination from "../components/ui/Pagination.jsx";
 import { useFetch } from "../hooks/fetch-hooks";
-import { useSelector } from "react-redux";
-import Pagination from "./ui/Pagination.jsx";
+import { useEffect } from "react";
+import { IconButton } from "@material-tailwind/react";
 import Chip from "../components/ui/Chip.jsx";
+import { getTokenFromCookies } from "../shared/token.js";
 
-const HomePageSearchSection = () => {
-  const searchKey = useSelector((state) => state.search.searchKey);
-  const [page, setPage] = useState("1");
-
-  const [isLoading, data, error] = useFetch("fetchSearch", `stories?search=${searchKey}&page=${page}`);
-  //   console.log("currentPage", currentPage);
-
+export default function ContinuePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
+  const { user } = useLoaderData();
+  const token = getTokenFromCookies();
 
-  useEffect(() => {
-    setPage(currentPage);
-  }, [currentPage]);
+  const renderPaginationItem = (page) => {
+    return (
+      <Link to={`/continue?page=${page}`} key={page}>
+        <IconButton
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
+        >
+          {page}
+        </IconButton>
+      </Link>
+    );
+  };
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", "1");
-    setSearchParams(params.toString());
-  }, [searchKey]);
+  const [isLoading, data, error] = useFetch(`fetchContinue-${user.user.id}`, `history?&page=${currentPage}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -36,39 +40,10 @@ const HomePageSearchSection = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading Books...</p>;
+  if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
-  if (!data.meta) {
-    return (
-      <div className="mt-12 px-4 md:px-12">
-        <section className="mt-12">
-          <div className="text-primary">
-            <h1 className="font-dm-display text-2xl font-medium tracking-wide">
-              No stories found for &quot;{searchKey}&quot;
-            </h1>
-            <p className="font-dm-sans text-base tracking-wide">Please try a different search term.</p>
-          </div>
-        </section>
-      </div>
-    );
-  }
-
-  const stories = data.data;
-
   const { total_page, prev_page, next_page } = data.meta;
-
-  const renderPaginationItem = (page) => {
-    return (
-      <Link to={`/?page=${page}`} key={page}>
-        <IconButton
-          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
-        >
-          {page}
-        </IconButton>
-      </Link>
-    );
-  };
 
   const renderEllipsis = () => {
     return <span className="text-gray-400">...</span>;
@@ -100,22 +75,19 @@ const HomePageSearchSection = () => {
     }
 
     // Always show the last page
-    if (total_page > 1) {
-      pagesToShow.push(renderPaginationItem(total_page));
-    }
+    pagesToShow.push(renderPaginationItem(total_page));
+
     return pagesToShow;
   };
 
   return (
     <>
-      <div className="mb-12 mt-12 px-4 md:px-12">
+      <div className="over mb-12 mt-12 px-4 md:px-12">
         <section className="mt-12">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
-              <h1 className="font-dm-display text-2xl font-medium tracking-wide">
-                Search Rresult for &quot;{searchKey}&quot;
-              </h1>
-              <p className="font-dm-sans text-base tracking-wide">Here you go</p>
+              <h1 className="font-dm-display text-2xl font-medium tracking-wide">Continue</h1>
+              <p className="font-dm-sans text-base tracking-wide">Continue your reading</p>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
@@ -123,23 +95,27 @@ const HomePageSearchSection = () => {
           </div>
           <section className="mt-4">
             <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
-              {stories.map((item) => (
+              {data.data.map((item) => (
                 <BookCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  imgUrl={item.cover_img}
+                  key={item.stories.id}
+                  id={item.stories.id}
+                  title={item.stories.title}
+                  imgUrl={item.stories.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => (
                     <section className="flex flex-col space-y-3">
                       <div className="flex flex-row flex-wrap gap-2 ">
-                        <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
-                        <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
+                        <Chip text={item?.stories.author.name} href={`/story/author/${item.stories.author_id}`} />
+                        <Chip text={item?.stories.genre.name} href={`/genre/${item.stories.genre_id}`} />
                         <div className="bg-[#E2EFDE] p-1.5">
                           <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
-                            {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                            {new Intl.NumberFormat("en-US").format(item.stories.upvote)} upvotes
                           </h4>
                         </div>
+                      </div>
+                      <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
+                        <div className="h-full bg-black" style={{ width: `${item.progress}%` }} />
+                        <p className="mt-1 text-sm text-primary">{item.progress}%</p>
                       </div>
                     </section>
                   )}
@@ -158,6 +134,4 @@ const HomePageSearchSection = () => {
       </div>
     </>
   );
-};
-
-export default HomePageSearchSection;
+}
