@@ -102,7 +102,7 @@ export default function StoryPage() {
         <div className="flex flex-grow-0 flex-col space-y-3">
           <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] max-w-[400px] object-cover" />
         </div>
-        <section className="mt-4 w-full flex-grow flex-col md:mt-0">
+        <section className="flex-grok mt-4 w-full flex-col md:mt-0">
           <div className="flex flex-col space-y-8">
             <section className="flex flex-col space-y-4">
               <section className="flex flex-col items-start justify-between space-y-3 md:space-y-0 lg:flex-row lg:space-x-4">

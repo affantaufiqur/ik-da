@@ -81,6 +81,7 @@ export const router = createBrowserRouter([
               Authorization: `Bearer ${getTokenFromCookies()}`,
             },
           });
+          console.log(history);
           const { user: currentUser } = user;
           return {
             user: currentUser,
@@ -260,6 +261,13 @@ export const router = createBrowserRouter([
       {
         path: "/story/author/:id",
         element: <AuthorPage />,
+        loader: async ({ params }) => {
+          const getAuthor = await fetchData(`user/${params.id}`);
+          if (getAuthor.message === "Internal server error" || getAuthor.message === "User not found") {
+            return redirect("/");
+          }
+          return getAuthor;
+        },
       },
       {
         path: "/genre/:id",

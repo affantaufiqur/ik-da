@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { IconButton } from "@material-tailwind/react";
 import Chip from "../components/ui/Chip.jsx";
 import { getTokenFromCookies } from "../shared/token.js";
+import Empty from "../components/ui/Empty.jsx";
 
 export default function BookmarkPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,6 +43,9 @@ export default function BookmarkPage() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
 
+  if (!data.data) {
+    return <Empty />;
+  }
   const { total_page, prev_page, next_page } = data.meta;
 
   const renderEllipsis = () => {

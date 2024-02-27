@@ -1,5 +1,5 @@
 import BookCard from "../components/BookCard";
-import { Link, useSearchParams, useParams } from "react-router-dom";
+import { Link, useSearchParams, useParams, useLoaderData } from "react-router-dom";
 import Pagination from "../components/ui/Pagination.jsx";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
@@ -10,6 +10,8 @@ export default function AuthorPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
   const params = useParams();
+  const userData = useLoaderData();
+  console.log(userData);
 
   const renderPaginationItem = (page) => {
     return (
@@ -82,7 +84,7 @@ export default function AuthorPage() {
         <section className="mt-12">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
-              <h1 className="font-dm-display text-2xl font-medium tracking-wide">Work by {data.data[0].author.name}</h1>
+              <h1 className="font-dm-display text-2xl font-medium tracking-wide">Work by {userData.name}</h1>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
@@ -90,27 +92,31 @@ export default function AuthorPage() {
           </div>
           <section className="mt-4">
             <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
-              {data.data.map((item) => (
-                <BookCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  imgUrl={item.cover_img}
-                  chapter={"chapter 21"}
-                  renderFn={() => (
-                    <section className="flex flex-col space-y-3">
-                      <div className="flex flex-row flex-wrap gap-2 ">
-                        <Chip text={item?.genre.name} />
-                        <div className="bg-[#E2EFDE] p-1.5">
-                          <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
-                            {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
-                          </h4>
+              {data.data.length < 1 ? (
+                <p>empty</p>
+              ) : (
+                data?.data?.map((item) => (
+                  <BookCard
+                    key={item?.id}
+                    id={item?.id}
+                    title={item?.title}
+                    imgUrl={item?.cover_img}
+                    chapter={"chapter 21"}
+                    renderFn={() => (
+                      <section className="flex flex-col space-y-3">
+                        <div className="flex flex-row flex-wrap gap-2 ">
+                          <Chip text={item?.genre.name} href={`/genre/${item?.genre_id}`} />
+                          <div className="bg-[#E2EFDE] p-1.5">
+                            <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
+                              {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                            </h4>
+                          </div>
                         </div>
-                      </div>
-                    </section>
-                  )}
-                />
-              ))}
+                      </section>
+                    )}
+                  />
+                ))
+              )}
             </div>
           </section>
         </section>

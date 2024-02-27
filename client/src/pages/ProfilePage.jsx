@@ -29,7 +29,7 @@ export default function ProfilePage() {
           <TitleSection title="Continue" subtitle="Continue your reading" href={"/continue"} />
           <section className="mt-4">
             <div className="grid grid-cols-3 gap-12 lg:grid-cols-6 xl:grid-cols-12">
-              {data.message ? (
+              {history.message ? (
                 <p>Empty</p>
               ) : (
                 history?.data?.slice(0, 4).map((item) => (
