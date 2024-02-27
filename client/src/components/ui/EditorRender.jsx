@@ -19,7 +19,7 @@ export default function EditorRender({ content }) {
     editor?.commands.setContent(generateHtml);
   }, [generateHtml, editor]);
   if (!editor) return null;
-  return <EditorContent editor={editor} />;
+  return <EditorContent editor={editor} className="text-justify font-dm-sans text-base text-primary" />;
 }
 
 EditorRender.propTypes = {

@@ -13,22 +13,80 @@ class Bookmark {
             where: {
                 user_id: userId,
             },
-            include: { stories: true },
+            include: {
+                stories: {
+                    include: {
+                        author: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                        genre: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
             take: limit,
             skip: offset,
+            orderBy: {
+                created_at: "desc",
+            },
         });
-
         const totalCount = await prisma.bookmark.count({
             where: {
                 user_id: userId,
             },
         });
+
+        const dataWithProgress = await Promise.all(
+            bookmarks.map(async (bookmark) => {
+                const totalChapter = await prisma.chapter.count({
+                    where: {
+                        story_id: bookmark.story_id,
+                    },
+                });
+
+                const chapterRead = await prisma.chapterRead.count({
+                    where: {
+                        user_id: userId,
+                        story_id: bookmark.story_id,
+                    },
+                });
+
+                const progress = Math.floor((chapterRead / totalChapter) * 100);
+
+                return {
+                    id: bookmark.id,
+                    user_id: bookmark.user_id,
+                    stories: {
+                        id: bookmark.stories.id,
+                        title: bookmark.stories.title,
+                        author_id: bookmark.stories.author_id,
+                        author_name: bookmark.stories.author.name,
+                        genre_id: bookmark.stories.genre_id,
+                        genre_name: bookmark.stories.genre.name,
+                        synopsis: bookmark.stories.synopsis,
+                        upvote: bookmark.stories.upvote,
+                        cover_img: bookmark.stories.cover_img,
+                        status: bookmark.stories.status,
+                        progress: progress,
+                        created_at: bookmark.stories.created_at,
+                        updated_at: bookmark.stories.updated_at,
+                    },
+                    created_at: bookmark.created_at,
+                    updated_at: bookmark.updated_at,
+                };
+            }),
+        );
         const totalPage = Math.ceil(totalCount / limit);
         const nextPage = page < totalPage ? page + 1 : null;
         const prevPage = page > 1 ? page - 1 : null;
 
         const listStories = {
-            data: bookmarks,
+            data: dataWithProgress,
             meta: {
                 total: totalCount,
                 total_page: totalPage,

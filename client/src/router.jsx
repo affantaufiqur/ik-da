@@ -52,6 +52,13 @@ export const router = createBrowserRouter([
           if (!user) {
             return redirect("/login");
           }
+          const bookmarks = await fetchData("bookmarks", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${getTokenFromCookies()}`,
+            },
+          });
+          console.log(bookmarks);
           return user;
         },
       },
@@ -76,18 +83,60 @@ export const router = createBrowserRouter([
               Authorization: `Bearer ${token}`,
             },
           });
+          if (bookMarkData.message === "Internal server error") {
+            return null;
+          }
+          const readHistory = await fetchData(`history/${params.id}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (bookMarkData.message === "Internal server error") {
+            return null;
+          }
           const isLiked = upvoteData.is_liked;
           const isMarked = bookMarkData.is_bookmarked;
           return {
             user,
             isMarked,
             isLiked,
+            history: readHistory?.data,
+            progress: readHistory?.progress,
           };
         },
       },
       {
         path: "/story/:storyId/chapter/:chapterId",
         element: <ChapterPage />,
+        loader: async ({ params }) => {
+          const user = await getCurrentUser();
+          if (!user) {
+            return null;
+          }
+          const isBookExist = await fetchData(`stories/${params.storyId}`);
+          if (isBookExist.message === "Story not found") {
+            return redirect("/");
+          }
+          const checkChapterinStories = isBookExist.chapters.find((item) => {
+            return item.id === params.chapterId;
+          });
+          if (!checkChapterinStories) {
+            return redirect(`/story/${params.storyId}`);
+          }
+          const read = await fetchData(`history/${params.storyId}/chapters/${params.chapterId}`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${getTokenFromCookies()}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ storyId: params.storyId }),
+          });
+          if (read.message === "Internal server error") {
+            return null;
+          }
+          return true;
+        },
       },
       {
         path: "/add-story",
