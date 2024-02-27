@@ -13,9 +13,12 @@ const WorkColumn = () => {
   const getFourData = data.data.slice(0, 4);
   return (
     <section>
-      <div className="flex flex-col space-y-1 text-primary">
-        <h1 className="font-dm-display text-2xl font-medium tracking-wide">Work</h1>
-        <p className="font-dm-sans text-base tracking-wide">This is the story that wrote</p>
+      <div className="flex flex-row items-center justify-between space-y-1 text-primary">
+        <section className="flex flex-col justify-between">
+          <h1 className="font-dm-display text-2xl font-medium tracking-wide">Work</h1>
+          <p className="font-dm-sans text-base tracking-wide">This is the story that wrote</p>
+        </section>
+        <p>View all</p>
       </div>
       <section className="mt-4">
         <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12">
