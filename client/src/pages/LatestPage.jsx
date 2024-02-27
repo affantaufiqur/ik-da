@@ -24,7 +24,6 @@ const LatestPage = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
   const { total_page, prev_page, next_page } = data.meta;
   const renderPaginationItem = (page) => {
@@ -102,7 +101,7 @@ const LatestPage = () => {
                     <section className="flex flex-col space-y-2">
                       <div className="flex flex-row gap-1">
                         <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
-                        <Chip text={item?.genre.name} />
+                        <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
                         <Chip text={format(item.created_at, { date: "medium" })} />
                       </div>
                     </section>

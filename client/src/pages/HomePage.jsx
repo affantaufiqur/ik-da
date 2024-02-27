@@ -17,7 +17,6 @@ const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const isUserExist = pageData?.user ? true : false;
-  console.log(isUserExist);
 
   useEffect(() => {
     if (!selectedGenre && !searchKey) {

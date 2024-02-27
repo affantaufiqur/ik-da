@@ -27,7 +27,7 @@ export default function Recommended() {
                 renderFn={() => (
                   <div className="flex flex-row space-x-1">
                     <Chip text={item?.author.name} href={`story/author/${item.author_id}`} />
-                    <Chip text={item?.genre.name} />
+                    <Chip text={item?.genre.name} href={`/genre/${item?.genre_id}`} />
                   </div>
                 )}
               />

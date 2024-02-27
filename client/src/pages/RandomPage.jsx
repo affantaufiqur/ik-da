@@ -107,8 +107,8 @@ const RandomPage = () => {
                   renderFn={() => (
                     <section className="flex flex-col space-y-3">
                       <div className="flex flex-row flex-wrap gap-2 ">
-                        <Chip text={item?.author.name} href={`story/author/${item.author_id}`} />
-                        <Chip text={item?.genre.name} />
+                        <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
+                        <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
                         <div className="bg-[#E2EFDE] p-1.5">
                           <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
                             {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes

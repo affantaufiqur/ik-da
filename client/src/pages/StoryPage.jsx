@@ -1,6 +1,6 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Link, useLoaderData, useParams, useRevalidator, Await } from "react-router-dom";
+import { Link, useLoaderData, useParams, useRevalidator } from "react-router-dom";
 import { Typography } from "@material-tailwind/react";
 import { ScrollRestoration } from "react-router-dom";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -23,7 +23,6 @@ export default function StoryPage() {
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
-  console.log(userData);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -98,9 +97,6 @@ export default function StoryPage() {
 
   const historySet = new Set(userData?.history?.map((data) => data.chapter_id));
   const history = data?.chapters?.filter((item) => historySet.has(item.id)).map((item) => item.id);
-
-  const deviceWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-  console.log("Device width:", deviceWidth);
 
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
