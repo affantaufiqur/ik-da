@@ -11,11 +11,11 @@ class Bookmark {
         }
         const bookmarks = await prisma.bookmark.findMany({
             where: {
-                user_id: userId
+                user_id: userId,
             },
             include: { stories: true },
             take: limit,
-            skip: offset
+            skip: offset,
         });
 
         const totalCount = await prisma.bookmark.count({
@@ -33,36 +33,36 @@ class Bookmark {
                 total: totalCount,
                 total_page: totalPage,
                 prev_page: prevPage,
-                next_page: nextPage
-            }
-        }
+                next_page: nextPage,
+            },
+        };
         return listStories;
     }
-    async getCheckBookmarks(userId, storyId) {
+    async getCheckBookmarks(storyId, userId) {
         const bookmark = await prisma.bookmark.findFirst({
             where: {
                 user_id: userId,
-                story_id: storyId
-            }
+                story_id: storyId,
+            },
         });
+        console.log(bookmark);
         return bookmark;
     }
-    async getListReadChpater (storyId, userId) {
+    async getListReadChpater(storyId, userId) {
         const readChapter = await prisma.chapterRead.findMany({
             where: {
                 story_id: storyId,
-                user_id: userId
-            }
+                user_id: userId,
+            },
         });
         const listChapter = await prisma.chapter.count({
             where: {
                 story_id: storyId,
-            }
+            },
         });
         const progress = Math.floor(listChapter ? (readChapter.length / listChapter) * 100 : 0);
-        return ({ data: readChapter, progress });
+        return { data: readChapter, progress };
     }
-
 }
 
 export default new Bookmark();

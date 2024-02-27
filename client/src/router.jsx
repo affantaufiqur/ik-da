@@ -58,12 +58,31 @@ export const router = createBrowserRouter([
       {
         path: "/story/:id",
         element: <StoryPage />,
-        loader: async () => {
+        loader: async ({ params }) => {
           const user = await getCurrentUser();
           if (!user) {
             return null;
           }
-          return user;
+          const token = getTokenFromCookies();
+          const bookMarkData = await fetchData(`bookmarks/${params.id}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const upvoteData = await fetchData(`likes-story/${params.id}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const isLiked = upvoteData.is_liked;
+          const isMarked = bookMarkData.is_bookmarked;
+          return {
+            user,
+            isMarked,
+            isLiked,
+          };
         },
       },
       {

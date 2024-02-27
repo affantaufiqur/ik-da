@@ -27,7 +27,7 @@ export default function ProfilePage() {
           <div className="flex flex-col space-y-1 text-primary">
             <h1 className="font-dm-display text-2xl font-medium tracking-wide">Bookmarks</h1>
           </div>
-          <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-12">
+          <div className="grid grid-cols-3 gap-12 lg:grid-cols-6 xl:grid-cols-12">
             {data.message ? (
               <p>Empty</p>
             ) : (
@@ -36,7 +36,7 @@ export default function ProfilePage() {
                 .map((item) => (
                   <BookCard
                     key={item.id}
-                    id={item.id}
+                    id={item.story_id}
                     title={item.stories.title}
                     imgUrl={item.stories.cover_img}
                     chapter={"chapter 21"}
