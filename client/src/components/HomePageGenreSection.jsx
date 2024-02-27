@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
+import Skeleton from "./ui/Skeleton.jsx";
 
 const HomePageGenreSection = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -42,9 +43,8 @@ const HomePageGenreSection = () => {
     return <p>Error</p>;
   }
 
-  if (isLoading) return <p>Loading Books...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
   const stories = data.genre.stories;
 

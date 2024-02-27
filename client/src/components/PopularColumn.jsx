@@ -3,6 +3,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 import SectionTitle from "./ui/TitleSection";
 import Chip from "./ui/Chip";
+import Skeleton from "./ui/Skeleton";
 
 const PopularColumn = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -11,7 +12,7 @@ const PopularColumn = () => {
     `stories?popular=true${selectedGenre ? `&search=${selectedGenre}` : ""}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
 

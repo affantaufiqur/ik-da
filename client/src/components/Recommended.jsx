@@ -1,10 +1,11 @@
 import BookCard from "./BookCard";
 import { useFetch } from "../hooks/fetch-hooks";
 import Chip from "./ui/Chip";
+import Skeleton from "./ui/Skeleton";
 
 export default function Recommended() {
   const [isLoading, data, error] = useFetch("fetchRandomHome", "stories/random");
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const getFourData = data?.data?.slice(0, 4);
 

@@ -3,6 +3,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useLoaderData } from "react-router-dom";
 import TitleSection from "./ui/TitleSection.jsx";
 import Chip from "./ui/Chip.jsx";
+import Skeleton from "./ui/Skeleton.jsx";
 
 const WorkColumn = () => {
   const { user } = useLoaderData();
@@ -10,7 +11,7 @@ const WorkColumn = () => {
 
   const [isLoading, data, error] = useFetch("fetchAuthor", `stories/author/${userId}`);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const isDataExist = data.data.length > 0;
   return (

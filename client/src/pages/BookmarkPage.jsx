@@ -7,6 +7,7 @@ import { IconButton } from "@material-tailwind/react";
 import Chip from "../components/ui/Chip.jsx";
 import { getTokenFromCookies } from "../shared/token.js";
 import Empty from "../components/ui/Empty.jsx";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 export default function BookmarkPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,7 +41,7 @@ export default function BookmarkPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   if (!data.data) {

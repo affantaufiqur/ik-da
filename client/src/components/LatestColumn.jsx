@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Chip from "./ui/Chip.jsx";
 import { format } from "@formkit/tempo";
 import TitleSection from "./ui/TitleSection.jsx";
+import Skeleton from "./ui/Skeleton.jsx";
 
 const LatestColumn = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -13,7 +14,7 @@ const LatestColumn = () => {
     `stories?direction=desc${selectedGenre ? `&search=${selectedGenre}` : ""}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
 

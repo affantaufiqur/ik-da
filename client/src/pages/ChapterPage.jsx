@@ -1,6 +1,6 @@
-import { useNavigate, useParams, ScrollRestoration, Navigate } from "react-router-dom";
+import { useNavigate, useParams, ScrollRestoration } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ export default function ChapterPage() {
     `stories/${params.storyId}/chapters/${params.chapterId}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader className="h-5 w-5" />;
   if (error) return <p>Error</p>;
   const chapterNavigation = data.story.chapters
     .map((item, i, arr) => {

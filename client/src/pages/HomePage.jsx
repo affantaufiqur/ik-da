@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import HomePageSearchSection from "../components/HomePageSearchSection.jsx";
 import { useLoaderData } from "react-router-dom";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 const HomePage = () => {
   const pageData = useLoaderData();
@@ -50,6 +51,9 @@ const HomePage = () => {
       ) : (
         <HomePageSection user={isUserExist} />
       )}
+      <div className="mt-12 px-12">
+        <Skeleton />
+      </div>
     </div>
   );
 };

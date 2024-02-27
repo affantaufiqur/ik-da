@@ -6,6 +6,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import Chip from "../components/ui/Chip.jsx";
 import { format } from "@formkit/tempo";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 const LatestPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,7 +23,7 @@ const LatestPage = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   const { total_page, prev_page, next_page } = data.meta;

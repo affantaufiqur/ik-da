@@ -5,6 +5,7 @@ import { getTokenFromCookies } from "../shared/token";
 import BookCard from "../components/BookCard";
 import TitleSection from "../components/ui/TitleSection.jsx";
 import Chip from "../components/ui/Chip.jsx";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 export default function ProfilePage() {
   const { user, history } = useLoaderData();
@@ -15,7 +16,7 @@ export default function ProfilePage() {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   return (

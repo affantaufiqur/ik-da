@@ -2,7 +2,7 @@ import { format } from "@formkit/tempo";
 import { Menu as Dropdown, MenuHandler, MenuList, Typography } from "@material-tailwind/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useQueryClient } from "@tanstack/react-query";
-import { Dot, MoreVertical } from "lucide-react";
+import { Dot, Loader, MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { Link, ScrollRestoration, useLoaderData, useParams, useRevalidator } from "react-router-dom";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ export default function StoryPage() {
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader className="h-6 w-6" />;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters?.length;
   const formatUpvote = new Intl.NumberFormat().format(data?.upvote || 0);

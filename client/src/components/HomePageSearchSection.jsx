@@ -7,6 +7,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
 import Pagination from "./ui/Pagination.jsx";
 import Chip from "../components/ui/Chip.jsx";
+import Skeleton from "./ui/Skeleton";
 
 const HomePageSearchSection = () => {
   const searchKey = useSelector((state) => state.search.searchKey);
@@ -36,7 +37,7 @@ const HomePageSearchSection = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading Books...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   if (!data.meta) {

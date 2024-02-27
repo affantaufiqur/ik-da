@@ -6,6 +6,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 const RandomPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,7 +43,7 @@ const RandomPage = () => {
     }
   }, [data]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   const { total_page, prev_page, next_page } = data.meta;

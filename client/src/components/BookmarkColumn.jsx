@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useRouteLoaderData } from "react-router-dom";
 import TitleSection from "./ui/TitleSection.jsx";
 import Chip from "./ui/Chip.jsx";
+import Skeleton from "./ui/Skeleton.jsx";
 
 const BookmarkColumn = () => {
   const pageData = useRouteLoaderData("root");
@@ -14,7 +15,7 @@ const BookmarkColumn = () => {
     `stories${selectedGenre ? `?search=${selectedGenre}` : ""}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const exist = pageData ? true : false;
 

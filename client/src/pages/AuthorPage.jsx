@@ -5,6 +5,7 @@ import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { IconButton } from "@material-tailwind/react";
 import Chip from "../components/ui/Chip.jsx";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 export default function AuthorPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,7 +39,7 @@ export default function AuthorPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
 
   const { total_page, prev_page, next_page } = data.meta;
