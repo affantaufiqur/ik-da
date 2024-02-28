@@ -14,7 +14,7 @@ export default function GenrePage() {
 
   const renderPaginationItem = (page) => {
     return (
-      <Link to={`/popular?page=${page}`} key={page}>
+      <Link to={`/genre/${params.id}?page=${page}`} key={page}>
         <IconButton
           className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
         >
