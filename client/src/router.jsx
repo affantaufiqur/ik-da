@@ -18,6 +18,7 @@ import EditChapter from "./pages/EditChapter.jsx";
 import GenrePage from "./pages/GenrePage.jsx";
 import ContinuePage from "./pages/ContinuePage.jsx";
 import BookmarkPage from "./pages/BookmarkPage.jsx";
+import ErrorElement from "./components/ui/ErrorElement.jsx";
 import { fetchData } from "./shared/fetch.js";
 
 export const router = createBrowserRouter([
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />,
     id: "root",
+    errorElement: <ErrorElement />,
     loader: async () => {
       const user = await getCurrentUser();
       if (!user) {

@@ -22,6 +22,7 @@ export default function StoryPage() {
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
+  console.log(userData);
 
   if (isLoading) return <LoaderComponent />;
   if (error) return <p>Error</p>;
@@ -199,7 +200,8 @@ export default function StoryPage() {
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {data?.chapters?.map((chapter) => {
+                    {data?.chapters?.map((chapter, i, arr) => {
+                      const index = arr.length - 1 - i + 1;
                       return (
                         <div
                           className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
@@ -209,7 +211,12 @@ export default function StoryPage() {
                             to={"/story/" + id + "/chapter/" + chapter.id}
                             className={`truncate whitespace-normal text-wrap ${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
                           >
-                            {chapter.title}
+                            <p className="md:hidden">
+                              {index}. {truncateText(chapter.title, 20)}
+                            </p>
+                            <p className="hidden text-sm md:inline-block">
+                              {index}. {chapter.title}
+                            </p>
                           </Link>
                           <section className="flex flex-row items-center justify-end space-x-1">
                             <p className="whitespace-nowrap text-sm">

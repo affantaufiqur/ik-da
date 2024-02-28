@@ -16,7 +16,7 @@ export default function AuthorPage() {
 
   const renderPaginationItem = (page) => {
     return (
-      <Link to={`/popular?page=${page}`} key={page}>
+      <Link to={`/story/author/${params.id}?page=${page}`} key={page}>
         <IconButton
           className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? " bg-black text-white" : "bg-white"}`}
         >
@@ -74,7 +74,9 @@ export default function AuthorPage() {
     }
 
     // Always show the last page
-    pagesToShow.push(renderPaginationItem(total_page));
+    if (total_page > 1) {
+      pagesToShow.push(renderPaginationItem(total_page));
+    }
 
     return pagesToShow;
   };
