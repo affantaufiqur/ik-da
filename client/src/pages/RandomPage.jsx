@@ -11,6 +11,7 @@ const RandomPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
 
+  // eslint-disable-next-line no-unused-vars
   const [randomData, setRandomData] = useState(null);
 
   const renderPaginationItem = (page) => {
