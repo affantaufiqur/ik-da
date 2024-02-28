@@ -92,7 +92,9 @@ const HomePageGenreSection = () => {
     }
 
     // Always show the last page
-    pagesToShow.push(renderPaginationItem(total_page));
+    if (total_page > 1) {
+      pagesToShow.push(renderPaginationItem(total_page));
+    }
 
     return pagesToShow;
   };
