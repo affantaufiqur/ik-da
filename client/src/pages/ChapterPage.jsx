@@ -1,4 +1,4 @@
-import { useNavigate, useParams, ScrollRestoration, Navigate } from "react-router-dom";
+import { useNavigate, useParams, ScrollRestoration } from "react-router-dom";
 import EditorRender from "../components/ui/EditorRender";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useFetch } from "../hooks/fetch-hooks";
@@ -35,11 +35,13 @@ export default function ChapterPage() {
           className="my-1 max-h-[80px] w-full border-[1px] border-line/50 px-4 py-2"
           onChange={(e) => navigate(`/story/${params.storyId}/chapter/${e.target.value}`)}
         >
-          {data.story.chapters.map((item) => (
-            <option key={item.id} value={item.id} className="text-black" selected={item.id === params.chapterId}>
-              {item.title}
-            </option>
-          ))}
+          {data.story.chapters.map((item, i) => {
+            return (
+              <option key={item.id} value={item.id} className="text-black" selected={item.id === params.chapterId}>
+                {i + 1}. {item.title}
+              </option>
+            );
+          })}
         </select>
         <div className="flex flex-row justify-end space-x-2">
           <div className={`${chapterNavigation[0].prevChapter ? "" : "hidden"}`}>
