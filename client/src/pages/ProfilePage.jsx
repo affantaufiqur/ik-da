@@ -79,9 +79,12 @@ export default function ProfilePage() {
                           <Chip text={item?.stories.genre_name} href={`/genre/${item.stories.genre_id}`} />
                         </div>
                         <div className="h-[6px] w-full  space-y-2 border-[1px] border-line/50 bg-transparent">
-                          <div className="h-full bg-black" style={{ width: `${item.stories.progress}%` }} />
+                          <div
+                            className="h-full bg-black"
+                            style={{ width: `${item.stories.progress ? item.stories.progress : 0}%` }}
+                          />
                         </div>
-                        <h5 className="text-sm">{item.stories.progress}%</h5>
+                        <h5 className="text-sm">{item.stories.progress ? item.stories.progress : 0}%</h5>
                       </section>
                     )}
                   />
