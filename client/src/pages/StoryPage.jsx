@@ -1,18 +1,19 @@
-import { useFetch } from "../hooks/fetch-hooks";
-import { Menu as Dropdown, MenuHandler, MenuList } from "@material-tailwind/react";
-import { Link, useLoaderData, useParams, useRevalidator } from "react-router-dom";
-import { Typography } from "@material-tailwind/react";
-import { ScrollRestoration } from "react-router-dom";
+import { format } from "@formkit/tempo";
+import { Menu as Dropdown, MenuHandler, MenuList, Typography } from "@material-tailwind/react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { truncateText } from "../shared/common";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dot, MoreVertical } from "lucide-react";
 import { useState } from "react";
+import { Link, ScrollRestoration, useLoaderData, useParams, useRevalidator } from "react-router-dom";
+import { toast } from "sonner";
+import Chip from "../components/ui/Chip";
 import StoryToolbar from "../components/ui/StoryToolbar";
-import { MoreVertical } from "lucide-react";
+import { useFetch } from "../hooks/fetch-hooks";
+import { truncateText } from "../shared/common";
 import { fetchData } from "../shared/fetch.js";
 import { getTokenFromCookies } from "../shared/token.js";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { Dot } from "lucide-react";
+import LoaderComponent from "../components/ui/LoaderComponent";
+
 
 export default function StoryPage() {
   const queryClient = useQueryClient();
@@ -22,11 +23,12 @@ export default function StoryPage() {
   const [isLoading, data, error] = useFetch(`fetchStory-${id}`, "stories/" + id);
   const [readMore, isReadMore] = useState(false);
   const revalidate = useRevalidator();
+  console.log(userData);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoaderComponent />;
   if (error) return <p>Error</p>;
   const countTotalChapter = data?.chapters?.length;
-  const formatUpvote = new Intl.NumberFormat().format(data?.upvote);
+  const formatUpvote = new Intl.NumberFormat().format(data?.upvote || 0);
 
   function handleReadMore() {
     isReadMore(!readMore);
@@ -94,13 +96,16 @@ export default function StoryPage() {
     return operation;
   }
 
+  const historySet = new Set(userData?.history?.map((data) => data.chapter_id));
+  const history = data?.chapters?.filter((item) => historySet.has(item.id)).map((item) => item.id);
+
   return (
     <main className="h-full px-4 font-dm-sans md:px-12">
       <section className="flex flex-col md:w-full md:flex-row md:space-x-12">
         <div className="flex flex-grow-0 flex-col space-y-3">
           <img src={data?.cover_img} alt={data?.title} className="max-h-[1200px] max-w-[400px] object-cover" />
         </div>
-        <section className="mt-4 w-full flex-grow flex-col md:mt-0">
+        <section className="flex-grok mt-4 w-full flex-col md:mt-0">
           <div className="flex flex-col space-y-8">
             <section className="flex flex-col space-y-4">
               <section className="flex flex-col items-start justify-between space-y-3 md:space-y-0 lg:flex-row lg:space-x-4">
@@ -110,12 +115,19 @@ export default function StoryPage() {
                   </h2>
                 </section>
                 <div className="flex flex-col space-y-4 md:hidden">
-                  <section className="flex flex-row items-center space-x-1">
-                    <h2 className="font-dm-sans text-sm text-line">{data?.author.name}</h2>
-                    <Dot className="h-4 w-4 text-line/50" />
-                    <h2 className="font-dm-sans text-sm text-line">{data?.genre.name}</h2>
-                    <Dot className="h-4 w-4 text-line/50" />
-                    {userData?.user ? null : <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>}
+                  <section className="flex flex-col  space-y-2 whitespace-nowrap md:flex-row md:items-center md:space-x-1">
+                    <Link className="font-dm-sans text-sm text-line underline" to={`/story/author/${data?.author_id}`}>
+                      {data?.author.name}
+                    </Link>
+                    <Link className="font-dm-sans text-sm text-line underline" to={`/genre/${data?.genre_id}`}>
+                      {data?.genre.name}
+                    </Link>
+                    {userData?.user ? null : (
+                      <>
+                        <Dot className="hidden h-4 w-4 text-line/50 md:block" />
+                        <h2 className="font-dm-sans text-sm text-line">{formatUpvote} Upvote</h2>
+                      </>
+                    )}
                   </section>
 
                   <section className="md:hidden">
@@ -141,13 +153,9 @@ export default function StoryPage() {
                 </section>
               </section>
               <section className="hidden md:flex">
-                <section className="flex flex-row items-center space-x-2">
-                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                    <span className="text-primary">{data?.author.name}</span>
-                  </div>
-                  <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
-                    <span className="text-primary">{data?.genre.name}</span>
-                  </div>
+                <section className="flex flex-row items-center lg:space-x-2">
+                  <Chip text={data?.author.name} href={`/story/author/${data.author_id}`} />
+                  <Chip text={data?.genre.name} href={`/genre/${data.genre_id}`} />
                   {userData?.user ? null : (
                     <div className="relative grid select-none items-center whitespace-nowrap bg-gray-100 px-3 py-1.5 font-dm-sans text-xs font-bold uppercase text-white">
                       <span className="text-primary">{formatUpvote} Upvote</span>
@@ -170,50 +178,70 @@ export default function StoryPage() {
                 {readMore ? "Show Less" : "Read More"}
               </button>
             </section>
-            <div className="my-3 hidden h-[1px] w-full bg-line/20 md:block" />
+            <div className="h-[1px] w-full bg-line/20" />
             <section className="flex flex-col space-y-2">
               <section className="flex flex-row items-center justify-between">
-                <h1 className="font-dm-sans text-sm text-primary md:text-lg">Chapters {countTotalChapter}</h1>
-                <div className="flex w-1/3 flex-row items-center space-x-2">
-                  <h6 className="text-sm text-line">25%</h6>
-                  <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: "25%" }} />
-                  </div>
-                </div>
+                <h1 className="font-dm-sans text-sm text-primary md:text-lg">
+                  Chapters {history.length}/{countTotalChapter}
+                </h1>
+                {userData?.user ? (
+                  <>
+                    <div className="flex w-1/3 flex-row items-center space-x-2">
+                      <h6 className="text-sm text-line">{userData?.progress}%</h6>
+                      <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
+                        <div className="h-full bg-black" style={{ width: userData?.progress + "%" }} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-line/80">Login to track your progress</p>
+                )}
               </section>
               <ScrollArea.Root className="h-[225px] w-full overflow-hidden rounded-none border-[1px] border-line/50 bg-white">
                 <ScrollArea.Viewport className="h-full w-full rounded">
                   <div className="px-5 py-4">
                     <h2 className="font-dm-sans text-sm font-bold text-line">Chapters</h2>
-                    {data?.chapters?.map((chapter) => (
-                      <div
-                        className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
-                        key={chapter.id}
-                      >
-                        <Link to={"/story/" + id + "/chapter/" + chapter.id}>{chapter.title}</Link>
-                        {isUserWriter && (
-                          <Dropdown placement="bottom-end">
-                            <MenuHandler>
-                              <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
-                            </MenuHandler>
-                            <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
-                              <Link
-                                to={`chapter/${chapter.id}/edit`}
-                                className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
-                              >
-                                Edit
-                              </Link>
-                              <button
-                                onClick={() => handleDelete(chapter.id)}
-                                className="inline-flex justify-start p-1.5 hover:bg-gray-100"
-                              >
-                                Delete
-                              </button>
-                            </MenuList>
-                          </Dropdown>
-                        )}
-                      </div>
-                    ))}
+                    {data?.chapters?.map((chapter) => {
+                      return (
+                        <div
+                          className="border-t-mauve6 mt-2.5 flex flex-row items-center justify-between border-t pt-2.5 text-sm leading-normal tracking-wide text-line"
+                          key={chapter.id}
+                        >
+                          <Link
+                            to={"/story/" + id + "/chapter/" + chapter.id}
+                            className={`truncate whitespace-normal text-wrap ${history.some((item) => item === chapter.id) ? "text-green-600" : ""} `}
+                          >
+                            {chapter.title}
+                          </Link>
+                          <section className="flex flex-row items-center justify-end space-x-1">
+                            <p className="whitespace-nowrap text-sm">
+                              {format(chapter.created_at, { date: "medium" })}
+                            </p>
+                            {isUserWriter && (
+                              <Dropdown placement="bottom-end">
+                                <MenuHandler>
+                                  <MoreVertical className="h-5 w-5 hover:cursor-pointer" />
+                                </MenuHandler>
+                                <MenuList className="decoration-none flex flex-col space-y-2 rounded-none font-dm-sans hover:border-none lg:w-[240px]">
+                                  <Link
+                                    to={`chapter/${chapter.id}/edit`}
+                                    className="p-1.5 ring-transparent hover:bg-gray-100 hover:ring-transparent"
+                                  >
+                                    Edit
+                                  </Link>
+                                  <button
+                                    onClick={() => handleDelete(chapter.id)}
+                                    className="inline-flex justify-start p-1.5 hover:bg-gray-100"
+                                  >
+                                    Delete
+                                  </button>
+                                </MenuList>
+                              </Dropdown>
+                            )}
+                          </section>
+                        </div>
+                      );
+                    })}
                   </div>
                 </ScrollArea.Viewport>
                 <ScrollArea.Scrollbar

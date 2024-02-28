@@ -1,11 +1,12 @@
 import BookCard from "../components/BookCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
+import Chip from "../components/ui/Chip.jsx";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
+import Skeleton from "../components/ui/Skeleton.jsx";
 
 const RandomPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,7 +19,7 @@ const RandomPage = () => {
     return (
       <Link to={`/random?page=${page}`} key={page}>
         <IconButton
-          className={`rounded-md border px-3 py-1 text-black ${Number(currentPage) === page ? " bg-blue-gray-600" : "bg-white"}`}
+          className={`rounded-none border px-3 py-1 text-black shadow-none ${Number(currentPage) === page ? "bg-black text-white" : "bg-white"}`}
         >
           {page}
         </IconButton>
@@ -43,9 +44,8 @@ const RandomPage = () => {
     }
   }, [data]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
-  const progress = 35;
 
   const { total_page, prev_page, next_page } = data.meta;
 
@@ -84,8 +84,6 @@ const RandomPage = () => {
     return pagesToShow;
   };
 
-  console.log("daata", data);
-
   return (
     <>
       <div className="over mb-12 mt-12 px-4 md:px-12">
@@ -93,7 +91,7 @@ const RandomPage = () => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
               <h1 className="font-dm-display text-2xl font-medium tracking-wide">Random</h1>
-              <p className="font-dm-sans text-base tracking-wide">This is what random right now ;)</p>
+              <p className="font-dm-sans text-base tracking-wide">Just pick one</p>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
@@ -109,12 +107,17 @@ const RandomPage = () => {
                   imgUrl={item.cover_img}
                   chapter={"chapter 21"}
                   renderFn={() => (
-                    <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                      <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                      <p>{progress}%</p>
-
-                      <p>{item.upvote} upvotes</p>
-                    </div>
+                    <section className="flex flex-col space-y-3">
+                      <div className="flex flex-row flex-wrap gap-2 ">
+                        <Chip text={item?.author.name} href={`/story/author/${item.author_id}`} />
+                        <Chip text={item?.genre.name} href={`/genre/${item.genre_id}`} />
+                        <div className="bg-[#E2EFDE] p-1.5">
+                          <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
+                            {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                          </h4>
+                        </div>
+                      </div>
+                    </section>
                   )}
                 />
               ))}

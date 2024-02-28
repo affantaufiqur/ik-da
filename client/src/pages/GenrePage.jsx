@@ -1,15 +1,16 @@
 import BookCard from "../components/BookCard";
-import { Link, useSearchParams } from "react-router-dom";
 import Pagination from "../components/ui/Pagination.jsx";
+import { Link, useSearchParams, useParams } from "react-router-dom";
 import { useFetch } from "../hooks/fetch-hooks";
 import { useEffect } from "react";
 import { IconButton } from "@material-tailwind/react";
 import Chip from "../components/ui/Chip.jsx";
-import Skeleton from "../components/ui/Skeleton.jsx";
+import Skeleton from "../components/ui/Skeleton";
 
-const PopularPage = () => {
+export default function GenrePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || 1;
+  const params = useParams();
 
   const renderPaginationItem = (page) => {
     return (
@@ -22,8 +23,7 @@ const PopularPage = () => {
       </Link>
     );
   };
-
-  const [isLoading, data, error] = useFetch("fetchPopular", `stories?popular=true&page=${currentPage}`);
+  const [isLoading, data, error] = useFetch(`fetchGenre-${params.id}`, `genres/${params.id}?page=${currentPage}`);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -79,8 +79,8 @@ const PopularPage = () => {
         <section className="mt-12">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col space-y-1 text-primary">
-              <h1 className="font-dm-display text-2xl font-medium tracking-wide">Popular</h1>
-              <p className="font-dm-sans text-base tracking-wide">This is what popular right now ;)</p>
+              <h1 className="font-dm-display text-2xl font-medium tracking-wide">{data.genre.name}</h1>
+              <p className="font-dm-sans text-base tracking-wide">Showing stories with {data.genre.name}</p>
             </div>
             <div className="flex flex-row space-x-2">
               Page {currentPage}/{total_page}
@@ -88,7 +88,7 @@ const PopularPage = () => {
           </div>
           <section className="mt-4">
             <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12 xl:grid-cols-12">
-              {data.data.map((item) => (
+              {data.genre.stories.map((item) => (
                 <BookCard
                   key={item.id}
                   id={item.id}
@@ -123,6 +123,4 @@ const PopularPage = () => {
       </div>
     </>
   );
-};
-
-export default PopularPage;
+}

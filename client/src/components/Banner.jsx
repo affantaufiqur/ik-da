@@ -1,9 +1,10 @@
 import { useFetch } from "../hooks/fetch-hooks";
 import { Link } from "react-router-dom";
+import { Loader } from 'lucide-react'
 
 export default function Banner() {
   const [isLoading, data, error] = useFetch("fetchRandom", "stories");
-  if (isLoading) return <p>Loading</p>;
+  if (isLoading) return <Loader className="h-4 w-4" />; 
   if (error) return <p>Error</p>;
   const rand = data.data[Math.floor(Math.random() * 0.5)];
   // console.log(rand);

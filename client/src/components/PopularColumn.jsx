@@ -1,7 +1,9 @@
 import BookCard from "./BookCard";
-
 import { useFetch } from "../hooks/fetch-hooks";
 import { useSelector } from "react-redux";
+import SectionTitle from "./ui/TitleSection";
+import Chip from "./ui/Chip";
+import Skeleton from "./ui/Skeleton";
 
 const PopularColumn = () => {
   const selectedGenre = useSelector((state) => state.genre.selectedGenre);
@@ -10,18 +12,14 @@ const PopularColumn = () => {
     `stories?popular=true${selectedGenre ? `&search=${selectedGenre}` : ""}`,
   );
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Skeleton />;
   if (error) return <p>Error</p>;
   const getFourData = data.data.slice(0, 4);
-  const progress = 35;
 
   return (
     <div className="mt-12 px-4 md:px-12">
       <section className="mt-12">
-        <div className="flex flex-col space-y-1 text-primary">
-          <h1 className="font-dm-display text-2xl font-medium tracking-wide">Popular</h1>
-          <p className="font-dm-sans text-base tracking-wide">This is what popular right now ;)</p>
-        </div>
+        <SectionTitle title="Popular" subtitle="Popular right now" href="/popular?page=1" />
         <section className="mt-4">
           <div className="grid grid-cols-3 gap-12 sm:grid-cols-6 lg:grid-cols-12">
             {getFourData.map((item) => (
@@ -32,11 +30,17 @@ const PopularColumn = () => {
                 imgUrl={item.cover_img}
                 chapter={"chapter 21"}
                 renderFn={() => (
-                  <div className="h-[6px] w-full border-[1px] border-line bg-transparent">
-                    <div className="h-full bg-black" style={{ width: `${progress}%` }} />
-                    <p>{progress}%</p>
-                    {/* <p>{item.upvote} upvotes</p> */}
-                  </div>
+                  <section className="flex flex-col space-y-3">
+                    <div className="flex flex-row flex-wrap gap-2 ">
+                      <Chip text={item?.author.name} href={`story/author/${item.author_id}`} />
+                      <Chip text={item?.genre.name} href={`/genre/${item?.genre_id}`} />
+                      <div className="bg-[#E2EFDE] p-1.5">
+                        <h4 className="inline-flex items-center justify-center px-3 font-dm-sans text-sm font-bold text-primary md:text-base">
+                          {new Intl.NumberFormat("en-US").format(item.upvote)} upvotes
+                        </h4>
+                      </div>
+                    </div>
+                  </section>
                 )}
               />
             ))}
