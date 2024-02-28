@@ -28,7 +28,7 @@ export default function ChapterPage() {
     <main className="mx-4 xl:mx-32">
       <Link to={`/story/${params.storyId}`} className="mb-3 flex flex-row items-center space-x-2 text-line/80">
         <ChevronLeft className="h-4 w-4" />
-        Back
+        Back to story
       </Link>
       <section className="flex flex-col space-y-1">
         <select
