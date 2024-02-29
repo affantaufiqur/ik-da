@@ -7,37 +7,37 @@ async function main() {
 
     const stories = await prisma.story.findMany();
     const chapter = {
-        "type": "doc",
-        "content": [
-          {
-            "type": "paragraph",
-            "content": [
-              {
-                "text": faker.lorem.paragraph(10),
-                "type": "text"
-              },
-              {
-                "text": faker.lorem.paragraph(10),
-                "type": "text"
-              },
-              {
-                "text": faker.lorem.paragraph(10),
-                "type": "text"
-              }
-            ]
-          }
-        ]
-    }
+        type: "doc",
+        content: [
+            {
+                type: "paragraph",
+                content: [
+                    {
+                        text: faker.lorem.paragraph(10),
+                        type: "text",
+                    },
+                    {
+                        text: faker.lorem.paragraph(10),
+                        type: "text",
+                    },
+                    {
+                        text: faker.lorem.paragraph(10),
+                        type: "text",
+                    },
+                ],
+            },
+        ],
+    };
 
     for (const story in stories) {
-        for (let i=0; i<=10; i++) {
+        for (let i = 0; i <= 150; i++) {
             await prisma.chapter.create({
                 data: {
                     title: faker.lorem.sentence(),
                     content: chapter,
                     story_id: stories[story].id,
                     created_at: faker.date.past(),
-                }
+                },
             });
         }
     }
